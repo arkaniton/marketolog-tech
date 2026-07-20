@@ -404,12 +404,32 @@
 
 .panel { padding: 24px; border-radius: var(--r-panel); }
 
-.panel--accent {
-  padding: 24px;
+/* Акцентная поверхность. Ею выделены и панель «Цель месяца», и приоритетная
+   карточка в ленте — держим в одном правиле, чтобы стили не разъехались.
+   Раньше приоритетная карточка была контрастной (почти чёрной в светлой теме),
+   но плотный текст в тёмной плите читался тяжело. */
+.panel--accent,
+.accent-card {
   border-radius: var(--r-panel);
   background: linear-gradient(150deg, rgba(107, 91, 255, 0.22), rgba(107, 91, 255, 0.07));
   border: 1px solid rgba(107, 91, 255, 0.32);
   box-shadow: 0 16px 44px rgba(107, 91, 255, 0.14), var(--edge);
+}
+
+.panel--accent { padding: 24px; }
+
+.accent-card {
+  backdrop-filter: blur(var(--blur)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(140%);
+}
+
+/* Вложенные плашки на акцентной карточке чуть плотнее обычных,
+   иначе тонут в сиреневой заливке */
+.accent-card .node,
+.accent-card .draft,
+.accent-card .quote {
+  background: var(--bg-2);
+  border-color: var(--stroke-soft);
 }
 
 /* Подключения */
