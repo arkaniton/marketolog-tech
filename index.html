@@ -114,15 +114,18 @@ document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();
         </div>
       </div>
 
-      <div class="hero__task glass--sub">
-        <p class="label">Действие на сегодня</p>
-        <p class="hero__task-title mt8">Вернуть Марину К.</p>
-        <p class="muted mt8">
-          Не была 3 месяца, до этого ходила раз в 3 недели. Источник — 2ГИС.
-          Средний чек 3 800 ₽.
+      <!-- Содержимое меняется по кругу, текст печатается: см. assets/js/motion.js.
+           Разметка ниже — то, что видит пользователь без JS и при
+           prefers-reduced-motion, поэтому она заполнена, а не пуста. -->
+      <div class="hero__task glass--sub" id="hero-task">
+        <p class="label" data-slot="kind">Возврат клиента</p>
+        <p class="hero__task-title mt8" data-slot="title">Вернуть Марину К.</p>
+        <p class="hero__task-why mt8" data-slot="why">
+          Не была 3 месяца, обычно раз в 3 недели. Источник — 2ГИС.
         </p>
+        <p class="hero__task-text mt12" data-slot="text">Марина, здравствуйте! Это Анна из «Ириса». Давно вас не видели — ваш мастер Лена держит окно в субботу, и на окрашивание сделаем −15%. Записать?</p>
         <div class="hero__task-actions mt16">
-          <span class="btn btn--contrast btn--sm">Отправить</span>
+          <span class="btn btn--contrast btn--sm" data-slot="cta">Отправить</span>
           <span class="btn btn--ghost btn--sm">Изменить</span>
         </div>
       </div>
@@ -546,6 +549,7 @@ document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();
 </footer>
 
 <script src="assets/js/theme.js"></script>
+<script src="assets/js/motion.js"></script>
 <script src="assets/js/landing.js"></script>
 </body>
 </html>

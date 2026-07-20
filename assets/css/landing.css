@@ -156,16 +156,19 @@ main { display: flex; flex-direction: column; }
   position: relative;
 }
 
-/* Линия, связывающая ноды */
+/* Линия, связывающая шаги. Проходит за карточками и видна только
+   в зазорах, поэтому 2px и акцентным цветом — тонкая серая там терялась. */
 .steps::before {
   content: '';
   position: absolute;
   top: 30px;
   left: 12%;
   right: 12%;
-  height: 1px;
+  height: 2px;
+  border-radius: 2px;
   background: linear-gradient(90deg,
-    transparent, var(--stroke), var(--accent-glow), var(--stroke), transparent);
+    transparent, var(--accent) 20%, var(--accent) 80%, transparent);
+  opacity: 0.5;
 }
 
 .step {
@@ -511,3 +514,48 @@ main { display: flex; flex-direction: column; }
   .source__to { text-align: left; }
   .source__arrow { display: none; }
 }
+
+
+/* ==========================================================================
+   Анимации появления и лента в hero
+   ========================================================================== */
+
+/* Линия, связывающая три шага, прочерчивается слева направо */
+.motion-on .steps::before {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.9s var(--ease);
+}
+.motion-on .steps.is-in::before { transform: scaleX(1); }
+
+/* --- Карточка действия в hero --- */
+
+.hero__task-why { font-size: 0.87rem; color: var(--text-dim); }
+
+.hero__task-text {
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--sub-surface);
+  border: 1px solid var(--stroke-soft);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  /* Держим высоту под самый длинный текст: карточки сменяют друг друга,
+     и без этого макет дёргался бы на каждой смене */
+  min-height: 6.5em;
+}
+
+.hero__task { transition: opacity 0.3s var(--ease); }
+.hero__task.is-swapping { opacity: 0.35; }
+
+/* Курсор набора */
+.type-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  margin-left: 2px;
+  vertical-align: -0.15em;
+  background: var(--accent);
+  animation: cursor-blink 1.05s steps(2, start) infinite;
+}
+
+@keyframes cursor-blink { 50% { opacity: 0; } }
