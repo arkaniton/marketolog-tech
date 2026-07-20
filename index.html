@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>МаркетологТЕХ — возврат клиентов для салонов красоты на YClients</title>
+<meta name="description" content="ИИ-аналитик читает данные вашего салона в YClients и картах, находит уходящих клиентов и даёт готовый план возврата. Бесплатный разбор карточки в Я.Картах и 2ГИС.">
+
+<meta property="og:title" content="Ваша CRM уже знает, кто перестанет к вам ходить">
+<meta property="og:description" content="Показываем, сколько клиентов вы теряете, и даём готовый план, чтобы вернуть их. Бесплатный разбор карточки.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/landing.css">
+
+<!-- Тема применяется до отрисовки, иначе тёмная моргнёт белым на загрузке -->
+<script>
+(function(){try{if(localStorage.getItem('mt-theme')==='dark'){
+document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();
+</script>
+</head>
+<body>
+
+<!-- Фон: градиент + боке-пятна, цвета берутся из темы -->
+<div class="bg" aria-hidden="true">
+  <div class="bg__orb bg__orb--1"></div>
+  <div class="bg__orb bg__orb--2"></div>
+  <div class="bg__orb bg__orb--3"></div>
+</div>
+
+<!-- ══════════════════════════ ШАПКА ══════════════════════════ -->
+<header class="topbar">
+  <div class="wrap topbar__inner">
+    <a class="logo" href="#top" aria-label="МаркетологТЕХ, на главную">
+      <!-- Замените на <img src="assets/logo.svg" alt=""> когда будет файл бренда -->
+      <span class="logo__mark" aria-hidden="true">М</span>
+      <span class="logo__text"><b>Маркетолог</b><span>ТЕХ</span></span>
+    </a>
+
+    <nav class="topbar__nav" aria-label="Разделы страницы">
+      <a class="pill" href="#how">Как работает</a>
+      <a class="pill" href="#features">Что умеет</a>
+      <a class="pill" href="#faq">Вопросы</a>
+    </nav>
+
+    <div class="topbar__actions">
+      <button class="theme-toggle" type="button" aria-label="Включить тёмную тему" aria-pressed="false">
+        <svg class="theme-toggle__moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+        <svg class="theme-toggle__sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.4v2.2M12 19.4v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.4 12h2.2M19.4 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6"/></svg>
+      </button>
+      <a class="btn btn--ghost btn--sm" href="demo.html">Демо</a>
+      <a class="btn btn--primary btn--sm topbar__cta" href="#form">Проверить салон</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ══════════════════════════ 1. HERO ══════════════════════════ -->
+<section class="sec sec--hero" id="hero">
+  <div class="wrap hero">
+
+    <div class="hero__copy">
+      <p class="badge">
+        <span class="badge__dot" aria-hidden="true"></span>
+        Для салонов красоты на YClients
+      </p>
+
+      <h1 class="display mt24">
+        Ваша CRM уже знает,<br>
+        кто перестанет<br>
+        <span class="hero__accent">к вам ходить</span>
+      </h1>
+
+      <p class="lead mt24">
+        Сколько денег вы теряете каждый месяц? Мы показываем это первыми —
+        и даём готовый план, чтобы вернуть их.
+      </p>
+
+      <div class="hero__cta mt40">
+        <a class="btn btn--primary" href="#form">Проверить свой салон — бесплатно</a>
+        <a class="btn btn--ghost" href="demo.html">Записаться на демо</a>
+      </div>
+
+      <ul class="trustline mt24">
+        <li>Разбор карточки в Я.Картах и 2ГИС</li>
+        <li>Подключение за 5 минут</li>
+        <li>Данные не передаём</li>
+      </ul>
+    </div>
+
+    <!-- Превью продукта: живое доказательство вместо стокового скриншота -->
+    <aside class="hero__preview glass" aria-label="Пример утренней сводки в сервисе">
+      <div class="row between center hero__preview-head">
+        <div>
+          <p class="label">Сегодня, утро</p>
+          <p class="h3 mt8">Салон «Ирис»</p>
+        </div>
+        <span class="pill pill--outline">Демо-данные</span>
+      </div>
+
+      <div class="hero__metrics">
+        <div>
+          <p class="label">Под риском оттока</p>
+          <p class="metric metric--accent">47<span class="metric__unit">чел</span></p>
+        </div>
+        <div>
+          <p class="label">Выручка под риском</p>
+          <p class="metric">182 400<span class="metric__unit">₽</span></p>
+        </div>
+      </div>
+
+      <div class="hero__task glass--sub">
+        <p class="label">Действие на сегодня</p>
+        <p class="hero__task-title mt8">Вернуть Марину К.</p>
+        <p class="muted mt8">
+          Не была 3 месяца, до этого ходила раз в 3 недели. Источник — 2ГИС.
+          Средний чек 3 800 ₽.
+        </p>
+        <div class="hero__task-actions mt16">
+          <span class="btn btn--contrast btn--sm">Отправить</span>
+          <span class="btn btn--ghost btn--sm">Изменить</span>
+        </div>
+      </div>
+
+      <div class="row between center mt16">
+        <div class="avatars" aria-label="Ещё 46 клиентов в списке">
+          <span class="avatars__item av-1" aria-hidden="true">М</span>
+          <span class="avatars__item av-2" aria-hidden="true">А</span>
+          <span class="avatars__item av-3" aria-hidden="true">Е</span>
+          <span class="avatars__item av-4" aria-hidden="true">Д</span>
+          <span class="avatars__item avatars__more" aria-hidden="true">+43</span>
+        </div>
+        <a class="hero__preview-link" href="demo.html">Открыть демо →</a>
+      </div>
+    </aside>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════ 2. ПРОБЛЕМА ══════════════════════════ -->
+<section class="sec sec--problem reveal" id="problem">
+  <div class="wrap">
+    <h2 class="h1 sec__title">
+      Клиенты не жалуются.<br>
+      <span class="body-dim">Они просто перестают приходить.</span>
+    </h2>
+
+    <div class="cards-3 mt40">
+      <article class="card glass">
+        <p class="card__num">01</p>
+        <h3 class="h3 mt16">Отток тихий</h3>
+        <p class="muted mt12">
+          Недовольный клиент почти никогда не скандалит. Он молча уходит к соседям.
+          Вы узнаёте об этом через 2–3 месяца, когда падает выручка — и вернуть
+          его уже поздно.
+        </p>
+      </article>
+
+      <article class="card glass">
+        <p class="card__num">02</p>
+        <h3 class="h3 mt16">Данные есть, заниматься некому</h3>
+        <p class="muted mt12">
+          В YClients видно, кто был последний раз полгода назад и больше не вернулся.
+          Но у администратора нет времени это разбирать, а у вас — тем более.
+        </p>
+      </article>
+
+      <article class="card glass">
+        <p class="card__num">03</p>
+        <h3 class="h3 mt16">Маркетинг разорван</h3>
+        <p class="muted mt12">
+          Карты живут сами по себе, Telegram — сам по себе, акции — наугад.
+          Никто не связывает это в одну картину и не понимает, что реально
+          возвращает клиентов, а что просто сжигает бюджет.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ 3. КАК РАБОТАЕТ ══════════════════════════ -->
+<section class="sec reveal" id="how">
+  <div class="wrap">
+    <h2 class="h1 sec__title">Один сервис вместо пяти вкладок и таблиц</h2>
+
+    <!-- Связанные ноды — приём из референса -->
+    <ol class="steps mt40">
+      <li class="step glass">
+        <span class="step__dot" aria-hidden="true"></span>
+        <p class="label">Шаг 1</p>
+        <h3 class="h3 mt8">Подключаете</h3>
+        <p class="muted mt12">YClients и карты — за 5 минут, без разработчиков.</p>
+      </li>
+
+      <li class="step glass">
+        <span class="step__dot" aria-hidden="true"></span>
+        <p class="label">Шаг 2</p>
+        <h3 class="h3 mt8">ИИ разбирает</h3>
+        <p class="muted mt12">
+          Ночью сервис анализирует записи, источники, отзывы и карточки. За вас.
+        </p>
+      </li>
+
+      <li class="step step--accent contrast-card">
+        <span class="step__dot step__dot--accent" aria-hidden="true"></span>
+        <p class="label">Шаг 3</p>
+        <h3 class="h3 mt8">Вы действуете</h3>
+        <p class="muted mt12">
+          Утром открываете телефон: кто уходит, кого вернуть, что ответить на отзыв,
+          что запостить. С готовыми текстами. Вы проверяете и жмёте «отправить».
+        </p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ══════════════════════════ 6. ФОРМА (главная точка захвата) ══════════════════════════ -->
+<section class="sec sec--form reveal" id="form">
+  <div class="wrap form-wrap glass">
+
+    <div class="form-wrap__copy">
+      <h2 class="h1">Начните с бесплатного разбора карточки</h2>
+      <p class="lead mt24">
+        Посмотрим, как ваш салон выглядит в Я.Картах и 2ГИС, сколько отзывов
+        остались без ответа и где вы теряете клиентов. Разбор пришлём в Telegram —
+        вместе с тем, что умеет сервис и сколько стоит.
+      </p>
+
+      <ul class="ticks mt40">
+        <li>Рейтинг и позиция карточки на обеих площадках</li>
+        <li>Сколько отзывов остались без ответа</li>
+        <li>Где именно утекают клиенты</li>
+        <li>Что умеет сервис и сколько стоит</li>
+      </ul>
+    </div>
+
+    <!-- Заглушка: данные уходят в консоль. Точку приёма подключите в assets/js/landing.js -->
+    <form class="form" id="lead-form" novalidate>
+      <div class="field">
+        <label class="label" for="f-salon">Название салона или ссылка на карточку</label>
+        <input class="input" type="text" id="f-salon" name="salon"
+               placeholder="Салон «Ирис» или ссылка на 2ГИС" required>
+        <p class="field__err" data-err-for="f-salon"></p>
+      </div>
+
+      <div class="field">
+        <label class="label" for="f-tg">Ваш Telegram</label>
+        <input class="input" type="text" id="f-tg" name="telegram"
+               placeholder="@nickname" required>
+        <p class="field__err" data-err-for="f-tg"></p>
+      </div>
+
+      <fieldset class="field">
+        <legend class="label">Какой CRM пользуетесь</legend>
+        <div class="choices" role="radiogroup" aria-label="Какой CRM пользуетесь">
+          <label class="choice"><input type="radio" name="crm" value="YClients" checked><span>YClients</span></label>
+          <label class="choice"><input type="radio" name="crm" value="Другой"><span>Другой</span></label>
+          <label class="choice"><input type="radio" name="crm" value="Пока нет"><span>Пока нет</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="field">
+        <legend class="label">Сколько у вас точек</legend>
+        <div class="choices" role="radiogroup" aria-label="Сколько у вас точек">
+          <label class="choice"><input type="radio" name="points" value="1" checked><span>1</span></label>
+          <label class="choice"><input type="radio" name="points" value="2-3"><span>2–3</span></label>
+          <label class="choice"><input type="radio" name="points" value="4+"><span>4 и больше</span></label>
+        </div>
+      </fieldset>
+
+      <button class="btn btn--primary btn--block mt8" type="submit">
+        Получить разбор в Telegram
+      </button>
+
+      <!-- [N] — срок ответа. Замените «24» на реальный. -->
+      <p class="form__note">
+        Разбор придёт в течение 24 часов. Бесплатно и без обязательств.
+      </p>
+
+      <!-- Экран благодарности -->
+      <div class="form__done" id="form-done" hidden>
+        <div class="form__done-mark" aria-hidden="true">✓</div>
+        <h3 class="h2 mt16">Заявка принята</h3>
+        <p class="lead mt16">
+          Собираем данные по вашей карточке — это не мгновенно.
+          Разбор пришлём в Telegram в течение 24 часов.
+        </p>
+        <a class="btn btn--ghost mt24" href="demo.html">Пока посмотрите демо продукта</a>
+      </div>
+    </form>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════ 4. ЧТО УМЕЕТ ══════════════════════════ -->
+<section class="sec reveal" id="features">
+  <div class="wrap">
+    <h2 class="h1 sec__title">Не советы «в общем», а конкретные действия на сегодня</h2>
+
+    <div class="cards-6 mt40">
+      <article class="card glass">
+        <h3 class="h3">Находит тех, кто вот-вот уйдёт</h3>
+        <p class="muted mt12">
+          Сегментирует клиентов по риску оттока: как часто и когда ходили,
+          откуда пришли, сколько тратили. Вы видите список тех, кого ещё можно вернуть.
+        </p>
+      </article>
+
+      <article class="card glass">
+        <h3 class="h3">Готовый план возврата, а не просто список</h3>
+        <p class="muted mt12">
+          Для каждого сегмента — что предложить и текст сообщения, уже написанный
+          под вашего клиента. Осталось отправить.
+        </p>
+      </article>
+
+      <article class="card glass">
+        <h3 class="h3">Акции на основе данных, а не наугад</h3>
+        <p class="muted mt12">
+          Подсказывает, какая скидка и кому реально вернёт клиента, а где вы
+          просто раздадите свою маржу.
+        </p>
+      </article>
+
+      <article class="card glass">
+        <h3 class="h3">Карты под контролем</h3>
+        <p class="muted mt12">
+          Персональные ответы на реальные отзывы (не отписки), напоминания собрать
+          отзывы у довольных клиентов и мониторинг вашей карточки в Я.Картах и 2ГИС.
+        </p>
+      </article>
+
+      <article class="card glass">
+        <h3 class="h3">Черновики постов в Telegram-канал</h3>
+        <p class="muted mt12">
+          Сервис предлагает, о чём и когда написать, и готовит текст.
+          Канал перестаёт простаивать.
+        </p>
+      </article>
+
+      <article class="card glass">
+        <h3 class="h3">Отчёты для собственника</h3>
+        <p class="muted mt12">
+          Хайлайты дня, сводка за неделю и месяц. Видно, что работает и куда
+          уходят деньги — без копания в таблицах.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ 5. ПОЧЕМУ YCLIENTS ══════════════════════════ -->
+<section class="sec reveal" id="yclients">
+  <div class="wrap yc glass">
+    <div class="yc__copy">
+      <h2 class="h1">Мы знаем не только кто ушёл — но и откуда он пришёл</h2>
+      <p class="lead mt24">
+        В YClients виден источник записи: реклама, карты, рекомендация, соцсети.
+        Поэтому мы не гадаем, а точно понимаем, каким каналом человека вернуть.
+      </p>
+      <p class="lead mt16">
+        Клиент пришёл с 2ГИС и пропал? Работаем с картами.<br>
+        Записался по рекомендации? Точечное сообщение сработает лучше любой рассылки.
+      </p>
+      <p class="muted mt24 yc__note">
+        Пока сервис заточен под салоны на YClients — там данные чище всего.
+        Другой CRM? <a class="link" href="#form">Оставьте заявку</a>, подскажем по вашему случаю.
+      </p>
+    </div>
+
+    <!-- Источник → канал возврата -->
+    <div class="sources">
+      <div class="source glass--sub">
+        <span class="source__from">Пришёл с 2ГИС</span>
+        <span class="source__arrow" aria-hidden="true">→</span>
+        <span class="source__to">Работаем с картами</span>
+      </div>
+      <div class="source glass--sub">
+        <span class="source__from">По рекомендации</span>
+        <span class="source__arrow" aria-hidden="true">→</span>
+        <span class="source__to">Личное сообщение</span>
+      </div>
+      <div class="source glass--sub">
+        <span class="source__from">Из рекламы</span>
+        <span class="source__arrow" aria-hidden="true">→</span>
+        <span class="source__to">Точечная акция</span>
+      </div>
+      <div class="source glass--sub">
+        <span class="source__from">Из соцсетей</span>
+        <span class="source__arrow" aria-hidden="true">→</span>
+        <span class="source__to">Пост в канал</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ 7. ДОВЕРИЕ ══════════════════════════ -->
+<section class="sec reveal" id="trust">
+  <div class="wrap">
+    <h2 class="h1 sec__title">Почему нам можно доверить данные и репутацию</h2>
+
+    <div class="cards-4 mt40">
+      <!-- [N] — количество салонов в пилоте. Замените «10» на реальное. -->
+      <article class="card card--accent contrast-card">
+        <h3 class="h3">Бесплатный пилот для первых 10 салонов</h3>
+        <p class="muted mt12">
+          Подключаем лично, доводим до результата. Платите, только когда
+          увидите эффект.
+        </p>
+      </article>
+
+      <article class="card glass">
+        <h3 class="h3">Мы не пишем фейковые отзывы</h3>
+        <p class="muted mt12">
+          Помогаем грамотно отвечать на настоящие и собирать реальные.
+          Это работает вдолгую — а накрутки рано или поздно убивают карточку.
+        </p>
+      </article>
+
+      <article class="card glass">
+        <h3 class="h3">Ваши данные остаются вашими</h3>
+        <p class="muted mt12">
+          Не передаём третьим лицам. Используем только чтобы готовить
+          рекомендации для вас.
+        </p>
+      </article>
+
+      <!-- Заглушка под первый кейс. Замените на реальный отзыв, когда появится. -->
+      <article class="card card--empty">
+        <p class="label">Скоро здесь</p>
+        <h3 class="h3 mt8">Первый кейс клиента</h3>
+        <p class="muted mt12">
+          Место под историю салона из пилота: сколько клиентов вернули
+          и на какую сумму.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ 8. FAQ ══════════════════════════ -->
+<section class="sec reveal" id="faq">
+  <div class="wrap faq-wrap">
+    <h2 class="h1 sec__title">Вопросы, которые задают чаще всего</h2>
+
+    <div class="faq mt40">
+      <details class="faq__item glass">
+        <summary class="faq__q">Сложно подключить?</summary>
+        <p class="faq__a">
+          Нет. YClients подключается за 5 минут по инструкции, разработчик не нужен.
+          Для карт достаточно названия салона.
+        </p>
+      </details>
+
+      <details class="faq__item glass">
+        <summary class="faq__q">У меня другой CRM</summary>
+        <p class="faq__a">
+          На старте сервис максимально заточен под YClients — там данные о клиентах
+          чище всего. Если у вас другой CRM, оставьте заявку: скажем честно,
+          сможем ли помочь уже сейчас.
+        </p>
+      </details>
+
+      <details class="faq__item glass">
+        <summary class="faq__q">Чем вы отличаетесь от рассылок внутри YClients?</summary>
+        <p class="faq__a">
+          Рассылка отправляет всем одно и то же. Мы говорим, кому именно, что именно
+          и почему — и добавляем к этому карты, отзывы и посты. Это не рассылка,
+          а маркетолог, который смотрит на все каналы сразу.
+        </p>
+      </details>
+
+      <details class="faq__item glass">
+        <summary class="faq__q">ИИ будет писать отзывы за меня?</summary>
+        <p class="faq__a">
+          Нет. Фейковые отзывы мы не создаём. ИИ пишет персональные ответы
+          на настоящие отзывы и помогает собрать реальные у довольных клиентов.
+        </p>
+      </details>
+
+      <details class="faq__item glass">
+        <summary class="faq__q">Что с моими данными?</summary>
+        <p class="faq__a">
+          Используем только для ваших рекомендаций. Третьим лицам не передаём.
+        </p>
+      </details>
+
+      <details class="faq__item glass">
+        <summary class="faq__q">А если не сработает?</summary>
+        <p class="faq__a">
+          Для первых салонов — бесплатный пилот. Не увидите пользы — просто
+          не продолжаете. Вы ничем не рискуете.
+        </p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ 9. ФИНАЛЬНЫЙ CTA ══════════════════════════ -->
+<section class="sec sec--final reveal" id="final">
+  <div class="wrap final glass">
+    <h2 class="h1">
+      Узнайте, сколько клиентов вы теряете —<br>
+      <span class="body-dim">пока это не заметил кто-то другой</span>
+    </h2>
+    <p class="lead mt24">
+      Бесплатный разбор карточки и первый отчёт по возвращаемости.
+      Оставьте Telegram — пришлём.
+    </p>
+
+    <!-- Упрощённая форма: только Telegram -->
+    <form class="final__form mt40" id="lead-form-short" novalidate>
+      <label class="sr-only" for="f-tg-short">Ваш Telegram</label>
+      <input class="input" type="text" id="f-tg-short" name="telegram"
+             placeholder="@nickname" required>
+      <button class="btn btn--primary" type="submit">Получить разбор в Telegram</button>
+      <p class="field__err" data-err-for="f-tg-short"></p>
+    </form>
+
+    <p class="form__note">Ответим в течение 24 часов. Бесплатно и без обязательств.</p>
+
+    <div class="form__done" id="form-done-short" hidden>
+      <div class="form__done-mark" aria-hidden="true">✓</div>
+      <p class="h3 mt16">Готово — ждите разбор в Telegram</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ══════════════════════════ ПОДВАЛ ══════════════════════════ -->
+<footer class="footer">
+  <div class="wrap row between center wrapflex g20">
+    <a class="logo" href="#top">
+      <span class="logo__mark" aria-hidden="true">М</span>
+      <span class="logo__text"><b>Маркетолог</b><span>ТЕХ</span></span>
+    </a>
+    <p class="muted">Сервис возврата клиентов для салонов красоты на YClients</p>
+    <a class="link" href="demo.html">Посмотреть демо →</a>
+  </div>
+</footer>
+
+<script src="assets/js/theme.js"></script>
+<script src="assets/js/landing.js"></script>
+</body>
+</html>

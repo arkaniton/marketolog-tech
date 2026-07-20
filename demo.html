@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Демо дашборда — МаркетологТЕХ</title>
+<meta name="description" content="Кликабельное демо дашборда: лента действий ИИ, возврат клиентов, карты и отзывы, отчёты и цель месяца.">
+<meta name="robots" content="noindex">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/demo.css">
+
+<!-- Тема применяется до отрисовки, иначе тёмная моргнёт белым на загрузке -->
+<script>
+(function(){try{if(localStorage.getItem('mt-theme')==='dark'){
+document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();
+</script>
+</head>
+<body class="demo-body">
+
+<div class="bg" aria-hidden="true">
+  <div class="bg__orb bg__orb--1"></div>
+  <div class="bg__orb bg__orb--2"></div>
+  <div class="bg__orb bg__orb--3"></div>
+</div>
+
+<!-- Честная плашка: это макет, а не продукт на реальных данных -->
+<div class="demo-strip">
+  <div class="demo-strip__in">
+    <span class="badge">
+      <span class="badge__dot" aria-hidden="true"></span>
+      Демо-режим · данные вымышленные
+    </span>
+    <div class="demo-strip__right">
+      <button class="theme-toggle" type="button" aria-label="Включить тёмную тему" aria-pressed="false">
+        <svg class="theme-toggle__moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+        <svg class="theme-toggle__sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.4v2.2M12 19.4v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.4 12h2.2M19.4 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6"/></svg>
+      </button>
+      <a class="demo-strip__back" href="index.html">← Вернуться на сайт</a>
+    </div>
+  </div>
+</div>
+
+<main class="app glass">
+
+  <!-- ══════════════════ Панель приложения ══════════════════ -->
+  <header class="app__bar">
+    <a class="logo" href="index.html" aria-label="МаркетологТЕХ">
+      <span class="logo__mark" aria-hidden="true">М</span>
+    </a>
+
+    <nav class="tabs" role="tablist" aria-label="Разделы дашборда">
+      <button class="pill pill--active" role="tab" data-tab="today"    aria-selected="true"  aria-controls="s-today">Сегодня</button>
+      <button class="pill"              role="tab" data-tab="clients"  aria-selected="false" aria-controls="s-clients">Клиенты</button>
+      <button class="pill"              role="tab" data-tab="maps"     aria-selected="false" aria-controls="s-maps">Карты и отзывы</button>
+      <button class="pill"              role="tab" data-tab="reports"  aria-selected="false" aria-controls="s-reports">Отчёты</button>
+      <button class="pill"              role="tab" data-tab="goal"     aria-selected="false" aria-controls="s-goal">Цель месяца</button>
+    </nav>
+
+    <div class="user">
+      <span class="user__av av-5" aria-hidden="true">А</span>
+      <span class="user__info">
+        <b>Анна Соколова</b>
+        <i>Салон «Ирис»</i>
+      </span>
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════════════════════════════════
+       ЭКРАН 1 — СЕГОДНЯ
+       ══════════════════════════════════════════════════════════ -->
+  <section class="screen is-active" id="s-today" role="tabpanel" aria-label="Сегодня">
+
+    <!-- Полоса пульса: заголовок + кольцо цели + 4 числа -->
+    <div class="pulse">
+      <div class="pulse__title">
+        <h1 class="display">Сегодня</h1>
+        <p class="label mt8">Вторник, 20 июля · сводка за ночь готова</p>
+      </div>
+
+      <div class="ring" role="img" aria-label="Цель месяца: 12 из 20 клиентов возвращено">
+        <svg viewBox="0 0 120 120" width="118" height="118">
+          <circle class="ring__track" cx="60" cy="60" r="52"></circle>
+          <circle class="ring__bar"   cx="60" cy="60" r="52"></circle>
+        </svg>
+        <span class="ring__label"><b>12</b><i>/20</i></span>
+      </div>
+
+      <div class="pulse__metrics">
+        <div class="kpi">
+          <p class="label">Выручка под риском</p>
+          <p class="metric">182 400<span class="metric__unit">₽</span></p>
+          <p class="kpi__sub">47 клиентов</p>
+        </div>
+
+        <div class="kpi">
+          <p class="label">Возвращено за месяц</p>
+          <p class="metric metric--accent">148 200<span class="metric__unit">₽</span></p>
+          <p class="kpi__sub">12 клиентов</p>
+        </div>
+
+        <div class="kpi">
+          <p class="label">Возвращаемость</p>
+          <p class="metric">68<span class="metric__unit">%</span></p>
+          <p class="kpi__sub kpi__sub--up">↑ 6 п.п. к июню</p>
+        </div>
+
+        <div class="kpi">
+          <p class="label">Отзывы без ответа</p>
+          <p class="metric">9<span class="metric__unit">шт</span></p>
+          <p class="kpi__sub">рейтинг 4,6</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Фильтры ленты -->
+    <div class="filters" role="group" aria-label="Фильтр ленты действий">
+      <button class="pill pill--active" data-filter="all">Все · 6</button>
+      <button class="pill" data-filter="return">Возврат</button>
+      <button class="pill" data-filter="review">Отзывы</button>
+      <button class="pill" data-filter="post">Telegram</button>
+      <button class="pill" data-filter="promo">Акции</button>
+      <button class="pill pill--icon" aria-label="Добавить фильтр">+</button>
+    </div>
+
+    <div class="cols">
+
+      <!-- ЛЕНТА ДЕЙСТВИЙ ИИ — звезда продукта -->
+      <div class="feed">
+
+        <!-- Приоритетная карточка: белая, для контраста -->
+        <article class="act act--top contrast-card" data-type="return">
+          <div class="act__head">
+            <div>
+              <span class="tag tag--on-contrast">Возврат клиента</span>
+              <h2 class="h3 mt12">Вернуть Марину К.</h2>
+            </div>
+            <span class="act__value">3 800 ₽<i>средний чек</i></span>
+          </div>
+
+          <!-- Связанные ноды: клиент → предложение → канал -->
+          <div class="nodes">
+            <div class="node">
+              <p class="label">Клиент</p>
+              <p class="node__val">Марина К.</p>
+              <p class="node__sub">не была 3 месяца</p>
+            </div>
+            <div class="node">
+              <p class="label">Предложение</p>
+              <p class="node__val">Окрашивание −15%</p>
+              <p class="node__sub">её обычная услуга</p>
+            </div>
+            <div class="node">
+              <p class="label">Канал</p>
+              <p class="node__val">WhatsApp</p>
+              <p class="node__sub">пришла с 2ГИС</p>
+            </div>
+          </div>
+
+          <p class="why">
+            <b>Почему:</b> ходила стабильно раз в 3 недели полгода, последний визит
+            14 апреля. Пропуск в 3 месяца для неё нетипичен — вероятность ухода 82%.
+          </p>
+
+          <div class="draft draft--on-contrast">
+            <p class="label">Готовый текст</p>
+            <p class="draft__text">
+              Марина, здравствуйте! Это Анна из «Ириса». Давно вас не видели —
+              соскучились 🙂 Ваш мастер Лена держит для вас окно в субботу,
+              и на окрашивание сделаем −15%. Записать?
+            </p>
+          </div>
+
+          <div class="act__actions">
+            <button class="btn btn--primary btn--sm">Отправить</button>
+            <button class="btn btn--ghost btn--sm btn--on-contrast">Изменить</button>
+            <button class="btn btn--ghost btn--sm btn--on-contrast">Пропустить</button>
+          </div>
+        </article>
+
+        <!-- Ответ на отзыв -->
+        <article class="act glass" data-type="review">
+          <div class="act__head">
+            <div>
+              <span class="tag">Ответить на отзыв</span>
+              <h2 class="h3 mt12">2ГИС · 3 звезды · вчера</h2>
+            </div>
+            <span class="act__stars" aria-label="3 из 5">★★★<i>★★</i></span>
+          </div>
+
+          <blockquote class="quote">
+            «Стрижка нормальная, но ждала мастера 25 минут, хотя записывалась
+            заранее. Осадок остался.»
+            <cite>— Ольга В.</cite>
+          </blockquote>
+
+          <p class="why">
+            <b>Почему:</b> отзыв висит без ответа 19 часов. Неотвеченные отзывы
+            ниже 4 звёзд сильнее всего тянут рейтинг карточки вниз.
+          </p>
+
+          <div class="draft">
+            <p class="label">Персональный ответ</p>
+            <p class="draft__text">
+              Ольга, спасибо, что написали — и извините за ожидание. 25 минут это
+              правда много. Разобрались: в тот день у мастера наложились записи,
+              мы поправили расписание. Если решите вернуться, напишите нам напрямую —
+              подберём удобное время и компенсируем ожидание уходом за волосами.
+            </p>
+          </div>
+
+          <div class="act__actions">
+            <button class="btn btn--primary btn--sm">Опубликовать</button>
+            <button class="btn btn--ghost btn--sm">Изменить</button>
+          </div>
+        </article>
+
+        <!-- Пост в Telegram -->
+        <article class="act glass" data-type="post">
+          <div class="act__head">
+            <div>
+              <span class="tag">Пост в Telegram</span>
+              <h2 class="h3 mt12">Канал молчит 9 дней</h2>
+            </div>
+            <span class="act__value">418<i>подписчиков</i></span>
+          </div>
+
+          <p class="why">
+            <b>Почему:</b> на этой неделе 14 свободных окон в четверг и пятницу.
+            Пост с живым поводом закрывает их лучше, чем скидка.
+          </p>
+
+          <div class="draft">
+            <p class="label">Черновик · опубликовать в четверг, 10:00</p>
+            <p class="draft__text">
+              Лето — время, когда волосы получают больше всего солнца и меньше всего
+              ухода 🌞<br><br>
+              На этой неделе у нас освободились окна в четверг и пятницу.
+              Приходите на уход за волосами — восстановим то, что забрало море и солнце.<br><br>
+              Записаться: по ссылке в описании или ответом на это сообщение.
+            </p>
+          </div>
+
+          <div class="act__actions">
+            <button class="btn btn--primary btn--sm">Опубликовать</button>
+            <button class="btn btn--ghost btn--sm">В календарь</button>
+          </div>
+        </article>
+
+        <!-- Акция -->
+        <article class="act glass" data-type="promo">
+          <div class="act__head">
+            <div>
+              <span class="tag">Запустить акцию</span>
+              <h2 class="h3 mt12">Сегмент «Были 1 раз и пропали»</h2>
+            </div>
+            <span class="act__value">31<i>клиент</i></span>
+          </div>
+
+          <div class="nodes">
+            <div class="node">
+              <p class="label">Сегмент</p>
+              <p class="node__val">31 клиент</p>
+              <p class="node__sub">1 визит, 4+ месяца назад</p>
+            </div>
+            <div class="node">
+              <p class="label">Предложение</p>
+              <p class="node__val">Второй визит −20%</p>
+              <p class="node__sub">действует 14 дней</p>
+            </div>
+            <div class="node">
+              <p class="label">Прогноз</p>
+              <p class="node__val">7–9 возвратов</p>
+              <p class="node__sub">≈ 26 000 ₽ выручки</p>
+            </div>
+          </div>
+
+          <p class="why">
+            <b>Почему:</b> у клиентов после первого визита конверсия во второй —
+            34%. Скидка 20% окупается с третьего возврата, глубже уходить смысла нет.
+          </p>
+
+          <div class="act__actions">
+            <button class="btn btn--primary btn--sm">Запустить</button>
+            <button class="btn btn--ghost btn--sm">Посмотреть список</button>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- ПРАВЫЙ РЕЙЛ -->
+      <aside class="rail">
+
+        <div class="panel glass">
+          <p class="label">Подключения</p>
+          <ul class="conns mt16">
+            <li><span class="dot dot--ok"></span> YClients <i>синхр. 04:12</i></li>
+            <li><span class="dot dot--ok"></span> Яндекс Карты <i>4,6 · 128 отзывов</i></li>
+            <li><span class="dot dot--ok"></span> 2ГИС <i>4,4 · 76 отзывов</i></li>
+            <li><span class="dot dot--warn"></span> Telegram-канал <i>нет прав на постинг</i></li>
+          </ul>
+          <button class="btn btn--ghost btn--sm btn--block mt16">Настроить</button>
+        </div>
+
+        <div class="panel glass">
+          <div class="row between center">
+            <p class="label">Активная акция</p>
+            <span class="tag tag--live">идёт</span>
+          </div>
+          <p class="h3 mt12">Возврат после паузы</p>
+          <p class="muted mt8">−15% на окрашивание · до 31 июля</p>
+          <div class="mini mt16">
+            <div><p class="label">Отправлено</p><p class="mini__v">64</p></div>
+            <div><p class="label">Вернулись</p><p class="mini__v mini__v--ok">12</p></div>
+            <div><p class="label">Выручка</p><p class="mini__v">148 200 ₽</p></div>
+          </div>
+        </div>
+
+        <div class="panel panel--accent">
+          <p class="label">Цель месяца</p>
+          <p class="h3 mt8">Вернуть 20 клиентов</p>
+          <div class="bar mt16"><span style="width:60%"></span></div>
+          <p class="muted mt12">12 из 20 · осталось 11 дней</p>
+        </div>
+
+        <!-- Хайлайты вчера -->
+        <div class="panel glass">
+          <p class="label">Вчера</p>
+          <ul class="hl mt16">
+            <li><b>2</b> клиента вернулись <i>· 7 400 ₽</i></li>
+            <li><b>3</b> отзыва отвечено</li>
+            <li><b>18</b> записей за день <i>· 61 300 ₽</i></li>
+            <li><b>4</b> новых клиента <i>· 3 с Я.Карт</i></li>
+          </ul>
+        </div>
+
+      </aside>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════
+       ЭКРАН 2 — КЛИЕНТЫ / ВОЗВРАТ
+       ══════════════════════════════════════════════════════════ -->
+  <section class="screen" id="s-clients" role="tabpanel" aria-label="Клиенты и возврат" hidden>
+
+    <div class="pulse pulse--slim">
+      <div class="pulse__title">
+        <h1 class="display">Клиенты</h1>
+        <p class="label mt8">Движок удержания · 412 активных клиентов</p>
+      </div>
+      <div class="pulse__metrics">
+        <div class="kpi">
+          <p class="label">Уходят</p>
+          <p class="metric metric--risk">18<span class="metric__unit">чел</span></p>
+          <p class="kpi__sub">89 300 ₽</p>
+        </div>
+        <div class="kpi">
+          <p class="label">Под риском</p>
+          <p class="metric">29<span class="metric__unit">чел</span></p>
+          <p class="kpi__sub">93 100 ₽</p>
+        </div>
+        <div class="kpi">
+          <p class="label">Вернулись</p>
+          <p class="metric metric--accent">12<span class="metric__unit">чел</span></p>
+          <p class="kpi__sub">148 200 ₽</p>
+        </div>
+        <div class="kpi">
+          <p class="label">Средний интервал</p>
+          <p class="metric">31<span class="metric__unit">дн</span></p>
+          <p class="kpi__sub kpi__sub--up">↓ 4 дня — хорошо</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="filters">
+      <button class="pill pill--active">Уходят · 18</button>
+      <button class="pill">Под риском · 29</button>
+      <button class="pill">Вернулись · 12</button>
+      <button class="pill">Все · 412</button>
+      <button class="pill pill--icon" aria-label="Добавить фильтр">+</button>
+    </div>
+
+    <div class="cols cols--wide">
+
+      <div class="panel glass table-panel">
+        <div class="thead">
+          <span>Клиент</span>
+          <span>Последний визит</span>
+          <span>Источник</span>
+          <span>Потрачено</span>
+          <span>Риск</span>
+          <span></span>
+        </div>
+
+        <div class="trow">
+          <span class="tcell tcell--name"><i class="avatars__item av-1">М</i> Марина К.</span>
+          <span class="tcell">14 апреля <b>· 97 дней</b></span>
+          <span class="tcell">2ГИС</span>
+          <span class="tcell">45 600 ₽</span>
+          <span class="tcell"><span class="risk risk--hi">82%</span></span>
+          <span class="tcell"><button class="btn btn--contrast btn--sm">Вернуть</button></span>
+        </div>
+
+        <div class="trow">
+          <span class="tcell tcell--name"><i class="avatars__item av-2">Е</i> Елена П.</span>
+          <span class="tcell">2 мая <b>· 79 дней</b></span>
+          <span class="tcell">Рекомендация</span>
+          <span class="tcell">61 200 ₽</span>
+          <span class="tcell"><span class="risk risk--hi">76%</span></span>
+          <span class="tcell"><button class="btn btn--contrast btn--sm">Вернуть</button></span>
+        </div>
+
+        <div class="trow">
+          <span class="tcell tcell--name"><i class="avatars__item av-3">Д</i> Дарья С.</span>
+          <span class="tcell">19 мая <b>· 62 дня</b></span>
+          <span class="tcell">Я.Карты</span>
+          <span class="tcell">28 400 ₽</span>
+          <span class="tcell"><span class="risk risk--mid">64%</span></span>
+          <span class="tcell"><button class="btn btn--ghost btn--sm">Вернуть</button></span>
+        </div>
+
+        <div class="trow">
+          <span class="tcell tcell--name"><i class="avatars__item av-4">О</i> Ольга В.</span>
+          <span class="tcell">28 мая <b>· 53 дня</b></span>
+          <span class="tcell">2ГИС</span>
+          <span class="tcell">19 800 ₽</span>
+          <span class="tcell"><span class="risk risk--mid">58%</span></span>
+          <span class="tcell"><button class="btn btn--ghost btn--sm">Вернуть</button></span>
+        </div>
+
+        <div class="trow">
+          <span class="tcell tcell--name"><i class="avatars__item av-5">И</i> Ирина Л.</span>
+          <span class="tcell">3 июня <b>· 47 дней</b></span>
+          <span class="tcell">Instagram</span>
+          <span class="tcell">34 100 ₽</span>
+          <span class="tcell"><span class="risk risk--mid">55%</span></span>
+          <span class="tcell"><button class="btn btn--ghost btn--sm">Вернуть</button></span>
+        </div>
+
+        <div class="trow">
+          <span class="tcell tcell--name"><i class="avatars__item av-1">Н</i> Наталья Ж.</span>
+          <span class="tcell">11 июня <b>· 39 дней</b></span>
+          <span class="tcell">Реклама</span>
+          <span class="tcell">12 300 ₽</span>
+          <span class="tcell"><span class="risk risk--lo">41%</span></span>
+          <span class="tcell"><button class="btn btn--ghost btn--sm">Вернуть</button></span>
+        </div>
+
+        <p class="table-more">и ещё 12 клиентов в сегменте</p>
+      </div>
+
+      <aside class="rail">
+        <!-- Карточка клиента -->
+        <div class="panel glass">
+          <div class="row center g12">
+            <span class="avatars__item av-1" style="width:44px;height:44px;font-size:.95rem">М</span>
+            <div>
+              <p class="h3">Марина К.</p>
+              <p class="label">клиент с марта 2024</p>
+            </div>
+          </div>
+
+          <div class="mini mini--2 mt24">
+            <div><p class="label">Визитов</p><p class="mini__v">12</p></div>
+            <div><p class="label">Потрачено</p><p class="mini__v">45 600 ₽</p></div>
+            <div><p class="label">Средний чек</p><p class="mini__v">3 800 ₽</p></div>
+            <div><p class="label">Источник</p><p class="mini__v">2ГИС</p></div>
+          </div>
+
+          <p class="label mt24">История визитов</p>
+          <div class="spark mt12" role="img" aria-label="Регулярные визиты каждые 3 недели, затем пауза 3 месяца">
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span>
+            <span class="spark__gap"></span>
+          </div>
+          <p class="muted mt12">Ходила раз в 3 недели. Пауза с 14 апреля.</p>
+
+          <div class="why why--panel mt16">
+            <b>Почему помечена:</b> интервал вырос в 4,6 раза от её нормы.
+            Жалоб и отменённых записей не было — это тихий уход.
+          </div>
+
+          <button class="btn btn--primary btn--sm btn--block mt16">Вернуть в один клик</button>
+        </div>
+
+        <!-- Воронка возврата -->
+        <div class="panel glass">
+          <p class="label">Воронка возврата · июль</p>
+          <ul class="funnel mt16">
+            <li><span style="width:100%">Помечено ИИ</span><b>64</b></li>
+            <li><span style="width:84%">Отправлено</span><b>54</b></li>
+            <li><span style="width:47%">Ответили</span><b>30</b></li>
+            <li><span style="width:28%">Записались</span><b>18</b></li>
+            <li><span style="width:19%" class="funnel--ok">Дошли</span><b>12</b></li>
+          </ul>
+          <p class="muted mt16">Конверсия в возврат — <b>19%</b></p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════
+       ЭКРАН 3 — КАРТЫ И ОТЗЫВЫ
+       ══════════════════════════════════════════════════════════ -->
+  <section class="screen" id="s-maps" role="tabpanel" aria-label="Карты и отзывы" hidden>
+
+    <div class="pulse pulse--slim">
+      <div class="pulse__title">
+        <h1 class="display">Карты и отзывы</h1>
+        <p class="label mt8">Я.Карты и 2ГИС · обновлено сегодня в 04:12</p>
+      </div>
+      <div class="pulse__metrics">
+        <div class="kpi">
+          <p class="label">Яндекс Карты</p>
+          <p class="metric">4,6<span class="metric__unit">★</span></p>
+          <p class="kpi__sub">128 отзывов</p>
+        </div>
+        <div class="kpi">
+          <p class="label">2ГИС</p>
+          <p class="metric">4,4<span class="metric__unit">★</span></p>
+          <p class="kpi__sub kpi__sub--down">↓ 0,2 за месяц</p>
+        </div>
+        <div class="kpi">
+          <p class="label">Без ответа</p>
+          <p class="metric metric--risk">9<span class="metric__unit">шт</span></p>
+          <p class="kpi__sub">старому — 19 часов</p>
+        </div>
+        <div class="kpi">
+          <p class="label">Отвечено за месяц</p>
+          <p class="metric metric--accent">87<span class="metric__unit">%</span></p>
+          <p class="kpi__sub kpi__sub--up">↑ 31 п.п.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="filters">
+      <button class="pill pill--active">Без ответа · 9</button>
+      <button class="pill">Все отзывы · 204</button>
+      <button class="pill">Я.Карты</button>
+      <button class="pill">2ГИС</button>
+      <button class="pill pill--icon" aria-label="Добавить фильтр">+</button>
+    </div>
+
+    <div class="cols">
+      <div class="feed">
+
+        <article class="act act--top contrast-card">
+          <div class="act__head">
+            <div>
+              <span class="tag tag--on-contrast">2ГИС · без ответа 19 ч</span>
+              <h2 class="h3 mt12">Ольга В. · 3 звезды</h2>
+            </div>
+            <span class="act__stars act__stars--on-contrast">★★★<i>★★</i></span>
+          </div>
+
+          <blockquote class="quote quote--on-contrast">
+            «Стрижка нормальная, но ждала мастера 25 минут, хотя записывалась
+            заранее. Осадок остался.»
+          </blockquote>
+
+          <div class="draft draft--on-contrast">
+            <p class="label">Персональный ответ, не отписка</p>
+            <p class="draft__text">
+              Ольга, спасибо, что написали — и извините за ожидание. 25 минут это
+              правда много. Разобрались: в тот день у мастера наложились записи,
+              мы поправили расписание. Если решите вернуться, напишите нам напрямую —
+              подберём удобное время и компенсируем ожидание уходом за волосами.
+            </p>
+          </div>
+
+          <div class="act__actions">
+            <button class="btn btn--primary btn--sm">Опубликовать</button>
+            <button class="btn btn--ghost btn--sm btn--on-contrast">Изменить</button>
+          </div>
+        </article>
+
+        <article class="act glass">
+          <div class="act__head">
+            <div>
+              <span class="tag">Я.Карты · без ответа 2 дня</span>
+              <h2 class="h3 mt12">Светлана Р. · 5 звёзд</h2>
+            </div>
+            <span class="act__stars">★★★★★</span>
+          </div>
+
+          <blockquote class="quote">
+            «Хожу к Лене уже год, всегда идеально. Спасибо!»
+          </blockquote>
+
+          <p class="why">
+            <b>Почему важно:</b> на хорошие отзывы отвечают реже, чем на плохие.
+            А это дешёвый способ показать живой салон и удержать лояльного клиента.
+          </p>
+
+          <div class="draft">
+            <p class="draft__text">
+              Светлана, спасибо! Передали Лене — она расплылась в улыбке 🙂
+              Ждём вас снова.
+            </p>
+          </div>
+
+          <div class="act__actions">
+            <button class="btn btn--primary btn--sm">Опубликовать</button>
+            <button class="btn btn--ghost btn--sm">Изменить</button>
+          </div>
+        </article>
+
+        <article class="act glass">
+          <div class="act__head">
+            <div>
+              <span class="tag">Собрать отзывы</span>
+              <h2 class="h3 mt12">14 довольных клиентов на этой неделе</h2>
+            </div>
+            <span class="act__value">14<i>человек</i></span>
+          </div>
+
+          <p class="why">
+            <b>Почему:</b> пришли повторно и оставили чаевые, но отзыв не писали.
+            Это самая тёплая аудитория для просьбы — и единственный честный способ
+            поднять рейтинг.
+          </p>
+
+          <div class="draft">
+            <p class="label">Сообщение через 2 часа после визита</p>
+            <p class="draft__text">
+              Спасибо, что были у нас сегодня! Если всё понравилось — буквально
+              пара слов на Яндекс.Картах очень нам помогут: [ссылка]
+            </p>
+          </div>
+
+          <div class="act__actions">
+            <button class="btn btn--primary btn--sm">Отправить 14 клиентам</button>
+            <button class="btn btn--ghost btn--sm">Посмотреть список</button>
+          </div>
+        </article>
+
+      </div>
+
+      <aside class="rail">
+        <div class="panel glass">
+          <p class="label">Конкуренты рядом · 500 м</p>
+          <ul class="comp mt16">
+            <li><span>Салон «Ирис»</span><b class="comp--you">4,6</b></li>
+            <li><span>Beauty Room</span><b>4,8</b></li>
+            <li><span>Студия «Локон»</span><b>4,5</b></li>
+            <li><span>Парикмахерская №1</span><b>4,1</b></li>
+          </ul>
+          <p class="muted mt16">
+            Beauty Room отвечает на 100% отзывов. Вы — на 87%.
+          </p>
+        </div>
+
+        <div class="panel glass">
+          <p class="label">Динамика рейтинга</p>
+          <div class="chart mt16" role="img" aria-label="Рейтинг рос с 4,2 до 4,6 за полгода">
+            <span style="height:42%"></span>
+            <span style="height:48%"></span>
+            <span style="height:55%"></span>
+            <span style="height:52%"></span>
+            <span style="height:68%"></span>
+            <span style="height:78%"></span>
+            <span style="height:88%" class="chart--now"></span>
+          </div>
+          <div class="row between mt12">
+            <span class="label">февр.</span>
+            <span class="label">июль</span>
+          </div>
+          <p class="muted mt16">4,2 → <b>4,6</b> с начала работы сервиса</p>
+        </div>
+
+        <div class="panel panel--accent">
+          <p class="label">Что тянет вниз</p>
+          <p class="h3 mt8">Ожидание мастера</p>
+          <p class="muted mt12">
+            Упоминается в 6 из 9 отзывов ниже 4 звёзд за квартал.
+            Это не про качество услуг — это про расписание.
+          </p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════
+       ЭКРАН 4 — ОТЧЁТЫ
+       ══════════════════════════════════════════════════════════ -->
+  <section class="screen" id="s-reports" role="tabpanel" aria-label="Отчёты" hidden>
+
+    <div class="pulse pulse--slim">
+      <div class="pulse__title">
+        <h1 class="display">Отчёт</h1>
+        <p class="label mt8">Июль 2026 · 1–20 июля</p>
+      </div>
+      <div class="pulse__metrics">
+        <div class="kpi">
+          <p class="label">Возвращённая выручка</p>
+          <p class="metric metric--accent">148 200<span class="metric__unit">₽</span></p>
+          <p class="kpi__sub kpi__sub--up">↑ 41% к июню</p>
+        </div>
+        <div class="kpi">
+          <p class="label">Выручка всего</p>
+          <p class="metric">1 042 700<span class="metric__unit">₽</span></p>
+          <p class="kpi__sub kpi__sub--up">↑ 12% к июню</p>
+        </div>
+        <div class="kpi">
+          <p class="label">Возвращаемость</p>
+          <p class="metric">68<span class="metric__unit">%</span></p>
+          <p class="kpi__sub kpi__sub--up">↑ 6 п.п.</p>
+        </div>
+        <div class="kpi">
+          <p class="label">Стоимость сервиса</p>
+          <p class="metric">12 000<span class="metric__unit">₽</span></p>
+          <p class="kpi__sub">окупился в 12,4 раза</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="filters">
+      <button class="pill">День</button>
+      <button class="pill">Неделя</button>
+      <button class="pill pill--active">Месяц</button>
+      <button class="pill pill--right">Выгрузить PDF</button>
+    </div>
+
+    <div class="cols cols--wide">
+
+      <div class="stack g20">
+        <div class="panel glass">
+          <p class="label">Возвращённая выручка по неделям</p>
+          <div class="chart chart--tall mt24" role="img" aria-label="Рост возвращённой выручки от 18 до 52 тысяч рублей по неделям">
+            <span style="height:34%"><i>18 400 ₽</i></span>
+            <span style="height:58%"><i>31 200 ₽</i></span>
+            <span style="height:86%"><i>46 100 ₽</i></span>
+            <span style="height:97%" class="chart--now"><i>52 500 ₽</i></span>
+          </div>
+          <div class="chart-legend mt12">
+            <span class="label">1–7 июля</span>
+            <span class="label">8–14</span>
+            <span class="label">15–20</span>
+            <span class="label">прогноз</span>
+          </div>
+        </div>
+
+        <div class="panel glass">
+          <p class="label">Что сработало</p>
+          <ul class="works mt16">
+            <li>
+              <span class="works__bar" style="width:100%"></span>
+              <b>Личные сообщения ушедшим</b>
+              <i>8 возвратов · 94 800 ₽ · стоимость 0 ₽</i>
+            </li>
+            <li>
+              <span class="works__bar" style="width:46%"></span>
+              <b>Акция «второй визит −20%»</b>
+              <i>3 возврата · 34 200 ₽ · скидка съела 8 600 ₽</i>
+            </li>
+            <li>
+              <span class="works__bar" style="width:21%"></span>
+              <b>Посты в Telegram</b>
+              <i>1 возврат · 19 200 ₽ · 4 новых записи</i>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <aside class="rail">
+        <div class="panel panel--accent">
+          <p class="label">Северная звезда</p>
+          <p class="metric metric--accent mt8">148 200<span class="metric__unit">₽</span></p>
+          <p class="muted mt12">
+            Деньги от клиентов, которых сервис пометил как уходящих —
+            и которых вы вернули.
+          </p>
+          <p class="roi mt16">Сервис стоит 12 000 ₽ · вернул 148 200 ₽</p>
+        </div>
+
+        <div class="panel glass">
+          <p class="label">Куда утекают деньги</p>
+          <ul class="leaks mt16">
+            <li>
+              <b>Скидки без эффекта</b>
+              <i>Сегмент «ходят часто» получил −15% и вернулся бы и так. Потеря маржи ≈ 11 400 ₽.</i>
+            </li>
+            <li>
+              <b>18 клиентов из «уходят» не обработаны</b>
+              <i>Под риском 89 300 ₽. Каждая неделя простоя снижает шанс возврата на 9%.</i>
+            </li>
+            <li>
+              <b>Telegram не постит</b>
+              <i>Нет прав на публикацию — 3 готовых поста ждут с 11 июля.</i>
+            </li>
+          </ul>
+        </div>
+
+        <div class="panel glass">
+          <p class="label">Источники новых клиентов</p>
+          <ul class="comp mt16">
+            <li><span>Яндекс Карты</span><b>34%</b></li>
+            <li><span>2ГИС</span><b>27%</b></li>
+            <li><span>Рекомендации</span><b>21%</b></li>
+            <li><span>Instagram</span><b>12%</b></li>
+            <li><span>Реклама</span><b>6%</b></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════
+       ЭКРАН 5 — ЦЕЛЬ МЕСЯЦА
+       ══════════════════════════════════════════════════════════ -->
+  <section class="screen" id="s-goal" role="tabpanel" aria-label="Цель месяца" hidden>
+
+    <div class="goal">
+      <div class="goal__main glass">
+        <p class="label">Цель месяца · июль</p>
+        <h1 class="h1 mt8">Вернуть 20 клиентов</h1>
+
+        <div class="goal__ring">
+          <div class="ring ring--xl" role="img" aria-label="12 из 20 клиентов возвращено, 60 процентов">
+            <svg viewBox="0 0 120 120" width="200" height="200">
+              <circle class="ring__track" cx="60" cy="60" r="52"></circle>
+              <circle class="ring__bar"   cx="60" cy="60" r="52"></circle>
+            </svg>
+            <span class="ring__label"><b>12</b><i>/20</i></span>
+          </div>
+
+          <div class="goal__side">
+            <div>
+              <p class="label">Возвращено</p>
+              <p class="metric metric--accent">148 200<span class="metric__unit">₽</span></p>
+            </div>
+            <div class="mt24">
+              <p class="label">Ещё на столе</p>
+              <p class="metric">163 800<span class="metric__unit">₽</span></p>
+              <p class="kpi__sub">35 клиентов под риском · 11 дней до конца месяца</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bar bar--lg mt24"><span style="width:60%"></span></div>
+        <p class="muted mt12">
+          Возвращено <b>148 200 ₽</b> из <b>312 000 ₽</b> потенциальных.
+          Темп выше июньского — тогда к 20-му числу было 7 клиентов.
+        </p>
+      </div>
+
+      <aside class="rail">
+        <div class="panel glass">
+          <p class="label">Вехи</p>
+          <ul class="miles mt16">
+            <li class="is-done"><b>Первые 10 возвращённых</b><i>достигнуто 16 июля</i></li>
+            <li class="is-done"><b>Первый месяц с ростом возвращаемости</b><i>июнь: +4 п.п.</i></li>
+            <li class="is-done"><b>100 000 ₽ возвращённой выручки</b><i>достигнуто 18 июля</i></li>
+            <li><b>20 возвращённых за месяц</b><i>осталось 8 клиентов</i></li>
+            <li><b>Возвращаемость 75%</b><i>сейчас 68%</i></li>
+          </ul>
+        </div>
+
+        <div class="panel panel--accent">
+          <p class="label">Чтобы закрыть цель</p>
+          <p class="h3 mt8">Обработать 18 клиентов из «уходят»</p>
+          <p class="muted mt12">
+            При текущей конверсии 19% это даст ещё 3–4 возврата.
+            Плюс акция на сегмент «были 1 раз» — ещё 7–9.
+          </p>
+          <button class="btn btn--primary btn--sm btn--block mt16" data-goto="today">
+            Перейти к действиям
+          </button>
+        </div>
+
+        <div class="panel glass">
+          <p class="label">Прошлые месяцы</p>
+          <ul class="comp mt16">
+            <li><span>Июнь</span><b>14 / 15</b></li>
+            <li><span>Май</span><b>9 / 12</b></li>
+            <li><span>Апрель</span><b>6 / 10</b></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+</main>
+
+<!-- Хвост: возврат в воронку -->
+<section class="demo-cta">
+  <div class="wrap tc">
+    <h2 class="h2">Хотите такой же экран по своему салону?</h2>
+    <p class="lead mt16" style="margin-inline:auto">
+      Начнём с бесплатного разбора карточки в Я.Картах и 2ГИС.
+      Пришлём в Telegram в течение 24 часов.
+    </p>
+    <a class="btn btn--primary mt24" href="index.html#form">Получить разбор в Telegram</a>
+  </div>
+</section>
+
+<script src="assets/js/theme.js"></script>
+<script src="assets/js/demo.js"></script>
+</body>
+</html>
