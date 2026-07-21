@@ -197,6 +197,36 @@
       running = false;
     }
 
+    function fill(data) {
+      slots.kind.textContent = data.kind;
+      slots.title.textContent = data.title;
+      slots.why.textContent = data.why;
+      slots.text.textContent = data.text;
+      if (slots.cta) slots.cta.textContent = data.cta;
+    }
+
+    /* Высота карточки фиксируется по самому высокому из трёх состояний.
+
+       Без этого страница дёргалась: текст печатается с нуля, у карточек
+       разной длины обоснование и сообщение, и карточка то росла, то
+       сжималась на пару десятков пикселей. Браузер компенсировал это
+       прокруткой (scroll anchoring), и страница мелко ползала под
+       курсором. Меряем вживую, потому что высота зависит от ширины
+       колонки и от того, какие шрифты успели загрузиться. */
+    function lockHeight() {
+      var current = HERO_CARDS[index];
+      var tallest = 0;
+
+      card.style.minHeight = '';
+      HERO_CARDS.forEach(function (data) {
+        fill(data);
+        tallest = Math.max(tallest, card.offsetHeight);
+      });
+
+      card.style.minHeight = tallest + 'px';
+      fill(current);
+    }
+
     function type(full, whenDone) {
       var i = 0;
       slots.text.textContent = '';
@@ -214,11 +244,7 @@
 
     function show(next) {
       var data = HERO_CARDS[next];
-      slots.kind.textContent = data.kind;
-      slots.title.textContent = data.title;
-      slots.why.textContent = data.why;
-      if (slots.cta) slots.cta.textContent = data.cta;
-
+      fill(data);
       card.classList.remove('is-swapping');
 
       type(data.text, function () {
@@ -237,6 +263,25 @@
       if (should && !running) { running = true; show(index); }
       else if (!should && running) { stop(); }
     }
+
+    lockHeight();
+
+    // Шрифты приезжают асинхронно и меняют высоту текста — перемеряем
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(lockHeight);
+    }
+
+    // Ширина колонки изменилась — прежняя высота больше не годится
+    var resizeTimer = null;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () {
+        var wasRunning = running;
+        stop();
+        lockHeight();
+        if (wasRunning) { running = true; show(index); }
+      }, 200);
+    });
 
     // Крутим только пока карточка в кадре и вкладка активна
     new IntersectionObserver(function (entries) {

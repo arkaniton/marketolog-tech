@@ -21,6 +21,17 @@
 <script>
 (function(){try{if(localStorage.getItem('mt-theme')==='dark'){
 document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();
+
+/* Страница всегда открывается сверху.
+   Хеш в адресе (…/#form оставался после клика по «Проверить салон»)
+   заставлял браузер при каждом открытии ссылки утаскивать к форме,
+   да ещё и с плавной прокруткой — выглядело как самопроизвольная перемотка.
+   Снимаем хеш до разбора body, иначе прыжок успеет произойти.
+   Нужны прямые ссылки на секцию — уберите этот блок. */
+(function(){try{
+  if(history.scrollRestoration) history.scrollRestoration='manual';
+  if(location.hash) history.replaceState(null,'',location.pathname+location.search);
+}catch(e){}})();
 </script>
 </head>
 <body>

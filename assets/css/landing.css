@@ -539,10 +539,12 @@ main { display: flex; flex-direction: column; }
   border: 1px solid var(--stroke-soft);
   font-size: 0.9rem;
   line-height: 1.55;
-  /* Держим высоту под самый длинный текст: карточки сменяют друг друга,
-     и без этого макет дёргался бы на каждой смене */
-  min-height: 6.5em;
 }
+
+/* Высоту карточки задаёт motion.js — по самому высокому из состояний.
+   Здесь только запрет браузеру подкручивать страницу, если высота всё же
+   дрогнет: без этого прокрутка мелко ползала во время печати. */
+.hero__preview { overflow-anchor: none; }
 
 .hero__task { transition: opacity 0.3s var(--ease); }
 .hero__task.is-swapping { opacity: 0.35; }

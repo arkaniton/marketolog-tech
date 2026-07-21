@@ -41,6 +41,27 @@
   }
 
   /* ------------------------------------------------------------------
+     Переходы по секциям
+
+     Прокручиваем сами и не даём браузеру записать хеш в адрес: иначе
+     после клика по «Проверить салон» URL превращался в …/#form, и при
+     следующем открытии этой ссылки страница сразу уезжала к форме.
+     ------------------------------------------------------------------ */
+
+  document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+    link.addEventListener('click', function (event) {
+      var id = link.getAttribute('href').slice(1);
+      if (!id) return;
+
+      var target = document.getElementById(id);
+      if (!target) return;
+
+      event.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  /* ------------------------------------------------------------------
      Валидация
      ------------------------------------------------------------------ */
 
