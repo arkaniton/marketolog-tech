@@ -280,19 +280,21 @@
   margin-bottom: 20px;
 }
 
-/* Линия проходит за нодами и видна только в зазорах между ними —
-   поэтому она акцентная и в 2px, иначе там нечего разглядывать */
-.nodes::before {
+/* Соединители рисуем отрезками в зазорах между нодами.
+   Раньше это была одна линия под всеми нодами, но фон ноды прозрачен
+   на 96% — линия просвечивала сквозь карточки и перечёркивала текст.
+   Отрезок в зазоре пересечь содержимое не может в принципе. */
+.node:not(:last-child)::after {
   content: '';
   position: absolute;
   top: 50%;
-  left: 16%;
-  right: 16%;
+  right: -12px;           /* ширина gap у .nodes */
+  width: 12px;
   height: 2px;
+  margin-top: -1px;
   border-radius: 2px;
-  background: linear-gradient(90deg,
-    transparent, var(--accent) 25%, var(--accent) 75%, transparent);
-  opacity: 0.55;
+  background: var(--accent);
+  opacity: 0.5;
 }
 
 .node {
@@ -831,7 +833,7 @@
   .goal__main { padding: 24px; }
   .goal__ring { gap: 28px; }
   .nodes { grid-template-columns: 1fr; }
-  .nodes::before { display: none; }
+  .node:not(:last-child)::after { display: none; }
   .act__head { flex-direction: column; gap: 12px; }
   .act__value { text-align: left; }
   .mini { grid-template-columns: 1fr 1fr; }
@@ -905,12 +907,12 @@
 .motion-on .works.is-in li:nth-child(3) .works__bar { transition-delay: 0.2s; }
 
 /* Связанные ноды: линия тянется, карточки проявляются следом */
-.motion-on .nodes::before {
+.motion-on .node:not(:last-child)::after {
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 0.7s var(--ease);
+  transition: transform 0.45s var(--ease);
 }
-.motion-on .nodes.is-in::before { transform: scaleX(1); }
+.motion-on .nodes.is-in .node:not(:last-child)::after { transform: scaleX(1); }
 
 .motion-on .node {
   opacity: 0;

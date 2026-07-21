@@ -156,18 +156,19 @@ main { display: flex; flex-direction: column; }
   position: relative;
 }
 
-/* Линия, связывающая шаги. Проходит за карточками и видна только
-   в зазорах, поэтому 2px и акцентным цветом — тонкая серая там терялась. */
-.steps::before {
+/* Соединители между шагами — отрезками в зазорах, на уровне точки шага.
+   Сплошная линия под карточками не годится: стекло полупрозрачное,
+   и она просвечивала сквозь них, перечёркивая текст. */
+.step:not(:last-child)::after {
   content: '';
   position: absolute;
   top: 30px;
-  left: 12%;
-  right: 12%;
+  right: calc(var(--gap) * -1);
+  width: var(--gap);
   height: 2px;
+  margin-top: -1px;
   border-radius: 2px;
-  background: linear-gradient(90deg,
-    transparent, var(--accent) 20%, var(--accent) 80%, transparent);
+  background: var(--accent);
   opacity: 0.5;
 }
 
@@ -492,7 +493,7 @@ main { display: flex; flex-direction: column; }
   .sec__title { max-width: none; }
   .cards-3, .cards-6 { grid-template-columns: 1fr 1fr; }
   .steps { grid-template-columns: 1fr; }
-  .steps::before { display: none; }
+  .step:not(:last-child)::after { display: none; }
   .form-wrap, .yc { grid-template-columns: 1fr; gap: 40px; padding: 40px; }
   .topbar__nav { display: none; }
 }
@@ -521,12 +522,13 @@ main { display: flex; flex-direction: column; }
    ========================================================================== */
 
 /* Линия, связывающая три шага, прочерчивается слева направо */
-.motion-on .steps::before {
+.motion-on .step:not(:last-child)::after {
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 0.9s var(--ease);
+  transition: transform 0.45s var(--ease);
 }
-.motion-on .steps.is-in::before { transform: scaleX(1); }
+.motion-on .steps.is-in .step:not(:last-child)::after { transform: scaleX(1); }
+.motion-on .steps.is-in .step:nth-child(2)::after { transition-delay: 0.12s; }
 
 /* --- Карточка действия в hero --- */
 
