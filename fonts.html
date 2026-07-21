@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Примерочная шрифтов для цифр — МаркетологТЕХ</title>
+<meta name="robots" content="noindex">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+
+<!-- Кандидаты. Все с лицензией OFL — можно в коммерческом проекте. -->
+<link href="https://fonts.googleapis.com/css2?family=Doto:ROND,wght@0..100,100..900&family=Handjet:ELGR,ELSH,wght@1..2,0..16,100..900&family=Sixtyfour&family=Workbench&family=Micro+5&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="assets/css/base.css">
+<script>
+(function(){try{if(localStorage.getItem('mt-theme')==='dark'){
+document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();
+</script>
+
+<style>
+  body { padding: 0 0 80px; }
+  .page { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  .head { padding: 28px 0 40px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .head__back { margin-left: auto; font-size: .88rem; color: var(--text-dim); }
+  .head__back:hover { color: var(--text); }
+
+  .note {
+    padding: 20px 24px;
+    border-radius: var(--r-card);
+    border-left: 3px solid var(--warn-dot);
+    background: var(--sub-surface);
+    font-size: .92rem;
+    line-height: 1.6;
+    color: var(--text-dim);
+    margin-bottom: 40px;
+  }
+  .note b { color: var(--text); }
+
+  .card { padding: 30px; border-radius: var(--r-panel); margin-bottom: 20px; }
+
+  .card__head {
+    display: flex; align-items: baseline; gap: 12px;
+    flex-wrap: wrap; margin-bottom: 22px;
+  }
+  .card__name {
+    font-family: 'Manrope', sans-serif; font-weight: 800;
+    font-size: 1.15rem; letter-spacing: -.02em;
+  }
+  .card__meta { font-size: .8rem; color: var(--text-faint); }
+  .card__meta b { color: var(--good); font-weight: 600; }
+
+  /* Ряд метрик — как в полосе пульса дашборда */
+  .row-kpi {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 24px;
+    padding: 22px 0 6px;
+  }
+  .kpi__label { font-size: .76rem; color: var(--text-faint); margin-bottom: 6px; }
+
+  /* Цифры берут шрифт-кандидат, подписи и единицы остаются в Inter */
+  .num {
+    display: flex; align-items: flex-start; gap: 3px;
+    font-size: 2.6rem; line-height: .95;
+    letter-spacing: -.02em; white-space: nowrap;
+  }
+  .num u { font-style: normal; text-decoration: none; }
+  .num i {
+    font-family: 'Inter', sans-serif; font-style: normal;
+    font-size: .38em; font-weight: 700; margin-top: .16em;
+    color: var(--text-dim); letter-spacing: 0;
+  }
+  .num--accent { color: var(--accent-hi); }
+
+  /* Шрифты кандидатов */
+  .f-manrope .num u { font-family: 'Manrope', sans-serif; font-weight: 800; letter-spacing: -.045em; }
+  .f-doto    .num u { font-family: 'Doto', monospace; font-weight: 700; }
+  .f-handjet .num u { font-family: 'Handjet', monospace; font-weight: 500; font-size: 1.15em; }
+  .f-sixtyfour .num u { font-family: 'Sixtyfour', monospace; font-size: .62em; }
+  .f-workbench .num u { font-family: 'Workbench', monospace; font-size: .78em; }
+  .f-micro5  .num u { font-family: 'Micro 5', monospace; font-size: 1.5em; }
+
+  /* Ползунки вариативных осей */
+  .axes { display: flex; gap: 22px; flex-wrap: wrap; margin-top: 22px;
+          padding-top: 20px; border-top: 1px solid var(--stroke-soft); }
+  .axis { display: flex; align-items: center; gap: 10px; font-size: .8rem; color: var(--text-dim); }
+  .axis input { width: 120px; accent-color: var(--accent); }
+  .axis output { font-variant-numeric: tabular-nums; color: var(--text); font-weight: 600; min-width: 28px; }
+
+  .verdict { font-size: .88rem; line-height: 1.6; color: var(--text-dim); margin-top: 18px; }
+  .verdict b { color: var(--text); }
+
+  h2.sec { font-family:'Manrope',sans-serif; font-weight:800; font-size:1.5rem;
+           letter-spacing:-.03em; margin: 44px 0 18px; }
+</style>
+</head>
+<body>
+
+<div class="bg" aria-hidden="true">
+  <div class="bg__orb bg__orb--1"></div>
+  <div class="bg__orb bg__orb--2"></div>
+  <div class="bg__orb bg__orb--3"></div>
+</div>
+
+<div class="page">
+
+  <header class="head">
+    <a class="logo" href="index.html">
+      <span class="logo__mark" aria-hidden="true">М</span>
+      <span class="logo__text"><b>Маркетолог</b><span>ТЕХ</span></span>
+    </a>
+    <button class="theme-toggle" type="button" aria-label="Включить тёмную тему" aria-pressed="false">
+      <svg class="theme-toggle__moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+      <svg class="theme-toggle__sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.4v2.2M12 19.4v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.4 12h2.2M19.4 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6"/></svg>
+    </button>
+    <a class="head__back" href="demo.html">Открыть дашборд →</a>
+  </header>
+
+  <h1 class="h1">Точечный шрифт для цифр</h1>
+  <p class="lead mt16">
+    Реальные метрики дашборда в разных шрифтах. Переключите тему — точечные
+    шрифты ведут себя в тёмной и светлой по-разному.
+  </p>
+
+  <p class="note mt40">
+    <b>Про AIPointe.</b> На fontsforyou он отдаётся с пометкой «free for personal
+    use» — то есть для коммерческого продукта не подходит. Автор там не указан,
+    сайт сам оговаривается, что собирает шрифты по интернету. Ставить такой
+    в проект, который будут продавать салонам, рискованно.
+    Все шрифты ниже — под лицензией OFL: можно свободно использовать
+    в коммерческих проектах, встраивать и хостить у себя.
+  </p>
+
+  <h2 class="sec">Как сейчас</h2>
+
+  <section class="card glass f-manrope">
+    <div class="card__head">
+      <span class="card__name">Manrope</span>
+      <span class="card__meta">текущий · <b>OFL</b> · кириллица есть</span>
+    </div>
+    <div class="row-kpi">
+      <div><p class="kpi__label">Выручка под риском</p><p class="num"><u>182 400</u><i>₽</i></p></div>
+      <div><p class="kpi__label">Возвращено</p><p class="num num--accent"><u>148 200</u><i>₽</i></p></div>
+      <div><p class="kpi__label">Возвращаемость</p><p class="num"><u>68</u><i>%</i></p></div>
+      <div><p class="kpi__label">Цель месяца</p><p class="num"><u>12</u><i>/20</i></p></div>
+    </div>
+    <p class="verdict"><b>Плюс:</b> плотный, читаемый, кириллица для подписей. <b>Минус:</b> ничем не выделяется.</p>
+  </section>
+
+  <h2 class="sec">Точечные</h2>
+
+  <section class="card glass f-doto" id="c-doto">
+    <div class="card__head">
+      <span class="card__name">Doto</span>
+      <span class="card__meta">ближе всего к AIPointe · <b>OFL</b> · только латиница (цифры и ₽ есть)</span>
+    </div>
+    <div class="row-kpi">
+      <div><p class="kpi__label">Выручка под риском</p><p class="num"><u>182 400</u><i>₽</i></p></div>
+      <div><p class="kpi__label">Возвращено</p><p class="num num--accent"><u>148 200</u><i>₽</i></p></div>
+      <div><p class="kpi__label">Возвращаемость</p><p class="num"><u>68</u><i>%</i></p></div>
+      <div><p class="kpi__label">Цель месяца</p><p class="num"><u>12</u><i>/20</i></p></div>
+    </div>
+    <div class="axes">
+      <label class="axis">Насыщенность
+        <input type="range" min="100" max="900" value="700" data-var="--doto-wght">
+        <output>700</output></label>
+      <label class="axis">Округлость точек
+        <input type="range" min="0" max="100" value="100" data-var="--doto-rond">
+        <output>100</output></label>
+    </div>
+    <p class="verdict"><b>Плюс:</b> честные круглые точки, регулируется от круглых до квадратных. <b>Минус:</b> нет кириллицы — только для цифр.</p>
+  </section>
+
+  <section class="card glass f-handjet" id="c-handjet">
+    <div class="card__head">
+      <span class="card__name">Handjet</span>
+      <span class="card__meta">точечно-матричный · <b>OFL</b> · <b>кириллица есть</b></span>
+    </div>
+    <div class="row-kpi">
+      <div><p class="kpi__label">Выручка под риском</p><p class="num"><u>182 400</u><i>₽</i></p></div>
+      <div><p class="kpi__label">Возвращено</p><p class="num num--accent"><u>148 200</u><i>₽</i></p></div>
+      <div><p class="kpi__label">Возвращаемость</p><p class="num"><u>68</u><i>%</i></p></div>
+      <div><p class="kpi__label">Цель месяца</p><p class="num"><u>12</u><i>/20</i></p></div>
+    </div>
+    <div class="axes">
+      <label class="axis">Насыщенность
+        <input type="range" min="100" max="900" value="500" data-var="--hj-wght">
+        <output>500</output></label>
+      <label class="axis">Форма элемента
+        <input type="range" min="1" max="16" step="1" value="4" data-var="--hj-elsh">
+        <output>4</output></label>
+      <label class="axis">Плотность сетки
+        <input type="range" min="1" max="2" step="0.05" value="1" data-var="--hj-elgr">
+        <output>1</output></label>
+    </div>
+    <p class="verdict">
+      <b>Плюс:</b> единственный точечный с кириллицей — можно применить и к подписям.
+      <b>Осторожно с осями:</b> точечный вид живёт узко, около «формы элемента» 4
+      и плотности сетки 1–1.5. Ниже и выше глифы заливаются сплошняком, а при
+      большой плотности почти исчезают — подкрутите ползунки и увидите сами.
+    </p>
+  </section>
+
+  <h2 class="sec">Экранные и пиксельные</h2>
+
+  <section class="card glass f-sixtyfour">
+    <div class="card__head">
+      <span class="card__name">Sixtyfour</span>
+      <span class="card__meta">ЭЛТ-монитор · <b>OFL</b> · только латиница</span>
+    </div>
+    <div class="row-kpi">
+      <div><p class="kpi__label">Выручка под риском</p><p class="num"><u>182 400</u><i>₽</i></p></div>
+      <div><p class="kpi__label">Возвращено</p><p class="num num--accent"><u>148 200</u><i>₽</i></p></div>
+      <div><p class="kpi__label">Возвращаемость</p><p class="num"><u>68</u><i>%</i></p></div>
+      <div><p class="kpi__label">Цель месяца</p><p class="num"><u>12</u><i>/20</i></p></div>
+    </div>
+    <p class="verdict">Очень широкий — длинные суммы вроде 182 400 ₽ занимают много места. Скорее ретро, чем «дорого и технологично».</p>
+  </section>
+
+  <section class="card glass f-workbench">
+    <div class="card__head">
+      <span class="card__name">Workbench</span>
+      <span class="card__meta">ЭЛТ-монитор · <b>OFL</b> · только латиница</span>
+    </div>
+    <div class="row-kpi">
+      <div><p class="kpi__label">Выручка под риском</p><p class="num"><u>182 400</u><i>₽</i></p></div>
+      <div><p class="kpi__label">Возвращено</p><p class="num num--accent"><u>148 200</u><i>₽</i></p></div>
+      <div><p class="kpi__label">Возвращаемость</p><p class="num"><u>68</u><i>%</i></p></div>
+      <div><p class="kpi__label">Цель месяца</p><p class="num"><u>12</u><i>/20</i></p></div>
+    </div>
+    <p class="verdict">Тот же ретро-регистр, что и Sixtyfour.</p>
+  </section>
+
+  <section class="card glass f-micro5">
+    <div class="card__head">
+      <span class="card__name">Micro 5</span>
+      <span class="card__meta">пиксельный · <b>OFL</b> · только латиница</span>
+    </div>
+    <div class="row-kpi">
+      <div><p class="kpi__label">Выручка под риском</p><p class="num"><u>182 400</u><i>₽</i></p></div>
+      <div><p class="kpi__label">Возвращено</p><p class="num num--accent"><u>148 200</u><i>₽</i></p></div>
+      <div><p class="kpi__label">Возвращаемость</p><p class="num"><u>68</u><i>%</i></p></div>
+      <div><p class="kpi__label">Цель месяца</p><p class="num"><u>12</u><i>/20</i></p></div>
+    </div>
+    <p class="verdict">Рисован под очень мелкий кегль. На крупных числах разваливается — не наш случай.</p>
+  </section>
+
+  <h2 class="sec">Что стоит учесть</h2>
+  <section class="card glass">
+    <p class="verdict" style="margin-top:0">
+      <b>Считывание цифр.</b> Точечные шрифты читаются медленнее сплошных. Для
+      витрины и первого экрана это плата за характер, но собственник открывает
+      дашборд, чтобы быстро увидеть деньги. Разумный компромисс — точечный шрифт
+      только на витрине (лендинг, hero) и в паре крупных чисел, а в рабочих
+      таблицах и списках оставить Inter.
+    </p>
+    <p class="verdict">
+      <b>Разряды.</b> «182 400» с пробелом-разделителем в точечных шрифтах
+      выглядит рыхло. Стоит посмотреть, не лучше ли узкий пробел.
+    </p>
+    <p class="verdict">
+      <b>Кириллица.</b> Из точечных её имеет только Handjet. Если захотите
+      применить шрифт не только к цифрам, но и к подписям — выбор один.
+    </p>
+    <p class="verdict">
+      <b>Вес.</b> Каждый шрифт добавляет загрузку. Подключать стоит только
+      выбранный и только нужные начертания.
+    </p>
+  </section>
+
+</div>
+
+<script src="assets/js/theme.js"></script>
+<script>
+// Ползунки вариативных осей: пишем значения в переменные и собираем
+// font-variation-settings для каждого кандидата.
+(function () {
+  var root = document.documentElement;
+  var vals = {
+    '--doto-wght': 700, '--doto-rond': 100,
+    '--hj-wght': 500, '--hj-elsh': 4, '--hj-elgr': 1
+  };
+
+  function apply() {
+    document.querySelectorAll('.f-doto .num u').forEach(function (el) {
+      el.style.fontVariationSettings =
+        '"wght" ' + vals['--doto-wght'] + ', "ROND" ' + vals['--doto-rond'];
+    });
+    document.querySelectorAll('.f-handjet .num u').forEach(function (el) {
+      el.style.fontVariationSettings =
+        '"wght" ' + vals['--hj-wght'] +
+        ', "ELSH" ' + vals['--hj-elsh'] +
+        ', "ELGR" ' + vals['--hj-elgr'];
+    });
+  }
+
+  document.querySelectorAll('.axis input').forEach(function (input) {
+    var out = input.parentElement.querySelector('output');
+    input.addEventListener('input', function () {
+      vals[input.dataset.var] = input.value;
+      out.textContent = input.value;
+      apply();
+    });
+  });
+
+  apply();
+})();
+</script>
+</body>
+</html>

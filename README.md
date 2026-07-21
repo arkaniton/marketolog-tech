@@ -20,6 +20,7 @@ python3 -m http.server 4173
 ```
 index.html            Лендинг (9 блоков брифа)
 demo.html             Демо-дашборд, 5 экранов, read-only
+fonts.html            Примерочная точечных шрифтов для цифр (временная)
 assets/css/base.css   Дизайн-система: токены обеих тем, стекло, типографика, кнопки
 assets/css/landing.css Стили лендинга
 assets/css/demo.css   Стили дашборда
