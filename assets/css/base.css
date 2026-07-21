@@ -290,20 +290,31 @@ a { color: inherit; text-decoration: none; }
 
 .accent-text { color: var(--accent-hi); }
 
-/* Огромная метрика: число + мелкая единица верхним индексом */
+/* Огромная метрика: число точечным Doto + мелкая единица верхним индексом.
+
+   Doto только здесь, на крупных числах. В мелком кегле точечный шрифт
+   читается тяжело, поэтому таблицы, мини-метрики и хайлайты остаются
+   в Inter — там цифры нужно считывать быстро, а не разглядывать.
+
+   Оси (ROND 100, wght 100) закреплены в ссылке на шрифт в <head>
+   обеих страниц, отдельный вариативный файл не грузим. Поэтому вес
+   здесь именно 100 — иначе браузер начнёт подделывать жирность. */
 .metric {
   display: flex;
   align-items: flex-start;
   gap: 3px;
-  font-family: 'Manrope', 'Inter', sans-serif;
-  font-weight: 800;
-  letter-spacing: -0.045em;
+  font-family: 'Doto', 'Manrope', monospace;
+  font-weight: 100;
+  letter-spacing: 0;      /* плотный трекинг Manrope сминал бы точки */
   line-height: 0.95;
   font-size: clamp(2rem, 3.4vw, 3.1rem);
   white-space: nowrap;
 }
 
+/* Единица набирается обычным шрифтом: кегль мелкий, а в Doto
+   к тому же нет кириллицы для «чел», «шт», «дн» */
 .metric__unit {
+  font-family: 'Inter', sans-serif;
   font-size: 0.4em;
   font-weight: 700;
   line-height: 1;
