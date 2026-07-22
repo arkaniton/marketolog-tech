@@ -1,217 +1,358 @@
-/* ==========================================================================
-   Лендинг: появление секций, состояние шапки, валидация и отправка формы
-   ========================================================================== */
-
 (function () {
   'use strict';
 
-  /* ------------------------------------------------------------------
-     Появление секций при скролле
-     ------------------------------------------------------------------ */
+  var body = document.body;
+  var header = document.querySelector('[data-header]');
+  var flow = document.getElementById('audit-flow');
+  var flowDialog = flow ? flow.querySelector('.audit-flow-dialog') : null;
+  var flowSteps = flow ? Array.prototype.slice.call(flow.querySelectorAll('[data-flow-step]')) : [];
+  var flowProgress = flow ? Array.prototype.slice.call(flow.querySelectorAll('.flow-progress i')) : [];
+  var currentStep = 1;
+  var lastFocused = null;
+  var scanTimers = [];
 
-  var revealables = document.querySelectorAll('.reveal');
+  var TELEGRAM_RE = /^(?:(?:https?:\/\/)?t\.me\/)?@?[a-zA-Z0-9_]{3,32}$/;
 
-  if ('IntersectionObserver' in window) {
-    var observer = new IntersectionObserver(function (entries) {
+  function isValidPhone(value) {
+    var digits = value.replace(/\D/g, '');
+    return digits.length >= 10 && digits.length <= 15;
+  }
+
+  function setHeaderState() {
+    if (header) header.classList.toggle('is-stuck', window.scrollY > 12);
+  }
+
+  setHeaderState();
+  window.addEventListener('scroll', setHeaderState, { passive: true });
+
+  /* Появление секций. Без JS контент остаётся доступен при reduced motion. */
+  var revealItems = document.querySelectorAll('.reveal-item');
+  if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var revealObserver = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-in');
-          observer.unobserve(entry.target);
-        }
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        revealObserver.unobserve(entry.target);
       });
-    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.05 });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
 
-    revealables.forEach(function (el) { observer.observe(el); });
+    revealItems.forEach(function (item) { revealObserver.observe(item); });
   } else {
-    revealables.forEach(function (el) { el.classList.add('is-in'); });
+    revealItems.forEach(function (item) { item.classList.add('is-visible'); });
   }
 
-  /* ------------------------------------------------------------------
-     Шапка: подсвечиваем границу после прокрутки
-     ------------------------------------------------------------------ */
+  /* Переключение демонстрации для администратора и собственника. */
+  var productTabs = document.querySelectorAll('[data-product-tab]');
+  productTabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var name = tab.getAttribute('data-product-tab');
 
-  var topbar = document.querySelector('.topbar');
+      productTabs.forEach(function (item) {
+        var active = item === tab;
+        item.classList.toggle('is-active', active);
+        item.setAttribute('aria-selected', String(active));
+      });
 
-  if (topbar) {
-    var syncTopbar = function () {
-      topbar.classList.toggle('is-stuck', window.scrollY > 12);
-    };
-    syncTopbar();
-    window.addEventListener('scroll', syncTopbar, { passive: true });
-  }
+      document.querySelectorAll('[data-product-copy]').forEach(function (copy) {
+        var active = copy.getAttribute('data-product-copy') === name;
+        copy.hidden = !active;
+        copy.classList.toggle('is-active', active);
+      });
 
-  /* ------------------------------------------------------------------
-     Переходы по секциям
-
-     Прокручиваем сами и не даём браузеру записать хеш в адрес: иначе
-     после клика по «Проверить салон» URL превращался в …/#form, и при
-     следующем открытии этой ссылки страница сразу уезжала к форме.
-     ------------------------------------------------------------------ */
-
-  document.querySelectorAll('a[href^="#"]').forEach(function (link) {
-    link.addEventListener('click', function (event) {
-      var id = link.getAttribute('href').slice(1);
-      if (!id) return;
-
-      var target = document.getElementById(id);
-      if (!target) return;
-
-      event.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.querySelectorAll('[data-product-panel]').forEach(function (panel) {
+        var active = panel.getAttribute('data-product-panel') === name;
+        panel.hidden = !active;
+        panel.classList.toggle('is-active', active);
+      });
     });
   });
 
-  /* ------------------------------------------------------------------
-     Валидация
-     ------------------------------------------------------------------ */
-
-  // @nick, nick, t.me/nick, https://t.me/nick
-  var TELEGRAM_RE = /^(?:(?:https?:\/\/)?t\.me\/)?@?[a-zA-Z0-9_]{3,32}$/;
-
-  function setError(input, message) {
-    var slot = document.querySelector('[data-err-for="' + input.id + '"]');
+  function setFieldError(input, message) {
+    var slot = document.querySelector('[data-error-for="' + input.id + '"]');
     if (slot) slot.textContent = message || '';
-    input.classList.toggle('is-bad', Boolean(message));
-    if (message) {
-      input.setAttribute('aria-invalid', 'true');
-    } else {
-      input.removeAttribute('aria-invalid');
-    }
+    input.setAttribute('aria-invalid', message ? 'true' : 'false');
   }
 
   function validateSalon(input) {
     var value = input.value.trim();
     if (value.length < 2) {
-      setError(input, 'Укажите название салона или ссылку на карточку');
+      setFieldError(input, 'Введите название салона');
+      input.focus();
       return false;
     }
-    setError(input, '');
+    setFieldError(input, '');
     return true;
   }
 
-  function validateTelegram(input) {
-    var value = input.value.trim();
-    if (!value) {
-      setError(input, 'Без Telegram нам некуда прислать разбор');
-      return false;
-    }
-    if (!TELEGRAM_RE.test(value)) {
-      setError(input, 'Похоже на опечатку. Формат: @nickname');
-      return false;
-    }
-    setError(input, '');
-    return true;
+  function normalizeSalonName(value) {
+    var clean = value.trim();
+    if (!clean) return 'Салон «Ирис»';
+    if (/салон|студия|клиника/i.test(clean)) return clean;
+    return 'Салон «' + clean.replace(/[«»"]/g, '') + '»';
   }
 
-  /* ------------------------------------------------------------------
-     Отправка
-
-     ЗАГЛУШКА: заявка пишется в консоль. Чтобы подключить реальный приём,
-     замените тело submitLead() — например, на fetch к вашей serverless-
-     функции, которая уже кладёт сообщение в Telegram:
-
-       return fetch('/api/lead', {
-         method: 'POST',
-         headers: { 'Content-Type': 'application/json' },
-         body: JSON.stringify(lead)
-       }).then(function (r) {
-         if (!r.ok) throw new Error('Ошибка отправки');
-       });
-
-     Токен бота на фронтенде держать нельзя — он виден всем, кто откроет
-     исходники страницы. Нужна прослойка на сервере.
-     ------------------------------------------------------------------ */
-
-  function submitLead(lead) {
-    console.log('[Заявка]', lead);
-    return Promise.resolve();
-  }
-
-  function showDone(form, doneId) {
-    var done = document.getElementById(doneId);
-    if (!done) return;
-    done.hidden = false;
-    // Убираем форму из-под фокуса, чтобы табом не проваливаться в скрытое
-    form.querySelectorAll('input, button').forEach(function (el) {
-      el.tabIndex = -1;
+  function updateSalonName(name) {
+    document.querySelectorAll('[data-flow-salon], [data-result-salon]').forEach(function (slot) {
+      slot.textContent = name;
     });
-    done.setAttribute('role', 'status');
+
+    var contactSalon = document.getElementById('flow-contact-salon');
+    if (contactSalon) contactSalon.value = name;
   }
 
-  function wireForm(formId, doneId, collect) {
+  function clearScanTimers() {
+    scanTimers.forEach(function (timer) { window.clearTimeout(timer); });
+    scanTimers = [];
+  }
+
+  function animateScan() {
+    clearScanTimers();
+    var items = flow ? flow.querySelectorAll('.scan-list li') : [];
+    if (items.length < 4) return;
+
+    items.forEach(function (item, index) {
+      item.classList.toggle('is-done', index < 2);
+      item.classList.toggle('is-active', index === 2);
+      var icon = item.querySelector('i');
+      if (icon) icon.textContent = index < 2 ? '✓' : '';
+    });
+
+    scanTimers.push(window.setTimeout(function () {
+      items[2].classList.remove('is-active');
+      items[2].classList.add('is-done');
+      items[2].querySelector('i').textContent = '✓';
+      items[3].classList.add('is-active');
+    }, 900));
+
+    scanTimers.push(window.setTimeout(function () {
+      items[3].classList.remove('is-active');
+      items[3].classList.add('is-done');
+      items[3].querySelector('i').textContent = '✓';
+    }, 1800));
+  }
+
+  function focusFirstInStep(step) {
+    window.setTimeout(function () {
+      var activeStep = flow && flow.querySelector('[data-flow-step="' + step + '"]');
+      if (!activeStep) return;
+      var target = activeStep.querySelector('input:not([type="radio"]), button:not([data-flow-close])');
+      if (target) target.focus({ preventScroll: true });
+    }, 70);
+  }
+
+  function showStep(step) {
+    currentStep = Math.max(1, Math.min(step, flowSteps.length));
+
+    flowSteps.forEach(function (item) {
+      var active = Number(item.getAttribute('data-flow-step')) === currentStep;
+      item.hidden = !active;
+      item.classList.toggle('is-active', active);
+    });
+
+    flowProgress.forEach(function (bar, index) {
+      bar.classList.toggle('is-filled', index < currentStep);
+    });
+
+    if (flowDialog) flowDialog.scrollTop = 0;
+    if (currentStep === 3) animateScan();
+    focusFirstInStep(currentStep);
+  }
+
+  function openFlow(salonName) {
+    if (!flow) return;
+    lastFocused = document.activeElement;
+    updateSalonName(normalizeSalonName(salonName));
+    showStep(1);
+    flow.classList.add('is-open');
+    flow.setAttribute('aria-hidden', 'false');
+    body.classList.add('flow-open');
+  }
+
+  function closeFlow() {
+    if (!flow) return;
+    clearScanTimers();
+    flow.classList.remove('is-open');
+    flow.setAttribute('aria-hidden', 'true');
+    body.classList.remove('flow-open');
+    if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
+  }
+
+  function wireAuditForm(formId, inputId) {
     var form = document.getElementById(formId);
-    if (!form) return;
+    var input = document.getElementById(inputId);
+    if (!form || !input) return;
 
     form.addEventListener('submit', function (event) {
       event.preventDefault();
-
-      var result = collect(form);
-      if (!result) return;
-
-      var button = form.querySelector('button[type="submit"]');
-      var original = button ? button.textContent : '';
-      if (button) {
-        button.disabled = true;
-        button.textContent = 'Отправляем…';
-      }
-
-      submitLead(result)
-        .then(function () { showDone(form, doneId); })
-        .catch(function (error) {
-          console.error(error);
-          if (button) {
-            button.disabled = false;
-            button.textContent = original;
-          }
-          window.alert('Не удалось отправить заявку. Попробуйте ещё раз.');
-        });
+      if (!validateSalon(input)) return;
+      openFlow(input.value);
     });
 
-    // Снимаем ошибку, как только человек начал исправлять
-    form.querySelectorAll('.input').forEach(function (input) {
-      input.addEventListener('input', function () {
-        if (input.classList.contains('is-bad')) setError(input, '');
-      });
+    input.addEventListener('input', function () {
+      if (input.getAttribute('aria-invalid') === 'true') setFieldError(input, '');
     });
   }
 
-  // Полная форма (Блок 6)
-  wireForm('lead-form', 'form-done', function (form) {
-    var salon = form.querySelector('#f-salon');
-    var telegram = form.querySelector('#f-tg');
+  wireAuditForm('hero-audit-form', 'salon-search');
+  wireAuditForm('bottom-audit-form', 'bottom-salon');
 
-    var salonOk = validateSalon(salon);
-    var telegramOk = validateTelegram(telegram);
+  if (flow) {
+    flow.addEventListener('click', function (event) {
+      var closeTarget = event.target.closest('[data-flow-close]');
+      if (closeTarget) {
+        closeFlow();
+        return;
+      }
 
-    if (!salonOk || !telegramOk) {
-      (salonOk ? telegram : salon).focus();
-      return null;
+      var nextTarget = event.target.closest('[data-flow-next]');
+      if (nextTarget) showStep(currentStep + 1);
+    });
+  }
+
+  document.addEventListener('keydown', function (event) {
+    if (!flow || !flow.classList.contains('is-open')) return;
+
+    if (event.key === 'Escape') {
+      closeFlow();
+      return;
     }
 
-    return {
-      salon: salon.value.trim(),
-      telegram: telegram.value.trim(),
-      crm: form.querySelector('input[name="crm"]:checked').value,
-      points: form.querySelector('input[name="points"]:checked').value,
-      source: 'landing:form',
-      sentAt: new Date().toISOString()
-    };
+    if (event.key !== 'Tab' || !flowDialog) return;
+    var focusable = Array.prototype.slice.call(flowDialog.querySelectorAll('button:not([disabled]):not([hidden]), input:not([disabled]):not([type="hidden"]), a[href]'))
+      .filter(function (item) { return item.offsetParent !== null; });
+    if (!focusable.length) return;
+
+    var first = focusable[0];
+    var last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
   });
 
-  // Упрощённая форма (Блок 9)
-  wireForm('lead-form-short', 'form-done-short', function (form) {
-    var telegram = form.querySelector('#f-tg-short');
+  function selectedValue(name, fallback) {
+    var selected = document.querySelector('input[name="' + name + '"]:checked');
+    return selected ? selected.value : fallback;
+  }
 
-    if (!validateTelegram(telegram)) {
-      telegram.focus();
-      return null;
+  function setRecommendedTariff() {
+    var crm = selectedValue('flow-crm', 'yclients');
+    var branches = selectedValue('flow-branches', '1');
+    var recommendedPlan = 'crm';
+
+    if (branches === '5+') {
+      recommendedPlan = 'network';
+    } else if (crm === 'none') {
+      recommendedPlan = 'geo';
     }
 
-    return {
-      telegram: telegram.value.trim(),
-      source: 'landing:final-cta',
-      sentAt: new Date().toISOString()
-    };
-  });
+    document.querySelectorAll('[data-result-plan]').forEach(function (card) {
+      var recommended = card.getAttribute('data-result-plan') === recommendedPlan;
+      var badge = card.querySelector('.result-match');
+      card.classList.toggle('is-recommended', recommended);
+      card.classList.remove('is-selected');
+      if (badge) badge.hidden = !recommended;
+    });
 
+    document.querySelectorAll('[data-flow-final-button]').forEach(function (button) {
+      button.textContent = 'Выбрать';
+    });
+    var note = document.getElementById('prototype-note');
+    if (note) note.hidden = true;
+  }
+
+  var contactForm = document.getElementById('flow-contact-form');
+  if (contactForm) {
+    var messengerInput = document.getElementById('flow-messenger');
+    var contactInput = document.getElementById('flow-contact');
+    var contactLabel = document.getElementById('flow-contact-label');
+    var deliveryNote = document.getElementById('flow-delivery-note');
+    var messengerOptions = contactForm.querySelectorAll('[data-messenger-option]');
+
+    function selectMessenger(name) {
+      messengerInput.value = name;
+      messengerOptions.forEach(function (option) {
+        var active = option.getAttribute('data-messenger-option') === name;
+        option.classList.toggle('is-active', active);
+        option.setAttribute('aria-pressed', String(active));
+      });
+
+      contactInput.value = '';
+      setFieldError(contactInput, '');
+
+      if (name === 'max') {
+        contactLabel.textContent = 'Номер телефона в MAX';
+        contactInput.placeholder = '+7 999 123-45-67';
+        contactInput.setAttribute('autocomplete', 'tel');
+        contactInput.setAttribute('inputmode', 'tel');
+        deliveryNote.textContent = 'Полный отчёт и описания показателей придут в MAX после подключения бота.';
+      } else {
+        contactLabel.textContent = 'Ваш Telegram';
+        contactInput.placeholder = '@nickname';
+        contactInput.setAttribute('autocomplete', 'username');
+        contactInput.setAttribute('inputmode', 'text');
+        deliveryNote.textContent = 'Полный отчёт и описания показателей придут в Telegram после подключения бота.';
+      }
+    }
+
+    messengerOptions.forEach(function (option) {
+      option.addEventListener('click', function () {
+        selectMessenger(option.getAttribute('data-messenger-option'));
+        contactInput.focus();
+      });
+    });
+
+    contactForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      var salon = document.getElementById('flow-contact-salon');
+      var messenger = messengerInput.value;
+      var contactValue = contactInput.value.trim();
+
+      if (messenger === 'telegram' && !TELEGRAM_RE.test(contactValue)) {
+        setFieldError(contactInput, 'Проверьте Telegram. Например: @nickname');
+        contactInput.focus();
+        return;
+      }
+
+      if (messenger === 'max' && !isValidPhone(contactValue)) {
+        setFieldError(contactInput, 'Введите номер, на который зарегистрирован MAX');
+        contactInput.focus();
+        return;
+      }
+
+      setFieldError(contactInput, '');
+      updateSalonName(normalizeSalonName(salon.value));
+      setRecommendedTariff();
+
+      /*
+       * Точка интеграции для программиста:
+       * здесь contact + messenger + CRM + количество филиалов отправляются
+       * в API, которое запускает реальный аудит и выбранного бота.
+       */
+      showStep(4);
+    });
+
+    contactInput.addEventListener('input', function () {
+      if (contactInput.getAttribute('aria-invalid') === 'true') setFieldError(contactInput, '');
+    });
+  }
+
+  var finalButtons = document.querySelectorAll('[data-flow-final-button]');
+  var prototypeNote = document.getElementById('prototype-note');
+  if (finalButtons.length && prototypeNote) {
+    finalButtons.forEach(function (button) {
+      button.addEventListener('click', function () {
+        document.querySelectorAll('[data-result-plan]').forEach(function (card) {
+          card.classList.toggle('is-selected', card === button.closest('[data-result-plan]'));
+        });
+        finalButtons.forEach(function (item) {
+          item.textContent = item === button ? 'Выбрано' : 'Выбрать';
+        });
+        prototypeNote.hidden = false;
+      });
+    });
+  }
 })();
