@@ -1,171 +1,126 @@
 (function () {
   'use strict';
 
-  var body = document.body;
   var header = document.querySelector('[data-header]');
   var flow = document.getElementById('audit-flow');
-  var flowDialog = flow ? flow.querySelector('.audit-flow-dialog') : null;
-  var flowSteps = flow ? Array.prototype.slice.call(flow.querySelectorAll('[data-flow-step]')) : [];
-  var flowProgress = flow ? Array.prototype.slice.call(flow.querySelectorAll('.flow-progress i')) : [];
-  var currentStep = 1;
-  var lastFocused = null;
+  var selectedSalon = 'Салон «Ирис»';
+  var selectedAddress = 'Москва, ул. Остоженка, 25';
   var scanTimers = [];
 
-  var TELEGRAM_RE = /^(?:(?:https?:\/\/)?t\.me\/)?@?[a-zA-Z0-9_]{3,32}$/;
-
-  function isValidPhone(value) {
-    var digits = value.replace(/\D/g, '');
-    return digits.length >= 10 && digits.length <= 15;
+  function updateHeader() {
+    if (header) header.classList.toggle('is-stuck', window.scrollY > 10);
   }
 
-  function setHeaderState() {
-    if (header) header.classList.toggle('is-stuck', window.scrollY > 12);
-  }
+  updateHeader();
+  window.addEventListener('scroll', updateHeader, { passive: true });
 
-  setHeaderState();
-  window.addEventListener('scroll', setHeaderState, { passive: true });
-
-  /* Появление секций. Без JS контент остаётся доступен при reduced motion. */
   var revealItems = document.querySelectorAll('.reveal-item');
   if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    var revealObserver = new IntersectionObserver(function (entries) {
+    var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
         entry.target.classList.add('is-visible');
-        revealObserver.unobserve(entry.target);
+        observer.unobserve(entry.target);
       });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
-
-    revealItems.forEach(function (item) { revealObserver.observe(item); });
+    }, { threshold: 0.08, rootMargin: '0px 0px -7% 0px' });
+    revealItems.forEach(function (item) { observer.observe(item); });
   } else {
     revealItems.forEach(function (item) { item.classList.add('is-visible'); });
   }
 
-  /* Переключение демонстрации для администратора и собственника. */
-  var productTabs = document.querySelectorAll('[data-product-tab]');
-  productTabs.forEach(function (tab) {
-    tab.addEventListener('click', function () {
-      var name = tab.getAttribute('data-product-tab');
-
-      productTabs.forEach(function (item) {
-        var active = item === tab;
-        item.classList.toggle('is-active', active);
-        item.setAttribute('aria-selected', String(active));
-      });
-
-      document.querySelectorAll('[data-product-copy]').forEach(function (copy) {
-        var active = copy.getAttribute('data-product-copy') === name;
-        copy.hidden = !active;
-        copy.classList.toggle('is-active', active);
-      });
-
-      document.querySelectorAll('[data-product-panel]').forEach(function (panel) {
-        var active = panel.getAttribute('data-product-panel') === name;
-        panel.hidden = !active;
-        panel.classList.toggle('is-active', active);
-      });
-    });
-  });
-
-  function setFieldError(input, message) {
+  function setError(input, message) {
     var slot = document.querySelector('[data-error-for="' + input.id + '"]');
     if (slot) slot.textContent = message || '';
     input.setAttribute('aria-invalid', message ? 'true' : 'false');
   }
 
-  function validateSalon(input) {
-    var value = input.value.trim();
-    if (value.length < 2) {
-      setFieldError(input, 'Введите название салона');
-      input.focus();
-      return false;
+  function wireFinder(formId, inputId, suggestionId) {
+    var form = document.getElementById(formId);
+    var input = document.getElementById(inputId);
+    var suggestions = document.getElementById(suggestionId);
+    if (!form || !input || !suggestions) return;
+
+    function showSuggestions() {
+      suggestions.hidden = input.value.trim().length < 2;
+      setError(input, '');
     }
-    setFieldError(input, '');
-    return true;
-  }
 
-  function normalizeSalonName(value) {
-    var clean = value.trim();
-    if (!clean) return 'Салон «Ирис»';
-    if (/салон|студия|клиника/i.test(clean)) return clean;
-    return 'Салон «' + clean.replace(/[«»"]/g, '') + '»';
-  }
+    input.addEventListener('input', showSuggestions);
+    input.addEventListener('focus', showSuggestions);
 
-  function updateSalonName(name) {
-    document.querySelectorAll('[data-flow-salon], [data-result-salon]').forEach(function (slot) {
-      slot.textContent = name;
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      if (input.value.trim().length < 2) {
+        setError(input, 'Укажите город, улицу и номер дома');
+        input.focus();
+        return;
+      }
+      suggestions.hidden = false;
+      suggestions.querySelector('button').focus();
     });
 
-    var contactSalon = document.getElementById('flow-contact-salon');
-    if (contactSalon) contactSalon.value = name;
+    suggestions.querySelectorAll('[data-salon]').forEach(function (option) {
+      option.addEventListener('click', function () {
+        selectedSalon = option.getAttribute('data-salon');
+        selectedAddress = option.getAttribute('data-address');
+        input.value = selectedAddress;
+        suggestions.hidden = true;
+        openFlow();
+      });
+    });
   }
+
+  wireFinder('hero-audit-form', 'salon-address', 'hero-suggestions');
+  wireFinder('bottom-audit-form', 'bottom-address', 'bottom-suggestions');
 
   function clearScanTimers() {
     scanTimers.forEach(function (timer) { window.clearTimeout(timer); });
     scanTimers = [];
   }
 
-  function animateScan() {
+  function startScan() {
     clearScanTimers();
-    var items = flow ? flow.querySelectorAll('.scan-list li') : [];
-    if (items.length < 4) return;
-
-    items.forEach(function (item, index) {
-      item.classList.toggle('is-done', index < 2);
-      item.classList.toggle('is-active', index === 2);
-      var icon = item.querySelector('i');
-      if (icon) icon.textContent = index < 2 ? '✓' : '';
+    var steps = Array.prototype.slice.call(document.querySelectorAll('.scan-steps li'));
+    var teaser = document.querySelector('[data-audit-teaser]');
+    var submit = document.querySelector('[data-audit-submit]');
+    var scanState = document.querySelector('[data-scan-state]');
+    if (teaser) teaser.hidden = true;
+    if (submit) submit.disabled = true;
+    if (scanState) scanState.textContent = 'Результаты появятся через несколько секунд.';
+    steps.forEach(function (step, index) {
+      step.classList.toggle('is-done', index === 0);
+      step.classList.toggle('is-active', index === 1);
+      var icon = step.querySelector('i');
+      if (icon) icon.textContent = index === 0 ? '✓' : '';
     });
-
-    scanTimers.push(window.setTimeout(function () {
-      items[2].classList.remove('is-active');
-      items[2].classList.add('is-done');
-      items[2].querySelector('i').textContent = '✓';
-      items[3].classList.add('is-active');
-    }, 900));
-
-    scanTimers.push(window.setTimeout(function () {
-      items[3].classList.remove('is-active');
-      items[3].classList.add('is-done');
-      items[3].querySelector('i').textContent = '✓';
-    }, 1800));
+    [1, 2, 3].forEach(function (stepIndex, order) {
+      scanTimers.push(window.setTimeout(function () {
+        steps.forEach(function (step, index) {
+          step.classList.toggle('is-done', index <= stepIndex);
+          step.classList.toggle('is-active', index === stepIndex + 1);
+          var icon = step.querySelector('i');
+          if (icon) icon.textContent = index <= stepIndex ? '✓' : '';
+        });
+        if (stepIndex === 3) {
+          if (teaser) teaser.hidden = false;
+          if (submit) submit.disabled = false;
+          if (scanState) scanState.textContent = 'Готово: карточки проверены.';
+        }
+      }, 650 + order * 650));
+    });
   }
 
-  function focusFirstInStep(step) {
-    window.setTimeout(function () {
-      var activeStep = flow && flow.querySelector('[data-flow-step="' + step + '"]');
-      if (!activeStep) return;
-      var target = activeStep.querySelector('input:not([type="radio"]), button:not([data-flow-close])');
-      if (target) target.focus({ preventScroll: true });
-    }, 70);
-  }
-
-  function showStep(step) {
-    currentStep = Math.max(1, Math.min(step, flowSteps.length));
-
-    flowSteps.forEach(function (item) {
-      var active = Number(item.getAttribute('data-flow-step')) === currentStep;
-      item.hidden = !active;
-      item.classList.toggle('is-active', active);
-    });
-
-    flowProgress.forEach(function (bar, index) {
-      bar.classList.toggle('is-filled', index < currentStep);
-    });
-
-    if (flowDialog) flowDialog.scrollTop = 0;
-    if (currentStep === 3) animateScan();
-    focusFirstInStep(currentStep);
-  }
-
-  function openFlow(salonName) {
+  function openFlow() {
     if (!flow) return;
-    lastFocused = document.activeElement;
-    updateSalonName(normalizeSalonName(salonName));
-    showStep(1);
+    document.querySelectorAll('[data-selected-salon]').forEach(function (node) { node.textContent = selectedSalon; });
+    document.querySelectorAll('[data-selected-address]').forEach(function (node) { node.textContent = selectedAddress; });
+    var logo = document.querySelector('[data-selected-logo]');
+    if (logo) logo.textContent = selectedSalon.replace(/[^А-ЯA-Z]/g, '').slice(0, 1) || 'М';
+    showFlowStage('collect');
     flow.classList.add('is-open');
     flow.setAttribute('aria-hidden', 'false');
-    body.classList.add('flow-open');
+    document.body.classList.add('flow-open');
+    startScan();
   }
 
   function closeFlow() {
@@ -173,186 +128,167 @@
     clearScanTimers();
     flow.classList.remove('is-open');
     flow.setAttribute('aria-hidden', 'true');
-    body.classList.remove('flow-open');
-    if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
+    document.body.classList.remove('flow-open');
   }
 
-  function wireAuditForm(formId, inputId) {
-    var form = document.getElementById(formId);
-    var input = document.getElementById(inputId);
-    if (!form || !input) return;
-
-    form.addEventListener('submit', function (event) {
-      event.preventDefault();
-      if (!validateSalon(input)) return;
-      openFlow(input.value);
+  function showFlowStage(name) {
+    document.querySelectorAll('[data-flow-stage]').forEach(function (stage) {
+      stage.hidden = stage.getAttribute('data-flow-stage') !== name;
+      stage.classList.toggle('is-active', stage.getAttribute('data-flow-stage') === name);
     });
-
-    input.addEventListener('input', function () {
-      if (input.getAttribute('aria-invalid') === 'true') setFieldError(input, '');
+    document.querySelectorAll('.flow-progress i').forEach(function (bar, index) {
+      bar.classList.toggle('is-active', name === 'ready' || index === 0);
     });
+    if (flow) flow.querySelector('.audit-flow-panel').scrollTop = 0;
   }
 
-  wireAuditForm('hero-audit-form', 'salon-search');
-  wireAuditForm('bottom-audit-form', 'bottom-salon');
-
-  if (flow) {
-    flow.addEventListener('click', function (event) {
-      var closeTarget = event.target.closest('[data-flow-close]');
-      if (closeTarget) {
-        closeFlow();
-        return;
-      }
-
-      var nextTarget = event.target.closest('[data-flow-next]');
-      if (nextTarget) showStep(currentStep + 1);
-    });
-  }
-
-  document.addEventListener('keydown', function (event) {
-    if (!flow || !flow.classList.contains('is-open')) return;
-
-    if (event.key === 'Escape') {
-      closeFlow();
-      return;
-    }
-
-    if (event.key !== 'Tab' || !flowDialog) return;
-    var focusable = Array.prototype.slice.call(flowDialog.querySelectorAll('button:not([disabled]):not([hidden]), input:not([disabled]):not([type="hidden"]), a[href]'))
-      .filter(function (item) { return item.offsetParent !== null; });
-    if (!focusable.length) return;
-
-    var first = focusable[0];
-    var last = focusable[focusable.length - 1];
-    if (event.shiftKey && document.activeElement === first) {
-      event.preventDefault();
-      last.focus();
-    } else if (!event.shiftKey && document.activeElement === last) {
-      event.preventDefault();
-      first.focus();
-    }
+  document.querySelectorAll('[data-flow-close]').forEach(function (button) {
+    button.addEventListener('click', closeFlow);
   });
 
-  function selectedValue(name, fallback) {
-    var selected = document.querySelector('input[name="' + name + '"]:checked');
-    return selected ? selected.value : fallback;
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape' && flow && flow.classList.contains('is-open')) closeFlow();
+  });
+
+  var channelInput = document.getElementById('flow-channel');
+  var contactInput = document.getElementById('flow-contact');
+  var contactLabel = document.getElementById('flow-contact-label');
+  var callTime = document.getElementById('call-time');
+  var channelButtons = document.querySelectorAll('[data-channel]');
+
+  function selectChannel(channel) {
+    if (!channelInput || !contactInput || !contactLabel) return;
+    channelInput.value = channel;
+    channelButtons.forEach(function (button) {
+      var active = button.getAttribute('data-channel') === channel;
+      button.classList.toggle('is-active', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+    contactInput.value = '';
+    contactInput.setAttribute('autocomplete', channel === 'telegram' ? 'username' : 'tel');
+    contactInput.setAttribute('inputmode', channel === 'telegram' ? 'text' : 'tel');
+    if (channel === 'telegram') {
+      contactLabel.textContent = 'Telegram';
+      contactInput.placeholder = '@nickname';
+    } else if (channel === 'max') {
+      contactLabel.textContent = 'Номер телефона в MAX';
+      contactInput.placeholder = '+7 999 123-45-67';
+    } else {
+      contactLabel.textContent = 'Номер телефона';
+      contactInput.placeholder = '+7 999 123-45-67';
+    }
+    if (callTime) callTime.hidden = channel !== 'phone';
   }
 
-  function setRecommendedTariff() {
-    var crm = selectedValue('flow-crm', 'yclients');
-    var branches = selectedValue('flow-branches', '1');
-    var recommendedPlan = 'crm';
-
-    if (branches === '5+') {
-      recommendedPlan = 'network';
-    } else if (crm === 'none') {
-      recommendedPlan = 'geo';
-    }
-
-    document.querySelectorAll('[data-result-plan]').forEach(function (card) {
-      var recommended = card.getAttribute('data-result-plan') === recommendedPlan;
-      var badge = card.querySelector('.result-match');
-      card.classList.toggle('is-recommended', recommended);
-      card.classList.remove('is-selected');
-      if (badge) badge.hidden = !recommended;
+  channelButtons.forEach(function (button) {
+    button.addEventListener('click', function () {
+      selectChannel(button.getAttribute('data-channel'));
+      contactInput.focus();
     });
+  });
 
-    document.querySelectorAll('[data-flow-final-button]').forEach(function (button) {
-      button.textContent = 'Выбрать';
-    });
-    var note = document.getElementById('prototype-note');
-    if (note) note.hidden = true;
+  function validPhone(value) {
+    var digits = value.replace(/\D/g, '');
+    return digits.length >= 10 && digits.length <= 15;
   }
 
   var contactForm = document.getElementById('flow-contact-form');
   if (contactForm) {
-    var messengerInput = document.getElementById('flow-messenger');
-    var contactInput = document.getElementById('flow-contact');
-    var contactLabel = document.getElementById('flow-contact-label');
-    var deliveryNote = document.getElementById('flow-delivery-note');
-    var messengerOptions = contactForm.querySelectorAll('[data-messenger-option]');
-
-    function selectMessenger(name) {
-      messengerInput.value = name;
-      messengerOptions.forEach(function (option) {
-        var active = option.getAttribute('data-messenger-option') === name;
-        option.classList.toggle('is-active', active);
-        option.setAttribute('aria-pressed', String(active));
-      });
-
-      contactInput.value = '';
-      setFieldError(contactInput, '');
-
-      if (name === 'max') {
-        contactLabel.textContent = 'Номер телефона в MAX';
-        contactInput.placeholder = '+7 999 123-45-67';
-        contactInput.setAttribute('autocomplete', 'tel');
-        contactInput.setAttribute('inputmode', 'tel');
-        deliveryNote.textContent = 'Полный отчёт и описания показателей придут в MAX после подключения бота.';
-      } else {
-        contactLabel.textContent = 'Ваш Telegram';
-        contactInput.placeholder = '@nickname';
-        contactInput.setAttribute('autocomplete', 'username');
-        contactInput.setAttribute('inputmode', 'text');
-        deliveryNote.textContent = 'Полный отчёт и описания показателей придут в Telegram после подключения бота.';
-      }
-    }
-
-    messengerOptions.forEach(function (option) {
-      option.addEventListener('click', function () {
-        selectMessenger(option.getAttribute('data-messenger-option'));
-        contactInput.focus();
-      });
-    });
-
     contactForm.addEventListener('submit', function (event) {
       event.preventDefault();
-      var salon = document.getElementById('flow-contact-salon');
-      var messenger = messengerInput.value;
-      var contactValue = contactInput.value.trim();
+      var nameInput = document.getElementById('flow-name');
+      var consent = document.getElementById('flow-consent');
+      var error = document.getElementById('flow-error');
+      var channel = channelInput.value;
+      var contact = contactInput.value.trim();
+      error.textContent = '';
 
-      if (messenger === 'telegram' && !TELEGRAM_RE.test(contactValue)) {
-        setFieldError(contactInput, 'Проверьте Telegram. Например: @nickname');
+      if (nameInput.value.trim().length < 2) {
+        error.textContent = 'Укажите имя для отчёта';
+        nameInput.focus();
+        return;
+      }
+      if (channel === 'telegram' && !/^@?[a-zA-Z0-9_]{3,32}$/.test(contact)) {
+        error.textContent = 'Укажите имя в Telegram, например @nickname';
         contactInput.focus();
         return;
       }
-
-      if (messenger === 'max' && !isValidPhone(contactValue)) {
-        setFieldError(contactInput, 'Введите номер, на который зарегистрирован MAX');
+      if (channel !== 'telegram' && !validPhone(contact)) {
+        error.textContent = 'Проверьте номер телефона и попробуйте снова';
         contactInput.focus();
         return;
       }
+      if (!consent.checked) {
+        error.textContent = 'Подтвердите согласие на обработку данных';
+        consent.focus();
+        return;
+      }
 
-      setFieldError(contactInput, '');
-      updateSalonName(normalizeSalonName(salon.value));
-      setRecommendedTariff();
-
-      /*
-       * Точка интеграции для программиста:
-       * здесь contact + messenger + CRM + количество филиалов отправляются
-       * в API, которое запускает реальный аудит и выбранного бота.
-       */
-      showStep(4);
-    });
-
-    contactInput.addEventListener('input', function () {
-      if (contactInput.getAttribute('aria-invalid') === 'true') setFieldError(contactInput, '');
+      var dashboardLink = document.getElementById('open-dashboard');
+      if (dashboardLink) {
+        dashboardLink.href = 'demo.html?guest=1&salon=' + encodeURIComponent(selectedSalon) + '&address=' + encodeURIComponent(selectedAddress);
+      }
+      showFlowStage('ready');
     });
   }
 
-  var finalButtons = document.querySelectorAll('[data-flow-final-button]');
-  var prototypeNote = document.getElementById('prototype-note');
-  if (finalButtons.length && prototypeNote) {
-    finalButtons.forEach(function (button) {
-      button.addEventListener('click', function () {
-        document.querySelectorAll('[data-result-plan]').forEach(function (card) {
-          card.classList.toggle('is-selected', card === button.closest('[data-result-plan]'));
-        });
-        finalButtons.forEach(function (item) {
-          item.textContent = item === button ? 'Выбрано' : 'Выбрать';
-        });
-        prototypeNote.hidden = false;
+  var tourTabs = document.querySelectorAll('[data-tour-tab]');
+  tourTabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var name = tab.getAttribute('data-tour-tab');
+      tourTabs.forEach(function (button) {
+        button.classList.toggle('is-active', button === tab);
+      });
+      document.querySelectorAll('[data-tour-panel]').forEach(function (panel) {
+        var active = panel.getAttribute('data-tour-panel') === name;
+        panel.hidden = !active;
+        panel.classList.toggle('is-active', active);
       });
     });
+  });
+
+  document.querySelectorAll('[data-demo-link]').forEach(function (button) {
+    button.addEventListener('click', function () {
+      window.location.href = button.getAttribute('data-demo-link');
+    });
+  });
+
+  var sourceConverter = document.querySelector('[data-source-converter]');
+  var converterBrand = document.querySelector('[data-converter-brand]');
+  var converterChips = Array.prototype.slice.call(document.querySelectorAll('[data-source-chip]'));
+  var converterFrame = null;
+
+  function updateSourceConverter() {
+    converterFrame = null;
+    if (!sourceConverter || !converterBrand || !converterChips.length) return;
+
+    var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var rect = sourceConverter.getBoundingClientRect();
+    var start = window.innerHeight * 0.42;
+    var end = window.innerHeight * 0.02;
+    var progress = reducedMotion ? 0 : Math.max(0, Math.min(1, (start - rect.top) / (start - end)));
+    var viewportScale = window.innerWidth < 760 ? 0.46 : window.innerWidth < 1050 ? 0.72 : 1;
+
+    converterChips.forEach(function (chip) {
+      var sourceX = Number(chip.getAttribute('data-x')) * viewportScale;
+      var sourceY = Number(chip.getAttribute('data-y')) * viewportScale;
+      var visiblePart = 1 - progress;
+      var x = sourceX * visiblePart;
+      var y = sourceY * visiblePart;
+      var scale = 1 - progress * 0.38;
+      chip.style.transform = 'translate(calc(-50% + ' + x + 'px), calc(-50% + ' + y + 'px)) scale(' + scale + ')';
+      chip.style.opacity = String(Math.max(0, 1 - progress * 1.18));
+    });
+
+    converterBrand.style.transform = 'translate(-50%, -50%) scale(' + (1 + progress * 0.08) + ')';
   }
+
+  function queueSourceConverter() {
+    if (converterFrame !== null) return;
+    converterFrame = window.requestAnimationFrame(updateSourceConverter);
+  }
+
+  updateSourceConverter();
+  window.addEventListener('scroll', queueSourceConverter, { passive: true });
+  window.addEventListener('resize', queueSourceConverter);
 })();
