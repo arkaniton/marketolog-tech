@@ -253,42 +253,19 @@
     });
   });
 
-  var sourceConverter = document.querySelector('[data-source-converter]');
-  var converterBrand = document.querySelector('[data-converter-brand]');
-  var converterChips = Array.prototype.slice.call(document.querySelectorAll('[data-source-chip]'));
-  var converterFrame = null;
-
-  function updateSourceConverter() {
-    converterFrame = null;
-    if (!sourceConverter || !converterBrand || !converterChips.length) return;
-
-    var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var rect = sourceConverter.getBoundingClientRect();
-    var start = window.innerHeight * 0.42;
-    var end = window.innerHeight * 0.02;
-    var progress = reducedMotion ? 0 : Math.max(0, Math.min(1, (start - rect.top) / (start - end)));
-    var viewportScale = window.innerWidth < 760 ? 0.46 : window.innerWidth < 1050 ? 0.72 : 1;
-
-    converterChips.forEach(function (chip) {
-      var sourceX = Number(chip.getAttribute('data-x')) * viewportScale;
-      var sourceY = Number(chip.getAttribute('data-y')) * viewportScale;
-      var visiblePart = 1 - progress;
-      var x = sourceX * visiblePart;
-      var y = sourceY * visiblePart;
-      var scale = 1 - progress * 0.38;
-      chip.style.transform = 'translate(calc(-50% + ' + x + 'px), calc(-50% + ' + y + 'px)) scale(' + scale + ')';
-      chip.style.opacity = String(Math.max(0, 1 - progress * 1.18));
+  function makeExclusiveAccordion(selector) {
+    var items = Array.prototype.slice.call(document.querySelectorAll(selector));
+    items.forEach(function (item) {
+      item.addEventListener('toggle', function () {
+        if (!item.open) return;
+        items.forEach(function (other) {
+          if (other !== item) other.open = false;
+        });
+      });
     });
-
-    converterBrand.style.transform = 'translate(-50%, -50%) scale(' + (1 + progress * 0.08) + ')';
   }
 
-  function queueSourceConverter() {
-    if (converterFrame !== null) return;
-    converterFrame = window.requestAnimationFrame(updateSourceConverter);
-  }
+  makeExclusiveAccordion('.today-tasks details');
+  makeExclusiveAccordion('.capability-accordion details');
 
-  updateSourceConverter();
-  window.addEventListener('scroll', queueSourceConverter, { passive: true });
-  window.addEventListener('resize', queueSourceConverter);
 })();
