@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Инвентаризация материнского сайта — МаркетологТЕХ</title>
+  <style>
+    :root{--ink:#17201b;--muted:#66716a;--paper:#f7f5ef;--card:#fff;--line:#dde3dc;--accent:#e65f46;--green:#2b8a68;--blue:#4b6fca;--purple:#7357c9}
+    *{box-sizing:border-box} body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    .wrap{max-width:1220px;margin:0 auto;padding:42px 24px 80px}.eyebrow{color:var(--accent);font-weight:800;letter-spacing:.12em;text-transform:uppercase;font-size:12px}.hero{display:grid;grid-template-columns:1.3fr .7fr;gap:24px;align-items:end;margin-bottom:28px}.hero h1{font-size:clamp(32px,5vw,62px);line-height:.98;letter-spacing:-.045em;margin:10px 0 16px;max-width:820px}.hero p{font-size:18px;max-width:780px;color:var(--muted);margin:0}.note{background:#18201b;color:#f8f7f1;border-radius:22px;padding:20px}.note strong{display:block;color:#ff9b82;margin-bottom:6px}.note p{font-size:14px;color:#dfe6df;margin:0}.legend{display:flex;gap:8px;flex-wrap:wrap;margin:24px 0}.tag{display:inline-flex;align-items:center;border-radius:999px;padding:5px 10px;font-size:12px;font-weight:750;white-space:nowrap}.mvp{background:#dff4e8;color:#176646}.next{background:#e7edff;color:#3a5cb0}.later{background:#eee8ff;color:#6346a9}.out{background:#f1ede7;color:#756e65}.source{background:#f5efe1;color:#7a5b21}.section{margin-top:24px;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:24px;box-shadow:0 8px 26px rgba(28,38,30,.04)}.section h2{font-size:25px;letter-spacing:-.025em;margin:0 0 4px}.section .lead{color:var(--muted);margin:0 0 18px}.matrix{width:100%;border-collapse:collapse}.matrix th,.matrix td{padding:11px 10px;border-top:1px solid var(--line);vertical-align:top;text-align:left}.matrix th{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:#78827b;background:#fbfcfa}.matrix td:first-child{width:22%;font-weight:750}.matrix td:nth-child(2){width:38%}.matrix td:nth-child(3){width:22%;color:#4f5c54}.matrix td:last-child{width:18%}.metric-list{display:flex;flex-wrap:wrap;gap:7px;margin:0}.metric{border:1px solid #e2e7e0;border-radius:9px;padding:4px 8px;background:#fbfcfa;font-size:13px}.callout{border-left:4px solid var(--accent);padding:10px 14px;background:#fff6f2;border-radius:0 10px 10px 0;margin:16px 0;color:#5e423a}.small{font-size:13px;color:var(--muted)}.toc{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:20px 0}.toc a{color:var(--ink);text-decoration:none;background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 11px}.toc a:hover{border-color:var(--accent)}.decision{font-weight:750}.footer{margin-top:28px;color:var(--muted);font-size:13px}@media(max-width:850px){.hero{grid-template-columns:1fr}.toc{grid-template-columns:1fr 1fr}.matrix{display:block;overflow:auto}.matrix th,.matrix td{min-width:180px}.matrix td:first-child{min-width:190px}}@media(max-width:560px){.wrap{padding:26px 14px 54px}.section{padding:17px}.toc{grid-template-columns:1fr}.hero h1{font-size:40px}}
+  </style>
+</head>
+<body>
+<main class="wrap">
+  <div class="hero">
+    <div>
+      <div class="eyebrow">Рабочий документ для команды</div>
+      <h1>Что уже есть в МаркетологТЕХ — и что переносим к нам</h1>
+      <p>Инвентаризация материнского сайта по фактически открытым разделам. Здесь зафиксированы функции, показатели, источник данных и решение для нового продукта.</p>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span class="tag mvp">MVP — берём сейчас</span><span class="tag next">Следующий слой</span><span class="tag later">Позже</span><span class="tag out">Не берём в продукт</span><span class="tag source">Источник/ограничение</span>
+  </div>
+  <nav class="toc">
+    <a href="#home">Главная и задачи</a><a href="#yclients">YClients</a><a href="#geo">Геомаркетинг</a><a href="#metrika">Яндекс.Метрика</a><a href="#seo">SEO и сайт</a><a href="#competitors">Конкуренты</a><a href="#content">Контент</a><a href="#calendars">Календари</a><a href="#integrations">Интеграции и профиль</a>
+  </nav>
+
+  <section class="section" id="home">
+    <h2>1. Панель маркетинга — главный экран</h2>
+    <p class="lead">Сводит сигналы из разных разделов и превращает их в приоритеты на сегодня.</p>
+    <table class="matrix"><thead><tr><th>Что видно владельцу</th><th>Показатели и функция</th><th>Откуда берётся</th><th>Решение</th></tr></thead><tbody>
+      <tr><td>Состояние бизнеса</td><td><div class="metric-list"><span class="metric">полнота данных</span><span class="metric">посетители сайта</span><span class="metric">рейтинг карт</span><span class="metric">SEO-оценка</span><span class="metric">тренды</span></div></td><td>Агрегатор: YClients, карты, Метрика, SEO, соцсети</td><td><span class="tag mvp">MVP: да</span></td></tr>
+      <tr><td>Сигнал дня</td><td>Короткий вывод «что изменилось» + причина + ожидаемый эффект</td><td>Производный показатель и ИИ-объяснение</td><td><span class="tag mvp">MVP: да</span></td></tr>
+      <tr><td>Задачи на сегодня</td><td>Приоритет, срок, роль исполнителя, ссылка в нужный раздел, статус</td><td>ИИ-слой поверх фактов и календарей</td><td><span class="tag mvp">MVP: да</span></td></tr>
+      <tr><td>Совет директоров / Eva</td><td>Ответ на вопрос владельца, объяснение метрики, следующий шаг</td><td>ИИ + факты подключённых источников</td><td><span class="tag next">Следующий слой</span></td></tr>
+    </tbody></table>
+    <div class="callout"><b>Переносим принцип:</b> главная показывает не сырые показатели, а один главный сигнал, 3–5 доказательств и конкретные действия. Сырые таблицы остаются внутри разделов.</div>
+  </section>
+
+  <section class="section" id="yclients">
+    <h2>2. YClients — клиенты, записи и деньги</h2>
+    <p class="lead">На материнском сайте это самый насыщенный источник для операционного управления салоном.</p>
+    <table class="matrix"><thead><tr><th>Вкладка</th><th>Что используется</th><th>Источник / расчёт</th><th>В новом продукте</th></tr></thead><tbody>
+      <tr><td>Клиенты</td><td><div class="metric-list"><span class="metric">клиенты</span><span class="metric">визиты</span><span class="metric">явка</span><span class="metric">неявки</span><span class="metric">отмены</span><span class="metric">перезапись</span><span class="metric">новые / повторные</span><span class="metric">частота визитов</span><span class="metric">воронка удержания</span><span class="metric">топ-клиенты</span><span class="metric">источники записи</span><span class="metric">микс услуг</span></div></td><td>YClients API, read-only; часть показателей считается у нас</td><td><span class="tag mvp">MVP: да</span></td></tr>
+      <tr><td>Рассылки</td><td>Сегменты после визита, неявки, возврата, частоты, денег, лояльности, отзывов, услуги/мастера; экспорт и вопросы ИИ; вкладки Telegram и Max</td><td>YClients + правила сегментации + каналы сообщений</td><td><span class="tag next">Сегменты — MVP</span> <span class="tag next">Каналы — далее</span></td></tr>
+      <tr><td>Акции</td><td>Каталог акций, генерация предложений, проверка возвратности и выгодности</td><td>YClients + производные расчёты + ИИ</td><td><span class="tag later">Позже</span></td></tr>
+      <tr><td>Отзывы</td><td>Распределение оценок, динамика, отзывы после визита, разбор по мастерам</td><td>YClients (внутренние оценки); публичные отзывы — карты</td><td><span class="tag next">Следующий слой</span></td></tr>
+      <tr><td>Мастера</td><td>Лидер по выручке, просадка рейтинга, явка и загрузка мастеров, сбор отзывов, месячный AI-разбор</td><td>YClients; при отсутствии отзывов блок пустой — это нужно показывать явно</td><td><span class="tag next">Следующий слой</span></td></tr>
+      <tr><td>Финансы</td><td><div class="metric-list"><span class="metric">выручка за период</span><span class="metric">недополученная выручка</span><span class="metric">выручка по дням</span><span class="metric">выручка по мастерам</span><span class="metric">услуги в выручке</span><span class="metric">абонементы</span><span class="metric">начисления мастерам</span><span class="metric">средний чек</span></div></td><td>YClients + расчёт стоимости неявок и сегментов ценности</td><td><span class="tag mvp">Внутри раздела</span></td></tr>
+      <tr><td>Отчёты</td><td>Отчёт за день/неделю, критичный вывод, явка, неявки, возврат, канал, услуга, мастер и план действий по ролям</td><td>YClients + ИИ-агрегация</td><td><span class="tag mvp">MVP: краткий отчёт</span></td></tr>
+      <tr><td>Задачи</td><td>Задачи владельцу, администратору и мастерам; статус, срок, инструкция, переход в источник</td><td>Производный слой Eva</td><td><span class="tag mvp">MVP: да</span></td></tr>
+    </tbody></table>
+    <p class="small"><b>Правило подключения:</b> сохраняем логин/пароль только в защищённом серверном хранилище, токен обновляем автоматически, все запросы в новом продукте — только чтение. Записи, клиенты и финансы не изменяем из интерфейса MVP.</p>
+  </section>
+
+  <section class="section" id="geo">
+    <h2>3. Геомаркетинг — карточки, репутация и рынок</h2>
+    <p class="lead">В материнском сайте геослой строится вокруг ссылки на карточку Яндекс.Карт и данных 2ГИС. Для нашего MVP используем парсинг, без API Яндекс.Карт.</p>
+    <table class="matrix"><thead><tr><th>Вкладка</th><th>Метрики и функции</th><th>Источник / расчёт</th><th>В новом продукте</th></tr></thead><tbody>
+      <tr><td>Обзор</td><td>Рейтинг, число отзывов, доля ответов, заполненность карточки, позиция среди конкурентов, тональность, сильные/слабые стороны, задачи 0/N</td><td>Парсинг Яндекс.Карт и 2ГИС + AI-тональность + сравнительный расчёт</td><td><span class="tag mvp">MVP: да</span></td></tr>
+      <tr><td>Репутация</td><td>Позитив/негатив/обработано, темы похвалы и жалоб, показы карточки, маршруты, звонки, переходы на сайт, фото, истории, мессенджеры, очередь отзывов</td><td>Карты; динамика по периодам; отзывы храним с площадкой и датой</td><td><span class="tag mvp">MVP: ядро</span></td></tr>
+      <tr><td>Конкуренты</td><td>Рейтинг и отзывы рядом, категории, услуги, ДНК бренда, боли, оффер, скидки, ценовые сигналы, запись, SEO-запросы, каналы, соцметрики, визуальный код, разрывы рынка и риски</td><td>Публичный парсинг карт, сайтов и открытых соцсетей + AI-структурирование</td><td><span class="tag next">Следующий слой</span></td></tr>
+      <tr><td>Карточка → аудит</td><td>Адрес, график, телефоны, фото, сайт/соцсети, ответы на отзывы, 40 ключевых слов, заполненность 9/11, приоритетные рекомендации</td><td>Парсинг карточки + чек-лист</td><td><span class="tag mvp">MVP: да</span></td></tr>
+      <tr><td>Карточка → прайс</td><td>Загрузка прайса, шаблоны каталога, референсы фото, генерация карточек услуг</td><td>Файл клиента + AI/шаблоны</td><td><span class="tag later">Позже</span></td></tr>
+      <tr><td>Контент карточки</td><td>Истории/новости; шаги «стиль → тема → слова → содержание → дизайн»; готовые истории и скачивание</td><td>Публичная карточка + генерация контента</td><td><span class="tag later">Позже</span></td></tr>
+    </tbody></table>
+    <p class="small"><b>Воронка:</b> быстрый тест просит ссылку на карточку Яндекс.Карт, показывает название/адрес/фото для подтверждения, затем запускает парсинг. Если салон не найден — предлагаем каталог и ручную ссылку. Полный глубокий отчёт доступен после регистрации.</p>
+  </section>
+
+  <section class="section" id="metrika">
+    <h2>4. Яндекс.Метрика — сайт и воронка</h2>
+    <p class="lead">На материнском сайте подключение отмечено как «Яндекс ID со счётчиками, только чтение».</p>
+    <table class="matrix"><thead><tr><th>Экран / вкладка</th><th>Показатели</th><th>Источник</th><th>Решение</th></tr></thead><tbody>
+      <tr><td>KPI</td><td>Пользователи, визиты, отказы, время на сайте, глубина, новые; сравнение периодов и изменения</td><td>Яндекс.Метрика</td><td><span class="tag mvp">MVP: да</span></td></tr>
+      <tr><td>Каналы</td><td>Визиты, пользователи, доля, отказы, конверсия по прямым, рекламе, мессенджерам, ссылкам, поиску</td><td>Метрика + UTM/рефереры</td><td><span class="tag mvp">MVP: да</span></td></tr>
+      <tr><td>Страницы</td><td>URL, тип страницы, визиты, отказы, конверсия, индекс состояния</td><td>Метрика</td><td><span class="tag next">Следующий слой</span></td></tr>
+      <tr><td>Цели</td><td>Срабатывания целей и конверсия</td><td>Настроенные цели счётчика</td><td><span class="tag mvp">MVP: да, если цели есть</span></td></tr>
+      <tr><td>UTM / гео</td><td>Кампании и метки; география пользователей</td><td>Метрика</td><td><span class="tag next">Следующий слой</span></td></tr>
+      <tr><td>Устройства</td><td>Mobile/Desktop, браузер, визиты, пользователи, доля, отказы</td><td>Метрика</td><td><span class="tag next">Следующий слой</span></td></tr>
+      <tr><td>Источник × устройство</td><td>Связка канала и устройства: визиты, пользователи, отказы, конверсия</td><td>Метрика, производная сводка</td><td><span class="tag later">Позже</span></td></tr>
+    </tbody></table>
+    <div class="callout"><b>Ограничение:</b> Метрика показывает поведение на сайте. Связать визит с реальной записью в YClients можно только при общей маркировке (UTM/yclid/lead_id). Без неё показываем два слоя рядом и не называем это полной атрибуцией.</div>
+  </section>
+
+  <section class="section" id="seo">
+    <h2>5. Продвижение сайта и SEO</h2>
+    <p class="lead">Это отдельный аналитический модуль, а не источник оперативных показателей салона.</p>
+    <table class="matrix"><thead><tr><th>Что есть</th><th>Показатели и задачи</th><th>Источник</th><th>Решение</th></tr></thead><tbody>
+      <tr><td>Сводка SEO</td><td>Оценка 0–10, видимость, срочные задачи, AI-поиск, AEO/GEO готовность, LCP, скорость, страницы, топ-10/топ-50</td><td>Скан сайта + Вебмастер + правила аудита</td><td><span class="tag later">Позже</span></td></tr>
+      <tr><td>Позиции</td><td>Запрос, кластер, частотность, позиция, целевая страница</td><td>Яндекс.Вебмастер/SEO-источник</td><td><span class="tag later">Позже</span></td></tr>
+      <tr><td>Действия</td><td>FAQPage, Organization, llms.txt, sitemap, robots.txt, HTML-рендер, новые страницы и статьи</td><td>SEO-аудит + контент-план</td><td><span class="tag out">Не в MVP</span></td></tr>
+    </tbody></table>
+  </section>
+
+  <section class="section" id="competitors">
+    <h2>6. Анализ и мониторинг конкурентов</h2>
+    <p class="lead">Модуль превращает открытые сигналы рынка в идеи и задачи, но часть выводов носит вероятностный характер.</p>
+    <table class="matrix"><thead><tr><th>Функция</th><th>Что показывает</th><th>Источник</th><th>Решение</th></tr></thead><tbody>
+      <tr><td>Профиль конкурента</td><td>Компания, адреса, услуги, бренд-ДНК, боли, похвала, оффер, акции, цены, механики записи, каналы, SEO, соцсети, визуальный код</td><td>Открытые сайты/карты/соцсети + AI-структурирование</td><td><span class="tag next">Следующий слой</span></td></tr>
+      <tr><td>Мониторинг</td><td>Дайджест дня, количество сигналов, лидеры, высокий приоритет, контекст, рекомендация, новости по конкурентам</td><td>Периодический парсинг + AI</td><td><span class="tag later">Позже</span></td></tr>
+      <tr><td>Мои новости</td><td>Лента выбранных сигналов по дням и типам</td><td>Мониторинг конкурентов</td><td><span class="tag later">Позже</span></td></tr>
+    </tbody></table>
+  </section>
+
+  <section class="section" id="content">
+    <h2>7. Контент и ИИ-ассистент</h2>
+    <p class="lead">На материнском сайте есть отдельная медиастудия с большим числом генераторов.</p>
+    <table class="matrix"><thead><tr><th>Блок</th><th>Функции</th><th>Источник / ИИ</th><th>Решение</th></tr></thead><tbody>
+      <tr><td>Контент-ассистент</td><td>Сессии, текстовая задача, файлы, быстрые сценарии: кино-сцена, Reels из фото, вирусный ролик, говорящий аватар, товарный ролик, музыка, несколько героев, цветокор, оживление фото, карусель</td><td>Материалы клиента + выбранная модель</td><td><span class="tag later">Позже</span></td></tr>
+      <tr><td>Генерация контента</td><td>Тексты, тренды, изображения, карусели, видео, аватары, аудио, SEO-статьи, лендинги, транскрибация/клипы, галерея</td><td>AI-модели и медиа-хранилище</td><td><span class="tag later">Позже</span></td></tr>
+      <tr><td>Eva / ИИ-маркетолог</td><td>Быстрые вопросы, пояснение показателя, сводка, задача, проверка результата</td><td>AI + нормализованные факты</td><td><span class="tag mvp">MVP: объяснение и задачи</span></td></tr>
+    </tbody></table>
+  </section>
+
+  <section class="section" id="calendars">
+    <h2>8. Контент-календарь и стратег-календарь</h2>
+    <table class="matrix"><thead><tr><th>Раздел</th><th>Функции</th><th>Источник</th><th>Решение</th></tr></thead><tbody>
+      <tr><td>Контент-календарь</td><td>Стиль текста, палитра и стиль изображения, шаблоны, генерация месяца, неделя/месяц, фильтр платформ, создание поста, дни и статусы</td><td>Бриф бренда + генератор контента</td><td><span class="tag later">Позже</span></td></tr>
+      <tr><td>Стратег-календарь</td><td>Выполнено N из M, категории, неделя/месяц, карточка задачи с инструкцией, инструментом и контент-идеями</td><td>Сигналы всех аналитических модулей + ручные задачи</td><td><span class="tag next">Каркас задач — MVP</span></td></tr>
+    </tbody></table>
+  </section>
+
+  <section class="section" id="integrations">
+    <h2>9. Интеграции и профиль</h2>
+    <p class="lead">В профиле видно, какие подключения реально предусмотрены и какие права им нужны.</p>
+    <table class="matrix"><thead><tr><th>Подключение</th><th>Назначение на материнском сайте</th><th>Режим / данные</th><th>Решение для нового продукта</th></tr></thead><tbody>
+      <tr><td>YClients</td><td>Записи, клиенты, услуги и аналитика филиала</td><td>Логин и пароль филиала; чтение</td><td><span class="tag mvp">MVP</span></td></tr>
+      <tr><td>Яндекс.Метрика</td><td>Счётчик и отчёты по сайту</td><td>Яндекс ID; только чтение</td><td><span class="tag mvp">MVP</span></td></tr>
+      <tr><td>Яндекс.Вебмастер</td><td>Запросы и диагностика SEO</td><td>Подключение сайта; чтение</td><td><span class="tag later">Позже</span></td></tr>
+      <tr><td>Telegram / VK / MAX / email</td><td>Публикация, сегментные и индивидуальные сообщения</td><td>Бот/ключ сообщества/OAuth/SMTP — зависит от канала</td><td><span class="tag next">Следующий слой</span></td></tr>
+      <tr><td>Instagram / Pinterest / YouTube</td><td>Публикация контента</td><td>Ограничения площадок, подключение по OAuth</td><td><span class="tag later">Позже</span></td></tr>
+      <tr><td>Рокетдата</td><td>Глубокий геоанализ в материнском контуре</td><td>Отдельный сервис/лицензия</td><td><span class="tag out">Пока не берём</span></td></tr>
+    </tbody></table>
+    <p class="small"><b>Профиль, подписка, кредиты, настройки и центр знаний</b> — административный контур. Они нужны для аккаунтинга, но не должны смешиваться с метриками эффективности салона.</p>
+  </section>
+
+  <section class="section">
+    <h2>Итоговое решение для нашего MVP</h2>
+    <table class="matrix"><thead><tr><th>Берём в первую очередь</th><th>Оставляем на следующий слой</th><th>Пока не делаем</th></tr></thead><tbody>
+      <tr><td>Регистрация и роли; гостевой быстрый геоотчёт по ссылке; каталог салонов как fallback; парсинг Яндекс.Карт/2ГИС; YClients read-only; главная с сигналом дня; клиенты/возврат/явка/неявки/перезапись; финансовые базовые показатели; Яндекс.Метрика read-only; задачи Eva.</td><td>Telegram, MAX, VK, email; сегменты и рассылки; мастерская; детальная репутация; конкурентный мониторинг; SEO/Вебмастер; расширенные графики и источники × устройства.</td><td>Изменение данных в YClients, публикации без подтверждения, RocketData, полноценная студия контента, платёжный и кредитный контур, обещание точной сквозной атрибуции без общей маркировки.</td></tr>
+    </tbody></table>
+    <div class="callout"><b>Главный продуктовый принцип:</b> каждая метрика должна отвечать на вопрос «что происходит?», иметь подпись источника и периода, а рядом показывать «что сделать дальше». Если данных нет, интерфейс пишет «нет данных» и объясняет, какое подключение нужно.</div>
+  </section>
+
+  <p class="footer">Документ подготовлен для обсуждения с командой. Примеры чисел, названий и текстов на материнском сайте использовались только для понимания структуры; в новый продукт переносим схему и правила, а не чужие данные.</p>
+</main>
+</body>
+</html>
