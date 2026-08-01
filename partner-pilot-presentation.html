@@ -119,6 +119,65 @@
     .flow-box.core p { color: #d3d0c9; }
     .flow-box.core .chip { border-color: rgba(255,255,255,.18); background: rgba(255,255,255,.08); color: #d3d0c9; }
     .flow-box.core .chip strong { color: white; }
+    .nowrap { white-space: nowrap; }
+
+    .product-layout { display: grid; grid-template-columns: minmax(0, .94fr) minmax(0, 1.06fr); gap: 32px; align-items: center; margin-top: 18px; }
+    .product-copy h2 { max-width: 640px; font-size: clamp(40px, 5.3vw, 68px); }
+    .product-copy .lede { max-width: 620px; }
+    .proof-row { display: grid; gap: 8px; margin-top: 24px; }
+    .proof-row span { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 13px; }
+    .proof-row span::before { content: "✓"; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: rgba(63,128,100,.14); color: var(--mint); font-weight: 800; }
+    .product-screen { min-width: 0; padding: 18px; border: 1px solid rgba(25,27,24,.18); border-radius: 28px; background: var(--ink-2); box-shadow: var(--shadow); }
+    .screen-window { min-width: 0; padding: 15px; border-radius: 20px; background: var(--paper-2); overflow: hidden; }
+    .screen-chrome { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: var(--muted); font-size: 11px; }
+    .screen-chrome span:first-child { display: inline-flex; align-items: center; gap: 5px; min-width: 0; overflow-wrap: anywhere; }
+    .screen-chrome span:first-child::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--mint); }
+    .screen-status { color: var(--mint); font-weight: 800; }
+    .screen-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 18px; }
+    .screen-title > div { min-width: 0; }
+    .screen-title strong { font-size: 16px; letter-spacing: -.03em; }
+    .screen-title small { color: var(--muted); font-size: 11px; }
+    .screen-badge { padding: 7px 9px; border-radius: 999px; background: rgba(63,128,100,.14); color: var(--mint); font-size: 11px; font-weight: 800; white-space: nowrap; }
+    .screen-score { display: grid; grid-template-columns: .7fr 1fr; gap: 16px; align-items: center; margin-top: 13px; padding: 18px; border-radius: 18px; background: var(--ink-2); color: white; }
+    .screen-score small { display: block; margin-bottom: 6px; color: #b8bdb6; font-size: 11px; }
+    .screen-score strong { display: block; color: white; font-family: Georgia, serif; font-size: clamp(42px, 5vw, 64px); font-weight: 500; letter-spacing: -.07em; line-height: .9; }
+    .screen-score strong em { color: #b8bdb6; font-size: 14px; font-family: inherit; font-style: normal; letter-spacing: 0; }
+    .screen-score p { color: #d3d0c9; font-size: 13px; line-height: 1.35; }
+    .screen-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 9px; }
+    .screen-metric { min-width: 0; padding: 12px; border: 1px solid var(--line); border-radius: 14px; background: white; }
+    .screen-metric small { display: block; color: var(--muted); font-size: 10px; }
+    .screen-metric strong { display: block; margin-top: 5px; color: var(--ink); font-size: 22px; letter-spacing: -.06em; }
+    .screen-metric span { display: block; margin-top: 3px; color: var(--mint); font-size: 10px; }
+    .screen-action { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 9px; padding: 13px 14px; border-left: 3px solid var(--coral); border-radius: 12px; background: rgba(233,93,67,.14); }
+    .screen-action small { display: block; color: #ba4835; font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .screen-action strong { display: block; margin-top: 4px; color: var(--ink); font-size: 14px; }
+    .screen-action b { color: var(--ink); font-size: 12px; white-space: nowrap; }
+
+    .client-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .82fr); gap: 15px; align-items: end; margin-top: 14px; padding: 18px; border-radius: 18px; background: var(--ink-2); color: white; }
+    .client-hero small { display: block; color: #b8bdb6; font-size: 11px; }
+    .client-hero strong { display: block; margin-top: 6px; color: white; font-family: Georgia, serif; font-size: clamp(32px, 4.2vw, 54px); font-weight: 500; letter-spacing: -.07em; line-height: .9; white-space: nowrap; }
+    .client-hero .money { color: var(--coral); font-size: 26px; letter-spacing: -.05em; }
+    .client-hero p { color: #d3d0c9; font-size: 12px; line-height: 1.35; }
+    .client-list { display: grid; gap: 8px; margin-top: 9px; }
+    .client-list-item { display: grid; grid-template-columns: 8px minmax(0, 1fr) auto; gap: 9px; align-items: center; padding: 11px 12px; border: 1px solid var(--line); border-radius: 12px; background: white; }
+    .client-list-item i { width: 8px; height: 8px; border-radius: 50%; background: var(--mint); }
+    .client-list-item strong { display: block; color: var(--ink); font-size: 13px; }
+    .client-list-item small { display: block; margin-top: 3px; color: var(--muted); font-size: 10px; }
+    .client-list-item b { color: var(--coral); font-size: 12px; white-space: nowrap; }
+
+    .content-signal { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 14px; padding: 15px; border-radius: 16px; background: var(--ink-2); color: white; }
+    .content-signal > div { min-width: 0; }
+    .content-signal small { display: block; color: #b8bdb6; font-size: 10px; }
+    .content-signal strong { display: block; margin-top: 5px; color: white; font-size: clamp(14px, 1.4vw, 17px); line-height: 1.2; overflow-wrap: anywhere; }
+    .content-signal b { color: var(--coral); font-family: Georgia, serif; font-size: 34px; font-weight: 500; letter-spacing: -.06em; }
+    .content-outputs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 9px; }
+    .content-output { min-width: 0; padding: 13px; border: 1px solid var(--line); border-radius: 14px; background: white; overflow: hidden; }
+    .content-output em { display: inline-block; padding: 5px 7px; border-radius: 7px; background: #f0ebe2; color: var(--muted); font-size: 10px; font-style: normal; font-weight: 800; }
+    .content-output strong { display: block; margin-top: 10px; color: var(--ink); font-size: 14px; }
+    .content-output span { display: block; margin-top: 5px; color: var(--muted); font-size: 11px; line-height: 1.35; }
+    .content-footer { display: flex; align-items: center; gap: 8px; margin-top: 10px; color: var(--mint); font-size: 11px; font-weight: 800; }
+    .content-footer::before { content: "✦"; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: rgba(63,128,100,.14); }
+    .content-screen { transform: translateX(12px) scale(.98); transform-origin: right center; }
 
     .split { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); gap: 22px; margin-top: 36px; }
     .split > * { min-width: 0; }
@@ -179,6 +238,7 @@
       .hero-side span { font-size: 11px; }
       .cards.four { grid-template-columns: repeat(2, 1fr); }
       .metrics { grid-template-columns: repeat(2, 1fr); }
+      .product-layout { grid-template-columns: 1fr; gap: 22px; }
       .flow { grid-template-columns: 1fr; }
       .flow-arrow { transform: rotate(90deg); }
       .timeline { grid-template-columns: 1fr; gap: 17px; }
@@ -197,6 +257,16 @@
       h2 { font-size: clamp(36px, 11vw, 60px); }
       .cards.three, .cards.four, .split, .roadmap { grid-template-columns: 1fr; }
       .metrics { grid-template-columns: 1fr 1fr; }
+      .screen-score { grid-template-columns: 1fr .9fr; }
+      .content-outputs { grid-template-columns: 1fr; }
+      .product-slide h2 { font-size: clamp(34px, 10vw, 54px); }
+      .product-slide .lede { margin-top: 16px; font-size: 16px; }
+      .product-slide .product-layout { gap: 16px; }
+      .product-slide .proof-row { margin-top: 16px; gap: 6px; }
+      .content-screen { transform: none; }
+      .product-screen { padding: 12px; border-radius: 22px; }
+      .screen-window { padding: 12px; }
+      .screen-score { padding: 14px; }
       .card { min-height: 0; }
       .panel { padding: 20px; }
       .hint { display: none; }
@@ -248,13 +318,77 @@
     <section class="slide" data-title="Механика">
       <div class="slide-inner">
         <div class="eyebrow">Как работает продукт</div>
-        <h2>Из сигнала — в действие, которое возвращает <span class="mint">деньги</span>.</h2>
+        <h2><span class="nowrap">Из сигнала&nbsp;—</span> в действие, которое возвращает <span class="mint">деньги</span>.</h2>
         <div class="flow">
           <div class="flow-box"><strong>Источники</strong><div class="source-pills"><span>Яндекс Карты</span><span>2ГИС</span><span>YClients</span><span>Метрика</span></div><p>Публичные и подключённые данные салона.</p></div>
           <div class="flow-arrow">→</div>
           <div class="flow-box core"><strong>МаркетологТЕХ</strong><p>Ева находит приоритет, объясняет контекст и предлагает следующий шаг.</p><span class="chip">ИИ готовит · человек подтверждает</span></div>
           <div class="flow-arrow">→</div>
           <div class="flow-box"><strong>Задача</strong><p>«Отправить 15 сообщений в Telegram / Max по ритму клиента».</p><span class="chip">эффект можно проверить</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide product-slide" data-title="Геомаркетинг">
+      <div class="slide-inner">
+        <div class="eyebrow">Пример продукта · геомаркетинг</div>
+        <div class="product-layout">
+          <div class="product-copy">
+            <h2>Карты показывают,<br><span class="accent">что исправить первым.</span></h2>
+            <p class="lede">Ева собирает карточки, рейтинг, отзывы и фото — и превращает их в задачу, которую можно проверить.</p>
+            <div class="proof-row"><span>Рейтинг и отзывы в одном экране</span><span>Черновик ответа готов до публикации</span><span>Каждый вывод ведёт к следующему действию</span></div>
+          </div>
+          <div class="product-screen geo-screen" aria-label="Пример экрана геомаркетинга">
+            <div class="screen-window">
+              <div class="screen-chrome"><span>Проверка карточек · салон «Ирис»</span><span class="screen-status">● готово</span></div>
+              <div class="screen-title"><div><strong>Салон «Ирис»</strong><small>Яндекс Карты + 2ГИС</small></div><span class="screen-badge">Проверено сегодня</span></div>
+              <div class="screen-score"><div><small>Оценка карточки</small><strong>67<em>/100</em></strong></div><p>Начните с ответов на отзывы и новых фотографий.</p></div>
+              <div class="screen-metrics"><div class="screen-metric"><small>Рейтинг</small><strong>4,6 ★</strong><span>+0,1 за месяц</span></div><div class="screen-metric"><small>Отзывы</small><strong>34%</strong><span>ответов</span></div><div class="screen-metric"><small>Профиль</small><strong>72%</strong><span>заполнено</span></div></div>
+              <div class="screen-action"><div><small>Первое действие</small><strong>Ответить на 6 отзывов</strong></div><b>Открыть →</b></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide paper product-slide" data-title="Клиенты и возвраты">
+      <div class="slide-inner">
+        <div class="eyebrow">Пример продукта · YClients</div>
+        <div class="product-layout">
+          <div class="product-screen client-screen" aria-label="Пример экрана сегмента возврата клиентов">
+            <div class="screen-window">
+              <div class="screen-chrome"><span>Ева · сегмент возврата</span><span class="screen-status">● расчёт готов</span></div>
+              <div class="screen-title"><div><strong>Клиенты, которым пора вернуться</strong><small>Последние 30 дней · YClients</small></div><span class="screen-badge">24 клиента</span></div>
+              <div class="client-hero"><div><small>Потенциальная выручка</small><strong>84&nbsp;000&nbsp;₽</strong></div><div><small>Следующий шаг</small><p>Связаться сегодня и предложить удобное окно.</p><strong class="money">+24</strong></div></div>
+              <div class="client-list"><div class="client-list-item"><i></i><div><strong>Срок визита наступил</strong><small>сегмент готов к контакту</small></div><b>24</b></div><div class="client-list-item"><i></i><div><strong>Средний чек</strong><small>по последним визитам</small></div><b>3&nbsp;500&nbsp;₽</b></div><div class="client-list-item"><i></i><div><strong>Задача команде</strong><small>открыть сегмент и подтвердить сообщение</small></div><b>→</b></div></div>
+            </div>
+          </div>
+          <div class="product-copy">
+            <h2>Возврат клиента<br><span class="mint">становится задачей.</span></h2>
+            <p class="lede">YClients даёт историю визитов, а МаркетологТЕХ объясняет, кому написать сегодня и какой эффект можно вернуть.</p>
+            <div class="proof-row"><span>24 клиента уже готовы к контакту</span><span>84 000 ₽ — понятный потенциал, а не обещание</span><span>Команда подтверждает сообщение перед отправкой</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide product-slide" data-title="Контент и коммуникации">
+      <div class="slide-inner">
+        <div class="eyebrow">Пример продукта · контент и коммуникации</div>
+        <div class="product-layout">
+          <div class="product-copy">
+            <h2><span class="nowrap">Один сигнал&nbsp;—</span><br><span class="accent">три готовых касания.</span></h2>
+            <p class="lede">Ева связывает загрузку, спрос и голос бренда: из одной задачи команда получает материалы для Telegram, VK и карточки салона.</p>
+            <div class="proof-row"><span>Смысл и тон бренда сохраняются</span><span>Черновики можно проверить до публикации</span><span>Контент возвращается в календарь и отчёт</span></div>
+          </div>
+          <div class="product-screen content-screen" aria-label="Пример экрана контентного ассистента">
+            <div class="screen-window">
+              <div class="screen-chrome"><span>Ева · контентный ассистент</span><span class="screen-status">● 3 черновика</span></div>
+              <div class="content-signal"><div><small>Сигнал из данных салона</small><strong>Четверг проседает по загрузке</strong></div><b>38%</b></div>
+              <div class="content-outputs"><div class="content-output"><em>Telegram</em><strong>Тихий четверг</strong><span>сообщение для клиентов с подходящим ритмом</span></div><div class="content-output"><em>VK</em><strong>Пост о свободных окнах</strong><span>оффер без прямой скидки</span></div><div class="content-output"><em>Карты</em><strong>Обновить витрину</strong><span>фото и ответ на свежие отзывы</span></div></div>
+              <div class="content-footer">Ева подготовила черновики · команда подтверждает публикацию</div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -273,7 +407,7 @@
     <section class="slide" data-title="Пилотный контур">
       <div class="slide-inner">
         <div class="eyebrow">Что проверяем в первой волне</div>
-        <h2>Пилот — это работа<br>на реальном салоне.</h2>
+        <h2><span class="nowrap">Пилот&nbsp;— это работа</span><br>на реальном салоне.</h2>
         <p class="lede">Внутри недели проверяем не красивый отчёт, а рабочий процесс: источник → приоритет → действие → подтверждённый эффект.</p>
         <div class="cards four">
           <article class="card"><span class="number">01</span><h3>YClients</h3><p>Клиенты, визиты, возвраты и сегменты.</p></article>
@@ -316,7 +450,7 @@
     <section class="slide paper compact-slide" data-title="Юридический модуль">
       <div class="slide-inner">
         <div class="eyebrow">Следующий модуль · идея партнёра</div>
-        <h2>От аналитики —<br>к <span class="accent">защите салона.</span></h2>
+        <h2><span class="nowrap">От аналитики&nbsp;—</span><br>к <span class="accent">защите салона.</span></h2>
         <p class="lede">Документы и сценарии действий под услуги салона. Финальное решение — за специалистом.</p>
         <div class="split">
           <div class="panel dark"><h3>Пакет документов</h3><div class="list"><div class="list-item"><div class="badge">01</div><div><strong>ОКВЭД → документы</strong><span>Услуги и формат салона определяют список.</span></div></div><div class="list-item"><div class="badge">02</div><div><strong>Пакет под условия салона</strong><span>Готовые формы для конкретного бизнеса.</span></div></div></div></div>
