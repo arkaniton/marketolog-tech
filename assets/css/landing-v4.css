@@ -403,3 +403,9 @@ body{font-size:16px}
 .eva-mini-orb i:nth-child(4n){width:2px;height:2px;opacity:.72}
 @keyframes eva-mini-orb-shift{0%,100%{transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(.78);opacity:.38}50%{transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y) - 1px)) scale(1);opacity:1}}
 @media(prefers-reduced-motion:reduce){.eva-mini-orb i{animation:none}}
+/* Direct map-link entry: keep the hint as readable as the former suggestions. */
+.suggestion-note{display:grid;grid-template-columns:40px 1fr;align-items:center;gap:11px;padding:10px;border-radius:12px}.suggestion-note strong,.suggestion-note small{display:block}.suggestion-note small{color:var(--ink-faint);font-size:.62rem}
+
+/* The first visit is a public geo-check; the full cockpit starts after consented connections. */
+.hero-scenario-note{max-width:600px;margin-top:15px;padding-left:14px;border-left:2px solid var(--accent);color:var(--ink-faint);font-size:.75rem;line-height:1.55}.hero-scenario-note b{color:var(--ink-soft)}
+@media(max-width:760px){.hero-scenario-note{font-size:.72rem}}

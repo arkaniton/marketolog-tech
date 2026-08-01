@@ -40,28 +40,26 @@
         <div class="hero-copy">
           <p class="eyebrow reveal-item">ИИ-помощник для салонного бизнеса</p>
           <h1 class="reveal-item">Маркетинг салона<br><em>под контролем.</em></h1>
-          <p class="hero-lead reveal-item">Обрабатываем данные карт, отзывов и клиентов. Формируем конкретные задачи.</p>
+          <p class="hero-lead reveal-item">Сначала бесплатно проверяем карточку салона в картах. После подключения данных объединяем клиентов, деньги и спрос в конкретный план действий.</p>
 
           <form class="salon-finder reveal-item" id="hero-audit-form" novalidate>
             <div class="finder-title">
-              <label for="salon-address">Адрес салона</label>
-              <span>Краткий результат сразу</span>
+              <label for="salon-address">Ссылка на карточку в картах</label>
+              <span>Проверим за несколько секунд</span>
             </div>
             <div class="finder-control">
               <span class="finder-pin" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-5.2 7-12a7 7 0 1 0-14 0c0 6.8 7 12 7 12Z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
               </span>
-              <input id="salon-address" name="address" type="text" placeholder="Город, улица, дом" autocomplete="street-address" aria-autocomplete="list" aria-controls="hero-suggestions" required>
+              <input id="salon-address" name="maps_url" type="url" placeholder="Вставьте ссылку на Яндекс Карты или 2ГИС" autocomplete="url" inputmode="url" aria-autocomplete="none" aria-controls="hero-suggestions" required>
               <button class="button button--accent" type="submit" aria-label="Проверить бесплатно"><span class="cta-full">Проверить бесплатно</span><span class="cta-short" aria-hidden="true">Проверить</span></button>
             </div>
             <div class="salon-suggestions" id="hero-suggestions" role="listbox" hidden>
-              <button type="button" role="option" data-salon="Салон «Ирис»" data-address="Москва, ул. Остоженка, 25">
-                <span class="suggestion-logo">И</span><span><strong>Салон «Ирис»</strong><small>Москва, ул. Остоженка, 25</small></span><i>Яндекс Карты · 2ГИС</i>
+              <div class="suggestion-note"><span class="suggestion-logo">↗</span><span><strong>Поддерживаем Яндекс Карты и 2ГИС</strong><small>Ссылка помогает сразу проверить именно ваш салон</small></span></div>
+              <button type="button" data-manual-salon>
+                <span class="suggestion-logo suggestion-logo--soft">+</span><span><strong>Не нашли свой салон?</strong><small>Укажите название и адрес — проверим карточки отдельно</small></span><i>Указать →</i>
               </button>
-              <button type="button" role="option" data-salon="Студия Iris Beauty" data-address="Москва, Пречистенская наб., 17">
-                <span class="suggestion-logo suggestion-logo--soft">IB</span><span><strong>Студия Iris Beauty</strong><small>Москва, Пречистенская наб., 17</small></span><i>Яндекс Карты</i>
-              </button>
-              <p>На рабочем сайте результаты придут из поиска карт.</p>
+              <p>Не нашли ссылку? Укажите название и город — поможем найти карточку.</p>
             </div>
             <p class="field-message" data-error-for="salon-address" aria-live="polite"></p>
           </form>
@@ -70,6 +68,7 @@
             <span><i>✓</i> Результат через несколько секунд</span>
             <span><i>✓</i> Публикация только с вашего согласия</span>
           </div>
+          <p class="hero-scenario-note reveal-item"><b>Геоотчёт</b> строится по открытым данным Яндекс Карт и 2ГИС. YClients и Метрика подключаются только для личного кабинета.</p>
         </div>
 
         <div class="hero-product reveal-item" aria-label="Схема работы МаркетологТЕХ">
@@ -249,8 +248,8 @@
           <p>Проверим карточки на Яндекс Картах и в 2ГИС. Покажем результаты и откроем личный отчёт.</p>
         </div>
         <div class="pilot-steps">
-          <span><b>01</b> Укажите адрес</span>
-          <span><b>02</b> Получите проверку</span>
+          <span><b>01</b> Вставьте ссылку</span>
+          <span><b>02</b> Подтвердите карточку</span>
           <span><b>03</b> Добавьте данные салона</span>
           <a class="button button--accent" href="#audit">Проверить бесплатно</a>
         </div>
@@ -262,13 +261,14 @@
         <div>
           <p class="eyebrow">Бесплатная проверка карточек</p>
           <h2>Как клиенты видят салон.</h2>
-          <p>Укажите адрес. Ева проверит отзывы, фотографии и профиль.</p>
+          <p>Вставьте ссылку на карточку. Ева проверит отзывы, фотографии и профиль.</p>
         </div>
         <form class="salon-finder salon-finder--bottom" id="bottom-audit-form" novalidate>
-          <div class="finder-title"><label for="bottom-address">Адрес салона</label><span>результат сразу</span></div>
-          <div class="finder-control"><span class="finder-pin" aria-hidden="true">⌖</span><input id="bottom-address" name="address" type="text" placeholder="Город, улица, дом" required><button class="button button--accent" type="submit" aria-label="Проверить бесплатно"><span class="cta-full">Проверить бесплатно</span><span class="cta-short" aria-hidden="true">Проверить</span></button></div>
+          <div class="finder-title"><label for="bottom-address">Ссылка на карточку в картах</label><span>результат сразу</span></div>
+          <div class="finder-control"><span class="finder-pin" aria-hidden="true">↗</span><input id="bottom-address" name="maps_url" type="url" placeholder="Яндекс Карты или 2ГИС" inputmode="url" required><button class="button button--accent" type="submit" aria-label="Проверить бесплатно"><span class="cta-full">Проверить бесплатно</span><span class="cta-short" aria-hidden="true">Проверить</span></button></div>
           <div class="salon-suggestions" id="bottom-suggestions" role="listbox" hidden>
-            <button type="button" role="option" data-salon="Салон «Ирис»" data-address="Москва, ул. Остоженка, 25"><span class="suggestion-logo">И</span><span><strong>Салон «Ирис»</strong><small>Москва, ул. Остоженка, 25</small></span><i>Выбрать →</i></button>
+            <div class="suggestion-note"><span class="suggestion-logo">↗</span><span><strong>Поддерживаем Яндекс Карты и 2ГИС</strong><small>Прямая ссылка исключает ошибку при поиске</small></span></div>
+            <button type="button" data-manual-salon><span class="suggestion-logo suggestion-logo--soft">+</span><span><strong>Не нашли свой салон?</strong><small>Укажите название и адрес — проверим карточки отдельно</small></span><i>Указать →</i></button>
           </div>
           <p class="field-message" data-error-for="bottom-address" aria-live="polite"></p>
         </form>
@@ -292,6 +292,33 @@
         <div class="flow-progress"><i class="is-active"></i><i></i></div>
         <button class="flow-close" type="button" aria-label="Закрыть" data-flow-close>×</button>
       </header>
+
+      <div class="flow-stage" data-flow-stage="manual" hidden>
+        <div class="scan-side">
+          <p class="flow-kicker">Поиск вне базы</p>
+          <h2 id="manual-flow-title">Найдём салон<br>вручную.</h2>
+          <p class="scan-caption"><i></i><span>Сначала сверим название и город, затем подтвердим карточки на картах. Случайную точку не покажем.</span></p>
+        </div>
+        <div class="contact-side">
+          <p class="flow-kicker">Не нашли в списке?</p>
+          <h2>Укажите данные салона</h2>
+          <p>Если карточек нет в нашей базе, найдём их отдельно. Можно добавить прямую ссылку на карту — это ускорит проверку.</p>
+          <form id="manual-salon-form" novalidate>
+            <label for="manual-salon-name">Название салона</label>
+            <input id="manual-salon-name" name="salon_name" type="text" placeholder="Например, Sansmood" autocomplete="organization" required>
+            <label for="manual-salon-city">Город</label>
+            <input id="manual-salon-city" name="city" type="text" placeholder="Москва" autocomplete="address-level2" required>
+            <label for="manual-salon-address">Адрес</label>
+            <input id="manual-salon-address" name="address" type="text" placeholder="Улица, дом" autocomplete="street-address">
+            <label for="manual-yandex-url">Ссылка на Яндекс Карты <small>(необязательно)</small></label>
+            <input id="manual-yandex-url" name="yandex_maps_url" type="url" placeholder="https://yandex.ru/maps/..." inputmode="url">
+            <label for="manual-2gis-url">Ссылка на 2ГИС <small>(необязательно)</small></label>
+            <input id="manual-2gis-url" name="twogis_maps_url" type="url" placeholder="https://2gis.ru/..." inputmode="url">
+            <p class="field-message" id="manual-salon-error" aria-live="polite"></p>
+            <button class="button button--accent button--wide" type="submit">Найти и проверить карточки</button>
+          </form>
+        </div>
+      </div>
 
       <div class="flow-stage is-active" data-flow-stage="collect">
         <div class="scan-side">
@@ -365,6 +392,6 @@
     </section>
   </div>
 
-  <script src="assets/js/landing.js?v=20260728v4"></script>
+  <script src="assets/js/landing.js?v=20260731maps"></script>
 </body>
 </html>

@@ -9,12 +9,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@500;600;700&amp;family=Onest:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/demo.css?v=20260725p2g">
+  <link rel="stylesheet" href="assets/css/demo.css?v=20260801-summary">
 </head>
 <body>
   <div class="demo-notice">
     <span><i></i> <b data-demo-status>Демо-салон</b> <em data-demo-copy>· все источники подключены · данные вымышлены</em></span>
-    <div class="demo-notice-actions"><button type="button" data-reset-demo>Сбросить изменения</button><a href="index.html">Вернуться на лендинг ↗</a></div>
+    <div class="demo-notice-actions"><button type="button" data-reset-demo>Сбросить изменения</button><a href="functions-overview.html">Что входит в продукт ↗</a><a href="index.html">Вернуться на лендинг ↗</a></div>
   </div>
 
   <div class="app-shell">
@@ -27,18 +27,26 @@
         <div><button class="is-active" type="button" data-scope="single">1 салон</button><button type="button" data-scope="network">3 салона</button></div>
       </div>
 
-      <nav class="side-nav" role="tablist">
-        <button class="is-active" type="button" role="tab" data-screen="home"><i>⌁</i><span>Главная</span><b data-home-count>3</b></button>
-        <button type="button" role="tab" data-screen="calendar"><i>□</i><span>Календарь</span></button>
-        <button type="button" role="tab" data-screen="tasks"><i>✓</i><span>Задачи</span><b>4</b></button>
-        <p>Показатели</p>
-        <button type="button" role="tab" data-screen="clients"><i>◌</i><span>Клиенты</span><u class="source-dot source-dot--yc"></u></button>
-        <button type="button" role="tab" data-screen="finance"><i>₽</i><span>Финансы</span><u class="source-dot source-dot--yc"></u></button>
-        <button type="button" role="tab" data-screen="geo"><i>☆</i><span>Геомаркетинг</span><u class="source-dot is-live"></u></button>
-        <button type="button" role="tab" data-screen="growth"><i>◇</i><span>Рост и бренд</span><u class="source-dot source-dot--metric"></u></button>
-        <p>Управление</p>
-        <button type="button" role="tab" data-screen="reports"><i>↗</i><span>Отчёты</span></button>
-        <button type="button" role="tab" data-screen="integrations"><i>+</i><span>Интеграции</span><b data-integration-count>4</b></button>
+      <nav class="side-nav" aria-label="Навигация кабинета">
+        <button class="is-active" type="button" data-screen="home"><i>⌁</i><span>Сегодня</span><b data-home-count>3</b></button>
+        <p>План и контроль</p>
+        <button type="button" data-screen="calendar"><i>□</i><span>План</span></button>
+        <button type="button" data-screen="tasks"><i>✓</i><span>Задачи</span><b>4</b></button>
+        <button type="button" data-screen="reports"><i>↗</i><span>Отчёт владельцу</span></button>
+        <p>Клиенты и деньги</p>
+        <button type="button" data-screen="clients"><i>◌</i><span>Клиенты</span><u class="source-dot source-dot--yc"></u></button>
+        <button type="button" data-screen="finance"><i>₽</i><span>Финансы</span><u class="source-dot source-dot--yc"></u></button>
+        <p>Репутация и спрос</p>
+        <button type="button" data-screen="geo"><i>☆</i><span>Карты и отзывы</span><u class="source-dot is-live"></u></button>
+        <button type="button" data-screen="site"><i>◫</i><span>Сайт и конверсия</span><u class="source-dot source-dot--metric"></u></button>
+        <button type="button" data-screen="integrations"><i>+</i><span>Источники данных</span><b data-integration-count>4</b></button>
+        <details class="side-nav-more">
+          <summary>Дополнительно <i>+</i></summary>
+          <button type="button" data-screen="signals"><i>⌁</i><span>Рынок</span><b>3</b></button>
+          <button type="button" data-screen="strategy"><i>↗</i><span>Стратегия</span><b>90</b></button>
+          <button type="button" data-screen="content"><i>✦</i><span>Контент-фабрика</span><b>8</b></button>
+          <button type="button" data-screen="growth"><i>◇</i><span>Аналитика</span><u class="source-dot source-dot--metric"></u></button>
+        </details>
       </nav>
 
       <div class="sidebar-status"><span><i></i> Ева работает</span><p data-source-count>4 источника подключено</p></div>
@@ -64,9 +72,25 @@
       </header>
 
       <section class="screen is-active" data-screen-panel="home">
-        <div class="page-head">
-          <div><p>Среда, 23 июля · обновлено в 07:25</p><h1 data-home-priority-title>Три приоритета на сегодня</h1><span data-home-priority-copy>Ева уже собрала сигналы, объяснила причины и подготовила следующие шаги.</span></div>
+        <div class="page-head dashboard-page-head">
+          <div><p data-summary-updated>Среда, 23 июля · обновлено в 07:25</p><h1 data-home-priority-title>Состояние салона</h1><span data-home-priority-copy>YClients показывает результат, карты — видимость, Метрика — интерес к сайту. Ева связывает их в понятный план действий.</span></div>
+          <div class="dashboard-range-control" aria-label="Период главного экрана"><div role="group" aria-label="Выберите период"><button class="is-active" type="button" data-dashboard-range="today" aria-pressed="true">Сегодня</button><button type="button" data-dashboard-range="30d" aria-pressed="false">30 дней</button></div><span data-dashboard-state>Демо-данные</span><button type="button" data-dashboard-refresh aria-label="Обновить данные" title="Обновить данные">↻</button></div>
         </div>
+
+        <section class="dashboard-focus" aria-label="Главный сигнал дня">
+          <div class="dashboard-focus-copy"><span data-summary-signal-kicker>Сегодня · главный сигнал</span><h2 data-summary-signal-title>Вернуть 24 клиента</h2><p data-summary-signal-body>Срок их следующего визита уже наступил. Начните с подготовленного сегмента и проверьте результат после контакта.</p><div class="dashboard-focus-actions"><button class="primary-button" type="button" data-summary-signal-action data-go="clients">Открыть сегмент →</button><small data-summary-signal-meta>Факт · YClients · обновлено в 07:19</small></div></div>
+          <div class="dashboard-focus-stats"><article><strong data-summary-primary-value>24</strong><span data-summary-primary-label>клиента готовы к контакту</span></article><article class="dashboard-focus-estimate"><small>Оценка эффекта</small><strong data-summary-potential-value>до 84 000 ₽</strong><span data-summary-potential-formula>24 клиента × средний чек 3 500 ₽</span></article><article><small>Данные</small><strong data-summary-source-time>07:19</strong><span data-summary-source-label>YClients · сегодня</span></article></div>
+        </section>
+
+        <section class="dashboard-kpi-block" aria-label="Контекст решения">
+          <div class="dashboard-kpi-head"><div><span>Контекст решения</span><h2 data-summary-kpis-title>Три факта, которые стоит держать в фокусе</h2></div><small class="dashboard-kpi-period" data-summary-kpis-period>Факты · последние 30 дней</small></div>
+          <div class="dashboard-kpis">
+            <article class="dashboard-kpi dashboard-kpi--dark" data-summary-kpi-card><div><span data-summary-kpi-label>Выручка</span><b data-summary-kpi-source>YClients</b></div><strong data-summary-kpi-value>428 600 ₽</strong><small><span data-summary-kpi-period-label>факт за 30 дней</span> <em data-summary-kpi-delta>+12,4% к предыдущему периоду</em></small></article>
+            <article class="dashboard-kpi" data-summary-kpi-card><div><span data-summary-kpi-label>Повторная запись</span><b data-summary-kpi-source>YClients</b></div><strong data-summary-kpi-value>38%</strong><small><span data-summary-kpi-period-label>факт за 30 дней</span> <em data-summary-kpi-delta>цель месяца — 42%</em></small></article>
+            <article class="dashboard-kpi dashboard-kpi--warm" data-summary-kpi-card><div><span data-summary-kpi-label>Отзывы без ответа</span><b data-summary-kpi-source>Карты</b></div><strong data-summary-kpi-value>6</strong><small><span data-summary-kpi-period-label>факт на сегодня</span> <em data-summary-kpi-delta>первый ждёт 19 часов</em></small></article>
+          </div>
+          <div class="dashboard-kpi-foot" data-summary-sources><span><i class="source-dot source-dot--yc"></i> YClients обновлён сегодня в 07:19</span><span><i class="source-dot is-live"></i> Карты обновлены сегодня в 07:25</span><span><i class="source-dot source-dot--metric"></i> Метрика обновлена вчера</span></div>
+        </section>
 
         <div class="home-layout">
           <section class="calendar-panel calendar-panel--useful surface">
@@ -82,7 +106,7 @@
             </div>
             <div class="day-agenda">
               <div class="agenda-heading"><div><span data-agenda-date>Сегодня, 23 июля</span><strong data-agenda-count>3 задачи</strong></div><small>Нажмите на задачу, чтобы перейти к работе</small></div>
-              <div class="agenda-list" data-agenda-list>
+              <div class="agenda-list" data-agenda-list data-summary-actions>
                 <button class="agenda-task is-urgent" type="button" data-task-route="geo" data-task-focus="review">
                   <time>10:00</time><span><i>Отзывы · ответ готов</i><strong>Проверить 2 ответа клиентам</strong><small>Первый отзыв ждёт ответа 19 часов</small></span><b>Открыть →</b>
                 </button>
@@ -125,12 +149,28 @@
                 <strong>4 показателя растут</strong>
                 <div class="overview-growth-foot"><span><b>1</b> требует внимания</span><i></i><i></i><i></i><i></i><i></i></div>
               </article>
-              <article class="source-locked" data-requires-source="yclients"><span>Вернулось клиентов</span><strong data-single="27" data-network="79">27</strong><small>Демо · появится после подключения YClients</small><button type="button" data-connect="yclients">Подключить YClients</button></article>
-              <article class="source-locked" data-requires-source="yclients"><span>Повторная выручка</span><strong data-single="126 800 ₽" data-network="368 400 ₽">126 800 ₽</strong><small>После связанных действий · данные CRM</small><button type="button" data-connect="yclients">Подключить YClients</button></article>
-              <article><span>Рейтинг на картах</span><strong>4,7 ★</strong><small>+0,1 за 30 дней</small></article>
+              <article class="source-locked" data-requires-source="yclients"><span>Готовы к контакту</span><strong data-single="24" data-network="61">24</strong><small>срок следующего визита наступил</small><button type="button" data-connect="yclients">Подключить YClients</button></article>
+              <article class="source-locked" data-requires-source="yclients"><span>Окна под риском</span><strong data-single="2" data-network="6">2</strong><small>четверг ниже среднего на 38%</small><button type="button" data-connect="yclients">Подключить YClients</button></article>
+              <article><span>Отзывы без ответа</span><strong>6</strong><small>первый ждёт 19 часов</small></article>
             </div>
           </div>
         </div>
+
+        <section class="dashboard-sources" aria-label="Сводка источников">
+          <section class="source-ledger surface">
+            <div class="section-title"><div><span>YClients · источник записи</span><h2>Откуда приходят клиенты</h2><small class="source-ledger-meta">Факт · последние 30 дней · обновлено сегодня в 07:19</small></div><button type="button" data-go="clients">Все каналы →</button></div>
+            <div class="source-ledger-head"><span>Канал</span><span>Записи</span><span>Дошли</span><span>Выручка</span></div>
+            <div class="source-ledger-row"><strong><i class="channel-mark channel-mark--orange"></i>Яндекс Карты</strong><span>82</span><span>71</span><b>126 400 ₽</b></div>
+            <div class="source-ledger-row"><strong><i class="channel-mark channel-mark--red"></i>2ГИС</strong><span>46</span><span>39</span><b>68 100 ₽</b></div>
+            <div class="source-ledger-row"><strong><i class="channel-mark channel-mark--blue"></i>Сайт</strong><span>61</span><span>53</span><b>92 700 ₽</b></div>
+            <div class="source-ledger-row"><strong><i class="channel-mark channel-mark--violet"></i>Соцсети</strong><span>38</span><span>31</span><b>56 400 ₽</b></div>
+            <div class="source-ledger-row"><strong><i class="channel-mark channel-mark--sage"></i>Администратор</strong><span>24</span><span>20</span><b>31 600 ₽</b></div>
+          </section>
+          <div class="source-snapshot-stack">
+            <article class="source-snapshot source-snapshot--geo surface"><div><span>Карты · здоровье профиля</span><b>GEО</b></div><strong>4,7 <small>★</small></strong><p>286 отзывов · отвечено 78%</p><div class="source-progress"><i style="width:72%"></i></div><small>Заполненность карточки <b>72%</b></small><button type="button" data-go="geo">Открыть геоотчёт →</button></article>
+            <article class="source-snapshot source-snapshot--metric surface"><div><span>Метрика · интерес к сайту</span><b>М</b></div><strong>1 248</strong><p>визитов · 60 нажатий «записаться»</p><div class="source-mini-chart"><i style="--h:38%"></i><i style="--h:54%"></i><i style="--h:46%"></i><i style="--h:72%"></i><i style="--h:61%"></i><i style="--h:84%"></i><i style="--h:76%"></i></div><small>Конверсия в цель <b>4,8%</b></small><button type="button" data-go="site">Открыть Метрику →</button></article>
+          </div>
+        </section>
 
         <div class="home-secondary">
           <aside class="reply-panel surface" data-focus-target="review">
@@ -164,17 +204,24 @@
       </section>
 
       <section class="screen" data-screen-panel="clients" hidden>
-        <div class="page-head page-head--compact"><div><p>Источник · YClients</p><h1>Клиенты</h1><span>Не база контактов, а группы, с которыми нужно работать сейчас.</span></div><button class="connection-button" type="button" data-connect="yclients">Подключить YClients</button></div>
+        <div class="page-head page-head--compact"><div><p>Источник · YClients</p><h1>Клиенты и возвраты</h1><span>Показываем, кто вернулся, кто выпал из привычного ритма и какое действие стоит сделать сегодня.</span></div><button class="connection-button" type="button" data-connect="yclients">Подключить YClients</button></div>
         <div class="source-preview-note"><span>Демо-данные</span><p>Реальные показатели появятся после подключения YClients.</p><button type="button" data-connect="yclients">Подключить через OAuth →</button></div>
-        <div class="metrics-row"><article><span>Активная база</span><strong>846</strong><small>за 12 месяцев</small></article><article><span>Начали пропадать</span><strong class="negative">38</strong><small>нарушили ритм</small></article><article><span>Вернулись в июле</span><strong class="positive">27</strong><small>+18% к июню</small></article><article><span>Вернули выручки</span><strong>126 800 ₽</strong><small>текущий месяц</small></article></div>
-        <div class="two-columns"><section class="surface segment-panel"><div class="section-title"><div><span>Сегменты внимания</span><h2>Кто может уйти</h2></div></div><article><span>38</span><div><strong>Начали пропадать</strong><p>Раньше возвращались каждые 5–7 недель.</p></div><b>до 84 000 ₽</b></article><article><span>64</span><div><strong>Были один раз</strong><p>Второй записи пока не случилось.</p></div><b>до 118 000 ₽</b></article><article><span>21</span><div><strong>Вернулись после контакта</strong><p>Записались в течение 30 дней.</p></div><b class="positive">+96 200 ₽</b></article></section><aside class="pattern-panel"><span>Паттерн</span><h2>Клиенты мастера Алины возвращаются на 12 дней позже</h2><p>Проверьте доступность повторной записи сразу после визита.</p><button type="button" data-open-task="thursday">Открыть задачу</button></aside></div>
+        <div class="metrics-row client-metrics"><article><span>Активная база</span><strong>846</strong><small>клиенты за 12 месяцев</small></article><article><span>Вернулись за 30 дней</span><strong class="positive">27</strong><small>+18% к предыдущему месяцу</small></article><article><span>Начали пропадать</span><strong class="negative">38</strong><small>нарушили привычный ритм</small></article><article><span>Доля возврата</span><strong>38%</strong><small>цель на месяц — 42%</small></article></div>
+        <div class="client-analytics-grid">
+          <section class="surface client-return-chart"><div class="section-title"><div><span>Динамика возврата</span><h2>Клиенты возвращаются чаще</h2></div><b class="positive">+18%</b></div><div class="return-chart-bars"><i style="--h:42%"><small>апр</small><b>18</b></i><i style="--h:51%"><small>май</small><b>21</b></i><i style="--h:47%"><small>июн</small><b>19</b></i><i class="is-current" style="--h:72%"><small>июл</small><b>27</b></i></div><p class="chart-caption">Число клиентов с повторной записью в течение 30 дней после визита.</p></section>
+          <aside class="surface client-funnel"><div class="section-title"><div><span>Путь клиента</span><h2>Где теряем возврат</h2></div></div><div class="client-funnel-step"><strong>312</strong><span>состоялись визиты</span><b>100%</b></div><div class="client-funnel-step"><strong>86</strong><span>нужен следующий шаг</span><b>28%</b></div><div class="client-funnel-step is-good"><strong>27</strong><span>записались повторно</span><b>38% от группы</b></div><p>Ева выделяет клиентов, у которых уже подходит срок следующего визита.</p></aside>
+        </div>
+        <div class="two-columns"><section class="surface segment-panel"><div class="section-title"><div><span>Сегменты внимания</span><h2>Кому отправить следующий шаг</h2></div><button type="button" data-placeholder="Сегменты можно будет фильтровать по мастеру, услуге и сроку возврата">Фильтры →</button></div><article><span>38</span><div><strong>Начали пропадать</strong><p>Раньше возвращались каждые 5–7 недель.</p></div><b>до 84 000 ₽</b></article><article><span>64</span><div><strong>Были один раз</strong><p>После первого визита не выбрали дату повторно.</p></div><b>до 118 000 ₽</b></article><article><span>24</span><div><strong>Готовы к контакту</strong><p>Срок следующего визита уже наступил.</p></div><b class="positive">приоритет сегодня</b></article><article><span>27</span><div><strong>Вернулись после контакта</strong><p>Записались в течение последних 30 дней.</p></div><b class="positive">+126 800 ₽</b></article></section><aside class="pattern-panel client-explain"><span>Паттерн Евы</span><h2>Клиенты мастера Алины возвращаются на 12 дней позже</h2><p>У группы ниже доля повторной записи. Проверьте предложение следующего визита сразу после услуги.</p><details><summary>Как рассчитано</summary><p>Сравнили средний интервал между визитами по мастерам за последние 90 дней.</p></details><button type="button" data-open-task="thursday">Открыть задачу</button></aside></div>
+        <details class="workspace-explainer"><summary>Как читать раздел «Клиенты и возвраты»</summary><p><b>Вернулись</b> — клиенты с новой записью в выбранном окне после предыдущего визита. <b>Начали пропадать</b> — их привычный интервал уже нарушен. Оценка «под риском» помогает выбрать приоритет, но не является гарантированной потерей выручки.</p></details>
       </section>
 
       <section class="screen" data-screen-panel="finance" hidden>
-        <div class="page-head page-head--compact"><div><p>Источник · YClients</p><h1>Финансы</h1><span>Результат действий продукта и команды в деньгах.</span></div><button class="connection-button" type="button" data-connect="yclients">Подключить YClients</button></div>
+        <div class="page-head page-head--compact"><div><p>Источник · YClients</p><h1>Финансы</h1><span>Показываем, из чего складывается выручка, где деньги теряются и какой эффект дают возвраты клиентов.</span></div><button class="connection-button" type="button" data-connect="yclients">Подключить YClients</button></div>
         <div class="source-preview-note"><span>Демо-данные</span><p>Реальные показатели появятся после подключения YClients.</p><button type="button" data-connect="yclients">Подключить через OAuth →</button></div>
-        <div class="metrics-row"><article class="metric-dark"><span>Повторная выручка</span><strong>126 800 ₽</strong><small>после связанных действий</small></article><article><span>Вернулось клиентов</span><strong>27</strong><small>из 86 в работе</small></article><article><span>Средний чек возврата</span><strong>4 696 ₽</strong><small>+8% за месяц</small></article><article><span>Потенциал задач</span><strong>до 184 000 ₽</strong><small>оценка, ещё не результат</small></article></div>
-        <section class="surface finance-chart"><div class="section-title"><div><span>8 недель</span><h2>Возвращённая выручка</h2></div><b>План 140 000 ₽</b></div><div class="large-bars"><i style="--h:31%"><small>2 июн</small></i><i style="--h:42%"><small>9 июн</small></i><i style="--h:38%"><small>16 июн</small></i><i style="--h:53%"><small>23 июн</small></i><i style="--h:61%"><small>30 июн</small></i><i style="--h:69%"><small>7 июл</small></i><i style="--h:65%"><small>14 июл</small></i><i class="is-current" style="--h:84%"><small>21 июл</small></i></div></section>
+        <div class="metrics-row finance-kpis"><article class="metric-dark"><span>Выручка за 30 дней</span><strong>428 600 ₽</strong><small>+12,4% к предыдущему периоду</small></article><article><span>Повторная выручка</span><strong>126 800 ₽</strong><small>29,6% от общей выручки</small></article><article><span>Средний чек</span><strong>4 820 ₽</strong><small>+8,1% за месяц</small></article><article><span>Упущено · оценка</span><strong class="negative">до 84 000 ₽</strong><small>no-show и свободные окна</small></article><article><span>Выручка / визит</span><strong>1 374 ₽</strong><small>с учётом всех записей</small></article></div>
+        <div class="finance-analytics-grid"><section class="surface finance-chart"><div class="section-title"><div><span>8 недель · YClients</span><h2>Выручка и повторные клиенты</h2></div><b class="positive">тренд вверх</b></div><div class="finance-chart-legend"><span><i class="legend-dot legend-dot--dark"></i>выручка</span><span><i class="legend-dot legend-dot--accent"></i>повторная выручка</span></div><div class="finance-bars"><div><i style="--h:34%"></i><b style="--h:22%"></b><small>2 июн</small></div><div><i style="--h:43%"></i><b style="--h:30%"></b><small>9 июн</small></div><div><i style="--h:41%"></i><b style="--h:28%"></b><small>16 июн</small></div><div><i style="--h:54%"></i><b style="--h:39%"></b><small>23 июн</small></div><div><i style="--h:61%"></i><b style="--h:47%"></b><small>30 июн</small></div><div><i style="--h:70%"></i><b style="--h:55%"></b><small>7 июл</small></div><div><i style="--h:67%"></i><b style="--h:52%"></b><small>14 июл</small></div><div class="is-current"><i style="--h:88%"></i><b style="--h:68%"></b><small>21 июл</small></div></div><p class="chart-caption">Повторная выручка — деньги от клиентов, которые вернулись после предыдущего визита.</p></section><aside class="surface finance-leaks"><div class="section-title"><div><span>Где теряем деньги</span><h2>Разбор потерь</h2></div></div><article><span>01</span><div><strong>No-show</strong><p>7 записей · оценка потери</p></div><b>−33 740 ₽</b></article><article><span>02</span><div><strong>Отмены</strong><p>11 записей · можно вернуть</p></div><b>−28 600 ₽</b></article><article><span>03</span><div><strong>Свободные окна</strong><p>Четверг ниже среднего на 38%</p></div><b>−21 700 ₽</b></article><details><summary>Как считается оценка</summary><p>Средний чек умножается на количество незакрытых визитов. Это ориентир для приоритизации, а не подтверждённая потеря.</p></details></aside></div>
+        <section class="finance-breakdown surface"><div class="section-title"><div><span>Структура выручки</span><h2>Какие услуги дают результат</h2></div><button type="button" data-placeholder="В полной версии можно переключить период и филиал">30 дней →</button></div><div class="finance-service-row"><strong>Стрижка и укладка</strong><div><i style="width:82%"></i></div><span>142 800 ₽</span><b>33%</b></div><div class="finance-service-row"><strong>Окрашивание</strong><div><i style="width:68%"></i></div><span>118 400 ₽</span><b>28%</b></div><div class="finance-service-row"><strong>Уход и восстановление</strong><div><i style="width:51%"></i></div><span>86 600 ₽</span><b>20%</b></div><div class="finance-service-row"><strong>Маникюр и экспресс-услуги</strong><div><i style="width:39%"></i></div><span>80 800 ₽</span><b>19%</b></div></section>
+        <details class="workspace-explainer"><summary>Как читать финансовые показатели</summary><p><b>Повторная выручка</b> — сумма от клиентов, которые вернулись после прошлого визита. <b>Упущено</b> — расчётный диапазон по no-show, отменам и незакрытым окнам; это ориентир для действий, а не бухгалтерский факт.</p></details>
       </section>
 
       <section class="screen" data-screen-panel="geo" hidden>
@@ -182,16 +229,70 @@
         <div class="geo-context"><span>Обзор геокарточек</span><p>Сначала проблемы, которые требуют действия; затем показатели.</p></div>
         <div class="geo-hero"><article class="geo-score"><span>Индекс геокарточек</span><div class="geo-score-value"><strong>67</strong><span>из 100</span></div><div class="geo-score-track"><i style="width:67%"></i></div><p>Главный резерв — ответы на отзывы и свежесть фотографий.</p></article><div class="geo-metrics"><article><span>Рейтинг</span><strong>4,6 ★</strong><small class="positive">+0,1 за месяц</small></article><article><span>Ответили</span><strong>78%</strong><small>цель — 90%</small></article><article><span>Среднее время</span><strong>11 ч.</strong><small class="positive">было 1 д. 7 ч.</small></article><article><span>Действия</span><strong>1 008</strong><small>за 3 месяца</small></article></div></div>
         <div class="two-columns"><section class="surface review-list" data-focus-target="review"><div class="section-title"><div><span>Требуют человека</span><h2>6 отзывов без ответа</h2></div><button type="button" data-placeholder="Отзывы отсортированы по влиянию">Сначала важные</button></div><article><div><span>ОВ</span><p><strong>Ольга В.</strong><small>2ГИС · вчера · ★★★☆☆</small></p></div><blockquote>Стрижка хорошая, но мастера ждала 25 минут…</blockquote><button data-open-task="review">Ответ готов →</button></article><article><div><span>АС</span><p><strong>Алина С.</strong><small>Яндекс · 2 дня назад · ★★★★★</small></p></div><blockquote>Очень понравилась атмосфера и мастер Мария!</blockquote><button type="button" data-placeholder="Ева подготовит короткую благодарность">Поблагодарить →</button></article></section><aside class="surface profile-health" data-focus-target="photos"><span>Заполненность</span><strong>72%</strong><div><i style="width:72%"></i></div><ul><li>✓ Адрес и контакты</li><li>✓ Услуги и цены</li><li>! Нужны свежие фото</li><li>! Не заполнены вопросы</li></ul><button type="button" data-open-task="photos">Открыть задачу →</button></aside></div>
+        <div class="geo-analytics-grid"><section class="surface geo-trend-card"><div class="section-title"><div><span>Динамика за 90 дней</span><h2>Рейтинг и отзывы</h2></div><b class="positive">+0,2</b></div><div class="geo-trend-chart"><div><i style="--h:42%"></i><small>май</small><b>4,5</b></div><div><i style="--h:55%"></i><small>июнь</small><b>4,6</b></div><div class="is-current"><i style="--h:71%"></i><small>июль</small><b>4,7</b></div></div><p class="chart-caption">Рейтинг растёт после ответов на отзывы. Следующий резерв — свежие фото и заполненные вопросы.</p><details><summary>Что входит в показатель</summary><p>Средняя оценка и количество отзывов по Яндекс.Картам и 2ГИС за выбранный период.</p></details></section><section class="surface geo-sentiment-card"><div class="section-title"><div><span>Отзывы · 286 текстовых</span><h2>О чём говорят клиенты</h2></div><b>Ева</b></div><div class="sentiment-layout"><div class="geo-donut"><span>74%<small>позитив</small></span></div><ul><li><i class="sentiment-dot sentiment-dot--good"></i><span>Атмосфера и мастера</span><b>74%</b></li><li><i class="sentiment-dot sentiment-dot--neutral"></i><span>Цена и ожидание</span><b>16%</b></li><li><i class="sentiment-dot sentiment-dot--bad"></i><span>Опоздания</span><b>10%</b></li></ul></div><p class="chart-caption">Главная повторяющаяся боль — ожидание перед началом услуги.</p></section></div>
+        <section class="surface geo-competitors"><div class="section-title"><div><span>Срез рядом с салоном</span><h2>Как выглядит поле конкурентов</h2></div><button type="button" data-placeholder="В полной версии можно изменить радиус и категорию">Радиус 1 км →</button></div><div class="geo-competitor-head"><span>Карточка</span><span>Рейтинг</span><span>Отзывы</span><span>Сигнал</span></div><div class="geo-competitor-row is-ours"><strong><i>01</i>Салон «Ирис» <small>ваша карточка</small></strong><span>4,7 ★</span><span>286</span><b>в фокусе</b></div><div class="geo-competitor-row"><strong><i>02</i>Beauty Room <small>Москва · 0,4 км</small></strong><span>4,8 ★</span><span>412</span><b class="positive">сильнее по отзывам</b></div><div class="geo-competitor-row"><strong><i>03</i>Studio Forma <small>Москва · 0,7 км</small></strong><span>4,5 ★</span><span>198</span><b>меньше фото</b></div></section>
+        <details class="workspace-explainer"><summary>Как читать геопоказатели</summary><p><b>Индекс геокарточек</b> объединяет рейтинг, отзывы, заполненность и активность профиля. <b>Сравнение</b> показывает соседние карточки по тем же открытым данным и не является точной позицией в выдаче.</p></details>
+      </section>
+
+      <section class="screen" data-screen-panel="signals" hidden>
+        <div class="page-head page-head--compact"><div><p>Рынок · конкуренты · спрос</p><h1>Сигналы рынка</h1><span>Ева отделяет изменения, на которые стоит реагировать, от обычного шума.</span></div><button class="primary-button" type="button" data-go="tasks">Открыть задачи</button></div>
+        <div class="signal-summary">
+          <article><span>За неделю</span><strong>14</strong><small>изменений в районе</small></article>
+          <article><span>Требуют внимания</span><strong>3</strong><small>связаны со спросом и картами</small></article>
+          <article><span>Возможности</span><strong>2</strong><small>можно использовать в этом месяце</small></article>
+          <article class="signal-summary__source"><span>Источники</span><strong>Карты + сайт</strong><small>открытые данные и ваши показатели</small></article>
+        </div>
+        <div class="market-layout">
+          <section class="market-lead">
+            <div class="market-lead__label"><span>Сигнал с высоким влиянием</span><i>Проверен Евой</i></div>
+            <h2>В районе вырос интерес к экспресс-услугам в будние дни</h2>
+            <p>Поисковые запросы и карточки конкурентов показывают рост спроса. У «Ириса» есть свободные окна, которые можно предложить без снижения цены.</p>
+            <div class="market-lead__facts"><span><b>Источник</b> Яндекс Карты и Метрика</span><span><b>Почему сейчас</b> тренд держится 12 дней</span><span><b>Что сделать</b> собрать предложение на четверг</span></div>
+            <button type="button" data-open-task="thursday">Открыть готовую задачу →</button>
+          </section>
+          <aside class="market-watch surface">
+            <div class="section-title"><div><span>Наблюдаем</span><h2>Ещё два сигнала</h2></div></div>
+            <article><i>01</i><div><strong>У конкурента обновились карточки</strong><p>Свежие фото и новые услуги могут повысить видимость в поиске.</p></div><b>Карты</b></article>
+            <article><i>02</i><div><strong>Вопросы клиентов повторяются</strong><p>Три формулировки можно превратить в посты и ответы администратора.</p></div><b>Отзывы</b></article>
+            <article><i>03</i><div><strong>Пятница стабильно сильнее четверга</strong><p>Есть база для сценария переноса части спроса.</p></div><b>YClients</b></article>
+          </aside>
+        </div>
+        <section class="market-method surface"><span>Как это работает</span><div><strong>1. Собираем сигналы</strong><strong>2. Сверяем с данными салона</strong><strong>3. Выдаём действие и ожидаемый эффект</strong></div><p>Демо показывает принцип работы: реальные выводы появятся после подключения источников и настройки проекта.</p></section>
+      </section>
+
+      <section class="screen" data-screen-panel="site" hidden>
+        <div class="page-head page-head--compact"><div><p>Сайт · Метрика · путь до записи</p><h1>Сайт и конверсия</h1><span>Разбираем не только трафик: где клиент теряет уверенность и почему не доходит до записи.</span></div><button class="connection-button" type="button" data-connect="metrica">Подключить Метрику</button></div>
+        <div class="conversion-score"><article><span>Индекс конверсии</span><strong>62</strong><small>из 100 · потенциал роста найден</small><div><i style="width:62%"></i></div></article><article><span>За 30 дней</span><strong>1 248</strong><small>переходов на сайт</small></article><article><span>До записи дошли</span><strong>4,8%</strong><small>демо-оценка по воронке</small></article><article><span>Главная точка потери</span><strong>Услуги</strong><small>страница не отвечает на 3 частых вопроса</small></article></div>
+        <div class="site-workspace"><section class="site-audit surface"><div class="section-title"><div><span>Аудит страницы услуг</span><h2>Что мешает записаться</h2></div><b>3 правки</b></div><article><i>01</i><div><strong>Неясно, кому подойдёт услуга</strong><p>Клиенту не хватает результата, длительности и понятного следующего шага.</p></div><span>Высокое влияние</span></article><article><i>02</i><div><strong>Кнопка записи теряется после первого экрана</strong><p>На мобильном пути до записи нет постоянной точки действия.</p></div><span>Высокое влияние</span></article><article><i>03</i><div><strong>Отзывы не поддерживают решение</strong><p>Нужно показать опыт клиентов рядом с услугой, а не на отдельной странице.</p></div><span>Среднее влияние</span></article><button type="button" data-placeholder="В рабочем продукте здесь откроется разметка страницы с рекомендациями Евы">Открыть разбор страницы →</button></section><aside class="funnel-card"><span>Путь клиента</span><h2>Переход → услуга → запись</h2><div class="funnel-steps"><article><strong>1 248</strong><small>посетили сайт</small></article><i>→</i><article><strong>468</strong><small>открыли услуги</small></article><i>→</i><article><strong>60</strong><small>нажали «записаться»</small></article><i>→</i><article><strong>23</strong><small>оставили контакт</small></article></div><p>Ева связывает падение с экраном и формулировкой, а не просто показывает процент.</p><button type="button" data-open-task="thursday">Создать задачу для команды →</button></aside></div>
+        <section class="site-questions surface"><div><span>Быстрые вопросы Еве</span><strong>Вместо долгого поиска по отчётам</strong></div><button type="button" data-placeholder="Ева покажет страницы с наибольшим числом уходов">Где уходят до записи?</button><button type="button" data-placeholder="Ева сопоставит каналы, заявки и записи">Какая реклама приводит записи?</button><button type="button" data-placeholder="Ева предложит правки первого экрана">Что исправить первым?</button></section>
+      </section>
+
+      <section class="screen" data-screen-panel="strategy" hidden>
+        <div class="page-head page-head--compact"><div><p>Цели · каналы · ожидаемый эффект</p><h1>Стратегия на 90 дней</h1><span>Один маршрут для салона: что делать сейчас, что измерять и к чему это приведёт.</span></div><button class="primary-button" type="button" data-go="reports">Посмотреть цель месяца</button></div>
+        <div class="strategy-hero"><section><span>Цель квартала</span><h2>Стабильнее заполнять будни и растить возвраты без постоянных скидок.</h2><p>Стратегия связывает загрузку, геокарточки, клиентские сегменты и контент, чтобы команда не работала по случайному списку задач.</p><div><b>+12%</b><span>цель по повторным записям</span><b>+8 п.п.</b><span>цель по загрузке будней</span></div></section><aside><span>Статус плана</span><strong>В фокусе</strong><p>Идёт 3-я неделя из 12</p><div><i style="width:25%"></i></div><small>7 задач завершено · 2 ждут решения владельца</small></aside></div>
+        <div class="strategy-streams"><article><header><span>01 · первые 30 дней</span><b>Сейчас</b></header><h2>Устранить потери</h2><p>Отзывы, карточки и страницы записи — убрать то, что уже мешает спросу.</p><ul><li><i>✓</i>Ответы на отзывы</li><li><i>✓</i>Свежие фото в карточках</li><li><i>→</i>Правки страницы услуг</li></ul><button type="button" data-go="geo">Открыть работу с картами →</button></article><article><header><span>02 · 31–60 дней</span><b>Дальше</b></header><h2>Вернуть и заполнить</h2><p>Сегменты клиентской базы и сценарии для дней с низкой загрузкой.</p><ul><li><i>→</i>Группа риска ухода</li><li><i>→</i>«Тихий четверг»</li><li><i>○</i>Проверка эффекта</li></ul><button type="button" data-go="clients">Открыть клиентов →</button></article><article><header><span>03 · 61–90 дней</span><b>Подготовка</b></header><h2>Закрепить рост</h2><p>Контент, бренд и тесты каналов на основе уже собранных сигналов.</p><ul><li><i>○</i>Контент-план</li><li><i>○</i>Тест оффера</li><li><i>○</i>Сводный отчёт</li></ul><button type="button" data-go="content">Открыть контент →</button></article></div>
+      </section>
+
+      <section class="screen" data-screen-panel="content" hidden>
+        <div class="page-head page-head--compact"><div><p>Идеи · черновики · публикации</p><h1>Контент-фабрика</h1><span>Преобразует вопросы клиентов, рыночные сигналы и стратегию в материалы для команды.</span></div><button class="primary-button" type="button" data-placeholder="В полном продукте здесь запускается создание нового материала">+ Создать материал</button></div>
+        <div class="content-pulse"><article><span>На этой неделе</span><strong>8</strong><small>материалов в работе</small></article><article><span>Готово к публикации</span><strong>3</strong><small>поста · сторис · ответ</small></article><article><span>Основано на данных</span><strong>6</strong><small>тем пришли из отзывов и рынка</small></article><article><span>Бренд-стиль</span><strong>Подключён</strong><small>тон и визуальные правила</small></article></div>
+        <div class="content-workspace"><section class="content-queue surface"><div class="section-title"><div><span>Очередь команды</span><h2>Что готовим</h2></div><button type="button" data-go="calendar">К календарю →</button></div><article><i>01</i><div><strong>Как выбрать экспресс-услугу в обед</strong><p>Пост · тема из рыночного сигнала</p></div><b>Черновик</b></article><article><i>02</i><div><strong>До и после: обновление формы</strong><p>Карусель · материалы собраны</p></div><b>Согласование</b></article><article><i>03</i><div><strong>Ответ на частый вопрос о записи</strong><p>Сторис · основано на отзывах</p></div><b>Готово</b></article><article><i>04</i><div><strong>Почему лучше записаться заранее</strong><p>Рилс · поддерживает загрузку четверга</p></div><b>Идея</b></article></section><aside class="content-generator"><span>Помощник по контенту</span><h2>Соберём материал из сигнала</h2><p>Выберите, что нужно команде. В реальном продукте Ева предложит структуру, текст и формат.</p><div><button type="button" data-placeholder="Черновик поста будет собран из выбранного сигнала">Пост</button><button type="button" data-placeholder="Сценарий сторис будет собран из выбранного сигнала">Сторис</button><button type="button" data-placeholder="Сценарий видео будет собран из выбранного сигнала">Видео</button><button type="button" data-placeholder="Черновик ответа будет собран из выбранного сигнала">Ответ</button></div><small>Контекст: спрос на экспресс-услуги в будние дни</small></aside></div>
+        <section class="content-sources surface"><span>Откуда приходят темы</span><div><article><b>Отзывы</b><strong>частые вопросы и возражения</strong></article><article><b>Рынок</b><strong>сезонность, спрос, конкуренты</strong></article><article><b>Стратегия</b><strong>цели месяца и приоритетные услуги</strong></article><article><b>Бренд</b><strong>тон, обещание и визуальный стиль</strong></article></div></section>
       </section>
 
       <section class="screen" data-screen-panel="growth" hidden>
-        <div class="page-head page-head--compact"><div><p>Сайт · соцсети · бренд</p><h1>Рост и бренд</h1><span>Отдельное пространство для стратегии и маркетинговых материалов.</span></div><button class="connection-button" type="button" data-connect="metrica">Подключить Метрику</button></div>
-        <div class="source-preview-note"><span>Демо-данные</span><p>Метрики сайта станут реальными после подключения Яндекс Метрики.</p><button type="button" data-connect="metrica">Подключить источник →</button></div>
-        <div class="growth-grid"><article class="growth-card" data-requires-source="metrica"><div><span>Сайт</span><i>М</i></div><h2>Анализ воронки сайта</h2><p>Трафик, конверсии и страницы, где теряются записи.</p><div class="fake-chart"><i></i><i></i><i></i><i></i><i></i></div><button type="button" data-connect="metrica">Подключить Метрику</button></article><article class="growth-card paid-lock"><div><span>Соцсети</span><i>◇</i></div><h2>Контент и идеи</h2><p>Темы из сезонности, спроса и реальных вопросов клиентов.</p><ul><li>12 тем на месяц</li><li>4 поста готовы</li><li>2 сезонных сигнала</li></ul><button type="button" data-open-pricing>Запросить в пилоте</button></article><article class="growth-card"><div><span>Бренд</span><i>Б</i></div><h2>Целостность образа</h2><p>Сайт, карточки и соцсети говорят одним голосом.</p><div class="brand-score"><strong>74</strong><span>из 100<br><small>есть 3 расхождения</small></span></div><button type="button" data-placeholder="В полном разборе Ева покажет три расхождения и предложит правки">Открыть анализ →</button></article><article class="growth-card"><div><span>Стратегия</span><i>↗</i></div><h2>План роста на 90 дней</h2><p>Приоритеты по каналам, бюджету и ожидаемому результату.</p><ol><li><b>01</b>Удержание клиентов</li><li><b>02</b>Локальный спрос</li><li><b>03</b>Контент и бренд</li></ol><button type="button" data-placeholder="План откроется после подтверждения целей и доступного бюджета">Посмотреть план →</button></article></div>
+        <div class="page-head page-head--compact"><div><p>Сайт · спрос · контент · стратегия</p><h1>Аналитика для роста</h1><span>Не набор дашбордов: Ева связывает каналы, находит причину и предлагает следующий шаг.</span></div><button class="connection-button" type="button" data-connect="metrica">Подключить Метрику</button></div>
+        <div class="analysis-path"><span>Данные</span><i>→</i><span>Причина</span><i>→</i><span>Гипотеза</span><i>→</i><span>Задача команде</span><p>Каждая рекомендация должна объяснять, откуда она появилась и какой результат ожидаем.</p></div>
+        <div class="source-preview-note"><span>Демо-данные</span><p>Метрики сайта и конверсии станут реальными после подключения Яндекс Метрики.</p><button type="button" data-connect="metrica">Подключить источник →</button></div>
+        <div class="growth-grid"><article class="growth-card" data-requires-source="metrica"><div><span>Сайт и запись</span><i>М</i></div><h2>Где теряются обращения</h2><p>Трафик, конверсия и страницы, на которых клиент уходит до записи.</p><div class="fake-chart"><i></i><i></i><i></i><i></i><i></i></div><button type="button" data-connect="metrica">Подключить Метрику</button></article><article class="growth-card"><div><span>Контент</span><i>◇</i></div><h2>Темы из живого спроса</h2><p>Вопросы из отзывов, сезонность и рыночные сигналы превращаются в темы для публикаций.</p><ul><li>12 тем на месяц</li><li>4 поста готовы</li><li>2 сезонных сигнала</li></ul><button type="button" data-placeholder="В полном продукте здесь будет контент-план с форматами и черновиками">Посмотреть темы →</button></article><article class="growth-card"><div><span>Образ бренда</span><i>Б</i></div><h2>Один голос во всех каналах</h2><p>Сайт, карточки и соцсети помогают клиенту узнать салон и принять решение быстрее.</p><div class="brand-score"><strong>74</strong><span>из 100<br><small>найдено 3 расхождения</small></span></div><button type="button" data-placeholder="В полном разборе Ева покажет три расхождения и предложит правки">Открыть разбор →</button></article><article class="growth-card"><div><span>Стратегия</span><i>↗</i></div><h2>План роста на 90 дней</h2><p>Приоритеты по удержанию, локальному спросу, контенту и ожидаемому эффекту.</p><ol><li><b>01</b>Удержание клиентов</li><li><b>02</b>Локальный спрос</li><li><b>03</b>Контент и бренд</li></ol><button type="button" data-placeholder="План откроется после подтверждения целей и доступного бюджета">Посмотреть план →</button></article></div>
       </section>
 
       <section class="screen" data-screen-panel="reports" hidden>
-        <div class="page-head page-head--compact"><div><p>15–21 июля</p><h1>Отчёт собственника</h1><span>Сначала итог, затем детали по направлениям и филиалам.</span></div><div class="delivery-chip"><i></i><span>Следующий отчёт<strong>в понедельник · Telegram</strong></span></div></div>
+        <div class="page-head page-head--compact"><div><p>15–21 июля · обновлено в воскресенье, 19:00</p><h1>Отчёт владельцу</h1><span>Итог недели, причины изменений, риски и решение, которое нужно принять.</span></div><div class="delivery-chip"><i></i><span>Следующий отчёт<strong>в понедельник · Telegram</strong></span></div></div>
+        <section class="owner-summary">
+          <article class="owner-summary__result"><span>Главный итог</span><h2>Команда вернула клиентов и подняла видимость салона на картах.</h2><p>Действия связаны с повторными записями и ростом активности карточек. Самый большой резерв — загрузка четверга.</p><div><b>Яндекс Карты</b><b>2ГИС</b><b>YClients</b></div></article>
+          <article class="owner-summary__answer"><span>Что нужно от владельца</span><strong>Согласовать сценарий для четверга</strong><p>Предложение составлено без прямой скидки. После подтверждения команда запускает его в ближайший четверг.</p><button type="button" data-open-task="thursday">Посмотреть решение →</button></article>
+        </section>
         <div class="report-top"><article><span>Повторные записи после действий</span><strong data-single="8 клиентов" data-network="24 клиента">8 клиентов</strong><p data-single="на 38 600 ₽" data-network="на 116 400 ₽">на 38 600 ₽</p><small>связаны с задачами команды</small></article><article><span>Недельный план</span><strong data-report-progress>86%</strong><div><i data-report-progress-bar style="width:86%"></i></div><small data-report-progress-copy>18 из 21 задач выполнено</small></article><article><span>Повторная выручка к прошлой неделе</span><strong class="positive">+21%</strong><svg viewBox="0 0 220 54"><path d="M2 48C24 47 29 35 49 37S78 45 98 26s32 1 49-7 28-2 42-12 19-2 29-6"></path></svg><small>по связанным визитам</small></article></div>
         <div class="report-kpis">
           <article><span>Новые клиенты</span><strong data-single="17" data-network="49">17</strong><small>+4 к прошлой неделе</small></article>
@@ -199,6 +300,12 @@
           <article><span>Рейтинг на картах</span><strong>4,7 ★</strong><small>+0,1 · ответили на 11 отзывов</small></article>
           <article><span>Активность карточек</span><strong>+18%</strong><small>звонки, маршруты и переходы</small></article>
         </div>
+        <section class="report-directions">
+          <article><span>Репутация</span><strong>Отзывы стали отвечаться быстрее</strong><p>11 ответов · среднее время 11 ч.</p><b>Карты</b></article>
+          <article><span>Клиенты</span><strong>Возвраты дали повторные записи</strong><p>8 клиентов · 38 600 ₽ выручки</p><b>YClients</b></article>
+          <article><span>Спрос</span><strong>Карточки привели больше действий</strong><p>+18% звонков, маршрутов и переходов</p><b>Карты</b></article>
+          <article><span>Риск</span><strong>Четверг требует нового сценария</strong><p>38% загрузки против среднего 76%</p><b>YClients</b></article>
+        </section>
         <div class="report-main">
           <section class="surface change-list">
             <div class="section-title"><div><span>Что изменилось</span><h2>Результат по направлениям</h2></div><button type="button" data-report-preview>Предпросмотр PDF</button></div>
@@ -213,6 +320,7 @@
             <section class="forecast-card surface"><span>Прогноз</span><strong>+42 000 ₽/мес.</strong><p>Если заполнить по 5 свободных окон в каждый четверг. Расчёт по среднему чеку и текущей конверсии.</p></section>
           </aside>
         </div>
+        <section class="report-evidence surface"><div class="section-title"><div><span>Почему мы так считаем</span><h2>Данные, которые легли в выводы</h2></div><small>Каждый вывод можно проверить по источнику</small></div><div class="report-evidence__grid"><article><span>Яндекс Карты + 2ГИС</span><strong>Отзывы, рейтинг, действия в карточках</strong><p>Показывают, где клиент видит салон и с каким впечатлением уходит.</p></article><article><span>YClients</span><strong>Записи, возвраты, загрузка, средний чек</strong><p>Помогают оценить эффект действий и увидеть свободные окна.</p></article><article><span>Яндекс Метрика</span><strong>Трафик и путь до записи</strong><p>Подключается следующим: найдёт страницы, на которых теряются обращения.</p></article></div></section>
         <section class="surface branch-report">
           <div class="section-title"><div><span>Сводка по филиалам</span><h2>Где нужен фокус</h2></div><small>Сначала сеть, затем каждый салон</small></div>
           <div class="branch-row branch-head"><span>Филиал</span><span>Вернули</span><span>Рейтинг</span><span>План</span><span>Главный риск</span></div>
@@ -312,6 +420,6 @@
   </aside>
 
   <div class="toast" role="status" aria-live="polite" hidden><span>✓</span><p><strong>Готово</strong><small>Действие сохранено в прототипе</small></p></div>
-  <script src="assets/js/demo.js?v=20260724p2d"></script>
+  <script src="assets/js/demo.js?v=20260801-summary"></script>
 </body>
 </html>
