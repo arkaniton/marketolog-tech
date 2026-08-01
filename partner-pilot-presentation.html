@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f1e9">
+  <title>МаркетологТЕХ · партнёрский пилот</title>
+  <style>
+    :root {
+      --ink: #191b18;
+      --ink-2: #191b18;
+      --paper: #f6f1e9;
+      --paper-2: #fffefc;
+      --text: #191b18;
+      --muted: #68706a;
+      --muted-dark: #68706a;
+      --line: rgba(25, 27, 24, .15);
+      --line-dark: rgba(25, 27, 24, .15);
+      --coral: #e95d43;
+      --coral-soft: #e95d43;
+      --mint: #3f8064;
+      --yellow: #d8b432;
+      --lavender: #9f8de5;
+      --shadow: 0 30px 90px rgba(25, 27, 24, .16);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      overflow: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Helvetica Neue", "Avenir Next", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    button { font: inherit; }
+
+    .deck { position: relative; min-height: 100svh; isolation: isolate; }
+    .deck::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(233, 93, 67, .14), transparent 32%),
+        radial-gradient(circle at 92% 12%, rgba(63, 128, 100, .10), transparent 28%),
+        linear-gradient(145deg, #f6f1e9, #f3eee6 56%, #f8f4ed);
+    }
+    .deck::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      opacity: .26;
+      background-image: radial-gradient(rgba(25, 27, 24, .18) .7px, transparent .7px);
+      background-size: 24px 24px;
+      mask-image: linear-gradient(to bottom, black, transparent 92%);
+    }
+
+    .chrome { position: fixed; z-index: 10; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; padding: 22px clamp(20px, 4vw, 56px); color: var(--muted); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }
+    .brand { color: var(--ink); font-weight: 800; letter-spacing: -.02em; text-transform: none; font-size: 15px; }
+    .brand i { color: var(--coral); font-style: normal; }
+    .counter { font-variant-numeric: tabular-nums; }
+    .progress { position: fixed; z-index: 10; top: 0; left: 0; height: 3px; width: 0; background: var(--coral); transition: width .35s ease; }
+
+    .slide { position: absolute; inset: 0; display: grid; place-items: center; padding: 90px clamp(22px, 7vw, 108px) 100px; color: var(--ink); background: var(--paper); opacity: 0; pointer-events: none; transform: translateY(20px) scale(.985); transition: opacity .4s ease, transform .5s cubic-bezier(.2,.75,.25,1); overflow: auto; }
+    .slide.active { opacity: 1; pointer-events: auto; transform: none; }
+    .slide.paper { color: var(--ink); background: var(--paper); }
+    .slide.paper::before { content: ""; position: absolute; inset: 0; z-index: -1; background: radial-gradient(circle at 90% 0%, rgba(237,101,72,.15), transparent 38%); }
+    .director-slide .panel.dark .metrics { margin-top: 0; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .hero-slide .slide-inner { max-width: 780px; }
+    .slide-inner { width: min(1160px, 100%); }
+    .eyebrow { display: flex; align-items: center; gap: 11px; margin-bottom: 24px; color: var(--coral-soft); font-size: 12px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+    .paper .eyebrow { color: #ba4835; }
+    .eyebrow::before { content: ""; width: 42px; height: 2px; background: currentColor; }
+    h1, h2, h3, p { margin: 0; }
+    h1, h2 { max-width: 920px; font-family: Georgia, "Times New Roman", serif; font-weight: 500; letter-spacing: -.045em; line-height: .98; }
+    h1 { font-size: clamp(44px, 8vw, 108px); }
+    h2 { font-size: clamp(36px, 6vw, 76px); }
+    .lede { max-width: 760px; margin-top: 24px; color: var(--muted); font-size: clamp(17px, 2.1vw, 24px); line-height: 1.42; }
+    .paper .lede { color: var(--muted-dark); }
+    .accent { color: var(--coral); }
+    .mint { color: var(--mint); }
+    .lavender { color: var(--lavender); }
+
+    .hero-meta { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 34px; }
+    .chip { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 999px; padding: 9px 13px; color: var(--muted); font-size: 13px; background: rgba(255,255,255,.38); }
+    .paper .chip { border-color: var(--line-dark); color: var(--muted-dark); }
+    .chip strong { color: var(--ink); }
+    .paper .chip strong { color: var(--ink); }
+
+    .hero-side { position: absolute; right: clamp(22px, 7vw, 108px); bottom: 15%; width: min(260px, 31vw); aspect-ratio: 1 / 1.08; display: grid; place-items: center; border: 1px solid rgba(25,27,24,.24); border-radius: 34px; background: var(--ink-2); box-shadow: var(--shadow); transform: rotate(3deg); }
+    .hero-side::after { content: ""; position: absolute; inset: 15px; border: 1px solid rgba(233,93,67,.55); border-radius: 26px; }
+    .hero-mark { position: relative; z-index: 1; display: grid; gap: 14px; justify-items: center; text-align: center; }
+    .hero-mark .m { display: grid; place-items: center; width: 76px; height: 76px; border-radius: 22px; background: var(--coral); color: white; font-size: 38px; }
+    .hero-mark b { color: white; font-size: 21px; letter-spacing: -.05em; }
+    .hero-mark span { max-width: 170px; color: #cfcac1; font-size: 13px; line-height: 1.4; }
+
+    .cards { display: grid; gap: 15px; margin-top: 36px; }
+    .cards.three { grid-template-columns: repeat(3, 1fr); }
+    .cards.four { grid-template-columns: repeat(4, 1fr); }
+    .card { min-height: 150px; padding: 22px; border: 1px solid var(--line); border-radius: 20px; background: rgba(255,255,255,.74); backdrop-filter: blur(12px); }
+    .paper .card { border-color: var(--line-dark); background: rgba(255,255,255,.74); }
+    .card.hot { background: linear-gradient(145deg, rgba(233,93,67,.18), rgba(255,255,255,.76)); border-color: rgba(233,93,67,.55); }
+    .card h3 { margin-bottom: 9px; font-size: clamp(19px, 2.2vw, 25px); letter-spacing: -.035em; }
+    .card p { color: var(--muted); font-size: clamp(14px, 1.45vw, 17px); line-height: 1.45; }
+    .paper .card p { color: var(--muted-dark); }
+    .number { display: block; margin-bottom: 22px; color: var(--coral); font-size: 12px; font-weight: 800; letter-spacing: .12em; }
+
+    .flow { display: grid; grid-template-columns: 1fr 52px 1.18fr 52px 1fr; align-items: center; gap: 12px; margin-top: 42px; }
+    .flow-box { min-height: 180px; display: flex; flex-direction: column; justify-content: space-between; padding: 22px; border: 1px solid var(--line); border-radius: 22px; background: rgba(255,255,255,.74); }
+    .flow-box.core { color: white; background: var(--ink-2); border-color: rgba(233,93,67,.55); box-shadow: 0 20px 60px rgba(25,27,24,.22); }
+    .flow-box strong { font-size: 19px; }
+    .flow-box p { color: var(--muted); line-height: 1.45; }
+    .flow-arrow { color: var(--coral); font-size: 30px; text-align: center; }
+    .source-pills { display: flex; flex-wrap: wrap; gap: 7px; }
+    .source-pills span { padding: 7px 9px; border-radius: 999px; background: #f0ebe2; color: var(--ink); font-size: 12px; }
+    .flow-box.core p { color: #d3d0c9; }
+    .flow-box.core .chip { border-color: rgba(255,255,255,.18); background: rgba(255,255,255,.08); color: #d3d0c9; }
+    .flow-box.core .chip strong { color: white; }
+
+    .split { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); gap: 22px; margin-top: 36px; }
+    .split > * { min-width: 0; }
+    .panel { min-width: 0; padding: 28px; border-radius: 24px; border: 1px solid var(--line); background: rgba(255,255,255,.74); }
+    .panel.dark { background: var(--ink-2); }
+    .panel.paper-panel { border-color: var(--line-dark); background: rgba(255,255,255,.74); }
+    .panel h3 { margin-bottom: 22px; font-size: 13px; letter-spacing: .13em; text-transform: uppercase; color: var(--coral); }
+    .paper .panel h3 { color: #ba4835; }
+    .list { display: grid; gap: 15px; }
+    .list-item { display: grid; grid-template-columns: 28px 1fr; gap: 11px; align-items: start; }
+    .list-item .badge { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 9px; background: var(--coral); color: white; font-size: 12px; font-weight: 800; }
+    .list-item .badge.mint-badge { background: var(--mint); }
+    .list-item strong { display: block; margin-bottom: 3px; font-size: 16px; }
+    .list-item span { color: var(--muted); font-size: 14px; line-height: 1.4; }
+    .panel.dark .list-item strong { color: white; }
+    .panel.dark .list-item span { color: #d3d0c9; }
+    .paper .list-item span { color: var(--muted-dark); }
+
+    .timeline { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; margin-top: 44px; position: relative; }
+    .timeline::before { content: ""; position: absolute; left: 4%; right: 4%; top: 24px; height: 2px; background: var(--coral); }
+    .time-step { position: relative; z-index: 1; text-align: center; }
+    .time-dot { display: grid; place-items: center; width: 48px; height: 48px; margin: 0 auto 16px; border-radius: 50%; background: var(--ink-2); border: 2px solid var(--coral); color: white; font-weight: 800; }
+    .time-step:last-child .time-dot { background: var(--coral); }
+    .time-step b { display: block; font-size: 15px; }
+    .time-step span { display: block; margin-top: 7px; color: var(--muted); font-size: 13px; line-height: 1.35; }
+
+    .metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 36px; min-width: 0; }
+    .metric { min-width: 0; padding: 22px; border-top: 2px solid var(--coral); background: rgba(255,255,255,.72); }
+    .panel.dark .metric { background: #242724; border: 1px solid rgba(255,255,255,.14); border-top: 2px solid var(--coral); }
+    .panel.dark .metric strong { color: var(--coral); }
+    .panel.dark .metric span { color: #d3d0c9; }
+    .metric strong { overflow-wrap: anywhere; }
+    .metric strong { display: block; margin-bottom: 9px; color: var(--coral-soft); font-family: Georgia, serif; font-size: clamp(30px, 4vw, 50px); font-weight: 500; letter-spacing: -.06em; }
+    .metric span { color: var(--muted); font-size: 14px; line-height: 1.4; }
+
+    .roadmap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 36px; }
+    .phase { padding: 22px; border: 1px solid var(--line); border-radius: 20px; background: rgba(255,255,255,.74); }
+    .phase strong { display: inline-block; margin-bottom: 16px; padding: 7px 10px; border-radius: 999px; background: var(--coral); color: white; font-size: 12px; }
+    .phase ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; line-height: 1.65; }
+
+    .closing { max-width: 740px; }
+    .closing .cta { display: inline-flex; margin-top: 32px; padding: 14px 20px; border-radius: 999px; background: var(--coral); color: white; font-weight: 800; }
+    .note { margin-top: 18px; color: var(--muted); font-size: 13px; }
+    .note b { color: var(--coral-soft); }
+
+    .nav { position: fixed; z-index: 10; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; padding: 18px clamp(20px, 4vw, 56px); }
+    .dots { display: flex; gap: 7px; }
+    .dots button { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 99px; background: rgba(25,27,24,.25); cursor: pointer; transition: width .2s, background .2s; }
+    .dots button.active { width: 28px; background: var(--coral); }
+    .nav-actions { display: flex; gap: 9px; }
+    .nav-actions button { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 13px; background: rgba(255,255,255,.62); color: var(--ink); cursor: pointer; font-size: 19px; transition: border-color .2s, background .2s; }
+    .nav-actions button:hover { border-color: var(--coral); background: rgba(233,93,67,.15); }
+
+    @media (max-width: 880px) {
+      .hero-side { position: relative; right: auto; bottom: auto; width: 150px; margin: 34px 0 0; transform: rotate(2deg); }
+      .hero-side .m { width: 48px; height: 48px; border-radius: 14px; font-size: 26px; }
+      .hero-side b { font-size: 15px; }
+      .hero-side span { font-size: 11px; }
+      .cards.four { grid-template-columns: repeat(2, 1fr); }
+      .metrics { grid-template-columns: repeat(2, 1fr); }
+      .flow { grid-template-columns: 1fr; }
+      .flow-arrow { transform: rotate(90deg); }
+      .timeline { grid-template-columns: 1fr; gap: 17px; }
+      .timeline::before { left: 23px; right: auto; top: 24px; bottom: 24px; width: 2px; height: auto; }
+      .time-step { display: grid; grid-template-columns: 48px 1fr; gap: 14px; text-align: left; align-items: center; }
+      .time-dot { margin: 0; }
+      .time-step span { margin-top: 4px; }
+    }
+    @media (max-width: 620px) {
+      .chrome { padding-top: 15px; font-size: 10px; }
+      .brand { font-size: 13px; }
+      .slide { padding: 70px 20px 86px; align-items: start; }
+      .slide-inner { margin: auto 0; }
+      .hero-side { display: none; }
+      h1 { font-size: clamp(42px, 13vw, 68px); }
+      h2 { font-size: clamp(36px, 11vw, 60px); }
+      .cards.three, .cards.four, .split, .roadmap { grid-template-columns: 1fr; }
+      .metrics { grid-template-columns: 1fr 1fr; }
+      .card { min-height: 0; }
+      .panel { padding: 20px; }
+      .hint { display: none; }
+    }
+    @media (max-height: 760px) and (min-width: 621px) {
+      .slide { padding-top: 68px; padding-bottom: 72px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .slide { transition: none; }
+    }
+    @media print {
+      html, body { overflow: visible; background: var(--paper); }
+      .slide { position: relative; min-height: 100vh; opacity: 1; transform: none; page-break-after: always; pointer-events: auto; }
+      .chrome, .nav, .progress { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck" id="deck">
+    <div class="progress" id="progress"></div>
+    <header class="chrome">
+      <div class="brand">Маркетолог<span>ТЕХ</span> <i>· партнёрский пилот</i></div>
+      <div class="counter"><span id="current">01</span> / <span id="total">10</span></div>
+    </header>
+
+    <section class="slide hero-slide active" data-title="Старт">
+      <div class="slide-inner">
+        <div class="eyebrow">Партнёрский пилот · август 2026</div>
+        <h1>Маркетинг салона<br><span class="accent">под контролем.</span></h1>
+        <p class="lede">МаркетологТЕХ соединяет карты, отзывы, YClients и коммуникации — чтобы вернуть клиента, показать деньги и сохранить рабочий ритм салона.</p>
+        <div class="hero-meta"><span class="chip"><strong>Ева</strong> собирает сигналы</span><span class="chip"><strong>Команда</strong> подтверждает</span><span class="chip"><strong>Владелец</strong> видит эффект</span></div>
+      </div>
+      <div class="hero-side" aria-hidden="true"><div class="hero-mark"><div class="m">M</div><b>МаркетологТЕХ</b><span>данные превращаются в действие</span></div></div>
+    </section>
+
+    <section class="slide" data-title="Боль владельца">
+      <div class="slide-inner">
+        <div class="eyebrow">Проблема, за которую платят</div>
+        <h2>Владелец видит цифры.<br><span class="accent">Действия теряются.</span></h2>
+        <p class="lede">Клиенты остывают, расходы живут отдельно, а правила работы салона держатся на памяти одного администратора.</p>
+        <div class="cards three">
+          <article class="card hot"><span class="number">01 · КЛИЕНТСКОЕ ЯДРО</span><h3>Клиент не возвращается сам</h3><p>Салон видит общую базу, но не знает, кому пора написать сегодня.</p></article>
+          <article class="card"><span class="number">02 · КОМАНДА</span><h3>Алгоритмы живут в головах</h3><p>Ушёл администратор — вместе с ним исчезли скрипты, правила и привычный ритм.</p></article>
+          <article class="card"><span class="number">03 · ФИНАНСЫ</span><h3>Выручка без причин</h3><p>Есть оборот, но рядом не видно расходов, кассового разрыва и эффекта действий.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Механика">
+      <div class="slide-inner">
+        <div class="eyebrow">Как работает продукт</div>
+        <h2>Из сигнала — в действие, которое возвращает <span class="mint">деньги</span>.</h2>
+        <div class="flow">
+          <div class="flow-box"><strong>Источники</strong><div class="source-pills"><span>Яндекс Карты</span><span>2ГИС</span><span>YClients</span><span>Метрика</span></div><p>Публичные и подключённые данные салона.</p></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box core"><strong>МаркетологТЕХ</strong><p>Ева находит приоритет, объясняет контекст и предлагает следующий шаг.</p><span class="chip">ИИ готовит · человек подтверждает</span></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box"><strong>Задача</strong><p>«Отправить 15 сообщений в Telegram / Max по ритму клиента».</p><span class="chip">эффект можно проверить</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide paper" data-title="Ценность">
+      <div class="slide-inner">
+        <div class="eyebrow">Что получает салон</div>
+        <h2>Одна система держит<br>три контура ценности.</h2>
+        <div class="split">
+          <div class="panel dark"><h3>Для команды</h3><div class="list"><div class="list-item"><div class="badge">01</div><div><strong>Администратор входит быстрее</strong><span>Скрипты, правила салона и задачи в одном месте.</span></div></div><div class="list-item"><div class="badge mint-badge">02</div><div><strong>Клиент получает заботу</strong><span>Точечное сообщение приходит в его привычный ритм.</span></div></div></div></div>
+          <div class="panel paper-panel"><h3>Для владельца</h3><div class="list"><div class="list-item"><div class="badge">03</div><div><strong>Видит план и факт</strong><span>Выручка, расходы, кассовые разрывы и точки роста.</span></div></div><div class="list-item"><div class="badge mint-badge">04</div><div><strong>Считает эффект</strong><span>Сколько клиентов вернулось и сколько денег принесло действие.</span></div></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Пилотный контур">
+      <div class="slide-inner">
+        <div class="eyebrow">Что проверяем в первой волне</div>
+        <h2>Пилот — это работа<br>на реальном салоне.</h2>
+        <p class="lede">Внутри недели проверяем не красивый отчёт, а рабочий процесс: источник → приоритет → действие → подтверждённый эффект.</p>
+        <div class="cards four">
+          <article class="card"><span class="number">01</span><h3>YClients</h3><p>Клиенты, визиты, возвраты и сегменты.</p></article>
+          <article class="card"><span class="number">02</span><h3>Геоданные</h3><p>Карточки, отзывы, рейтинг и заметные точки роста.</p></article>
+          <article class="card"><span class="number">03</span><h3>Telegram / Max</h3><p>Точечная коммуникация по ритму клиента.</p></article>
+          <article class="card hot"><span class="number">04</span><h3>Ева</h3><p>Ежедневный приоритет и готовая задача команде.</p></article>
+        </div>
+        <div class="hero-meta"><span class="chip">Изменения подтверждает команда салона</span><span class="chip">Доступы — только в кабинете</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Семь дней">
+      <div class="slide-inner">
+        <div class="eyebrow">Недельная проверка</div>
+        <h2>Семь дней, чтобы увидеть<br><span class="accent">реальный ритм.</span></h2>
+        <div class="timeline">
+          <div class="time-step"><div class="time-dot">0</div><div><b>Подготовка</b><span>Филиал, роли, согласие, источники.</span></div></div>
+          <div class="time-step"><div class="time-dot">1</div><div><b>Первый план</b><span>Команда получает приоритеты.</span></div></div>
+          <div class="time-step"><div class="time-dot">2–5</div><div><b>Работа</b><span>Задачи, вопросы, качество ответов.</span></div></div>
+          <div class="time-step"><div class="time-dot">6</div><div><b>Сводка</b><span>Сделано, потеряно, дальше.</span></div></div>
+          <div class="time-step"><div class="time-dot">7</div><div><b>Разбор</b><span>Продолжать, доработать или масштабировать.</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide paper" data-title="Эффект">
+      <div class="slide-inner">
+        <div class="eyebrow">Как поймём ценность</div>
+        <h2>Показываем, где салон<br><span class="accent">вернул деньги.</span></h2>
+        <p class="lede">В пилоте фиксируем действия, возвраты и подтверждённый эффект — без неподтверждённых обещаний.</p>
+        <div class="metrics">
+          <div class="metric"><strong>ритм</strong><span>Задачи закрываются каждый день.</span></div>
+          <div class="metric"><strong>ядро</strong><span>Горячие клиенты остаются в работе.</span></div>
+          <div class="metric"><strong>₽</strong><span>Видно, сколько заработано или сохранено.</span></div>
+          <div class="metric"><strong>7 дн.</strong><span>Есть решение о продолжении пилота.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide paper compact-slide" data-title="Юридический модуль">
+      <div class="slide-inner">
+        <div class="eyebrow">Следующий модуль · идея партнёра</div>
+        <h2>От аналитики —<br>к <span class="accent">защите салона.</span></h2>
+        <p class="lede">Документы и сценарии действий под услуги салона. Финальное решение — за специалистом.</p>
+        <div class="split">
+          <div class="panel dark"><h3>Пакет документов</h3><div class="list"><div class="list-item"><div class="badge">01</div><div><strong>ОКВЭД → документы</strong><span>Услуги и формат салона определяют список.</span></div></div><div class="list-item"><div class="badge">02</div><div><strong>Пакет под условия салона</strong><span>Готовые формы для конкретного бизнеса.</span></div></div></div></div>
+          <div class="panel paper-panel"><h3>Сценарии проверок</h3><div class="list"><div class="list-item"><div class="badge mint-badge">03</div><div><strong>Проверка СЭС</strong><span>Что делать и какие документы показать.</span></div></div><div class="list-item"><div class="badge">04</div><div><strong>Контрольная закупка</strong><span>Алгоритм действий и передача юристу.</span></div></div></div></div>
+        </div>
+        <div class="hero-meta"><span class="chip"><strong>Гипотеза:</strong> документы и помощь специалиста в стрессовой ситуации</span></div>
+      </div>
+    </section>
+
+    <section class="slide compact-slide director-slide" data-title="Цифровой директор">
+      <div class="slide-inner">
+        <div class="eyebrow">Модель для партнёров</div>
+        <h2>Цифровой директор<br><span class="mint">продаёт результат.</span></h2>
+        <p class="lede">Партнёр сопровождает салон, показывает эффект и получает понятную экономику подключения.</p>
+        <div class="split">
+          <div class="panel dark"><h3>Рабочая гипотеза</h3><div class="metrics"><div class="metric"><strong>20 000 ₽</strong><span>подписка салона / месяц</span></div><div class="metric"><strong>20%</strong><span>вознаграждение директора</span></div></div></div>
+          <div class="panel"><h3>Что видно партнёру</h3><div class="list"><div class="list-item"><div class="badge">01</div><div><strong>Активные салоны</strong><span>Статус пилота и прогресс Дня 7.</span></div></div><div class="list-item"><div class="badge mint-badge">02</div><div><strong>Подтверждённый эффект</strong><span>Возвраты, действия и основание для выплаты.</span></div></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Запуск">
+      <div class="slide-inner closing">
+        <div class="eyebrow">Следующий шаг</div>
+        <h2>Начинаем с одного салона,<br>а строим систему для сети.</h2>
+        <p class="lede">Выбираем 1–2 филиала, подключаем YClients, читаем геоданные и проживаем семь дней в реальном рабочем ритме.</p>
+        <div class="cta">Запустить пилот →</div>
+        <p class="note"><b>На выходе:</b> факты для владельца, сценарий для цифрового директора и список модулей для следующей версии.</p>
+      </div>
+    </section>
+
+    <nav class="nav" aria-label="Навигация по презентации">
+      <div class="dots" id="dots"></div>
+      <div class="nav-actions"><button id="prev" type="button" aria-label="Предыдущий слайд">←</button><button id="next" type="button" aria-label="Следующий слайд">→</button></div>
+    </nav>
+  </main>
+  <script>
+    (() => {
+      const slides = [...document.querySelectorAll('.slide')];
+      const dots = document.getElementById('dots');
+      const current = document.getElementById('current');
+      const total = document.getElementById('total');
+      const progress = document.getElementById('progress');
+      const prev = document.getElementById('prev');
+      const next = document.getElementById('next');
+      let index = 0;
+      total.textContent = String(slides.length).padStart(2, '0');
+      slides.forEach((slide, i) => {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.title = slide.dataset.title || `Слайд ${i + 1}`;
+        dot.setAttribute('aria-label', dot.title);
+        dot.addEventListener('click', () => go(i));
+        dots.appendChild(dot);
+      });
+      function go(nextIndex) {
+        index = Math.max(0, Math.min(slides.length - 1, nextIndex));
+        slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+        [...dots.children].forEach((dot, i) => dot.classList.toggle('active', i === index));
+        current.textContent = String(index + 1).padStart(2, '0');
+        progress.style.width = `${((index + 1) / slides.length) * 100}%`;
+        prev.disabled = index === 0;
+        next.disabled = index === slides.length - 1;
+        history.replaceState(null, '', `#${index + 1}`);
+      }
+      function step(delta) { go(index + delta); }
+      prev.addEventListener('click', () => step(-1));
+      next.addEventListener('click', () => step(1));
+      window.addEventListener('keydown', (event) => {
+        if (['ArrowRight', ' ', 'PageDown'].includes(event.key)) { event.preventDefault(); step(1); }
+        if (['ArrowLeft', 'PageUp'].includes(event.key)) { event.preventDefault(); step(-1); }
+        if (event.key === 'Home') { event.preventDefault(); go(0); }
+        if (event.key === 'End') { event.preventDefault(); go(slides.length - 1); }
+      });
+      let touchX = null;
+      window.addEventListener('touchstart', event => { touchX = event.changedTouches[0].clientX; }, { passive: true });
+      window.addEventListener('touchend', event => {
+        if (touchX === null) return;
+        const dx = event.changedTouches[0].clientX - touchX;
+        if (Math.abs(dx) > 45) step(dx < 0 ? 1 : -1);
+        touchX = null;
+      }, { passive: true });
+      const hash = Number.parseInt(location.hash.slice(1), 10);
+      go(Number.isFinite(hash) && hash > 0 ? hash - 1 : 0);
+    })();
+  </script>
+</body>
+</html>
