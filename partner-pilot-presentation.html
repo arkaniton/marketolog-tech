@@ -120,6 +120,10 @@
     .flow-box.core .chip { border-color: rgba(255,255,255,.18); background: rgba(255,255,255,.08); color: #d3d0c9; }
     .flow-box.core .chip strong { color: white; }
     .nowrap { white-space: nowrap; }
+    .real-shot { margin-top: 30px; padding: 11px; border: 1px solid rgba(25,27,24,.18); border-radius: 26px; background: var(--ink-2); box-shadow: var(--shadow); }
+    .real-shot img { display: block; width: 100%; height: min(39vh, 390px); border-radius: 17px; object-fit: cover; object-position: center 58%; }
+    .real-shot figcaption { display: flex; justify-content: space-between; gap: 16px; padding: 11px 4px 1px; color: #d3d0c9; font-size: 12px; line-height: 1.35; }
+    .real-shot figcaption strong { color: white; }
 
     .product-layout { display: grid; grid-template-columns: minmax(0, .94fr) minmax(0, 1.06fr); gap: 32px; align-items: center; margin-top: 18px; }
     .product-copy h2 { max-width: 640px; font-size: clamp(40px, 5.3vw, 68px); }
@@ -318,14 +322,11 @@
     <section class="slide" data-title="Как работает">
       <div class="slide-inner">
         <div class="eyebrow">Как работает система</div>
-        <h2>Система видит проблему.<br><span class="mint">Команда знает, что делать.</span></h2>
-        <div class="flow">
-          <div class="flow-box"><strong>Данные салона</strong><div class="source-pills"><span>Яндекс Карты</span><span>2ГИС</span><span>YClients</span><span>Метрика</span></div><p>Карты, отзывы, визиты и загрузка в одном месте.</p></div>
-          <div class="flow-arrow">→</div>
-          <div class="flow-box core"><strong>МаркетологТЕХ</strong><p>Ева находит приоритет, объясняет контекст и предлагает следующий шаг.</p><span class="chip">ИИ готовит · человек подтверждает</span></div>
-          <div class="flow-arrow">→</div>
-          <div class="flow-box"><strong>Следующий шаг</strong><p>«Написать 15 клиентам в Telegram или Max».</p><span class="chip">эффект можно проверить</span></div>
-        </div>
+        <h2>Один экран.<br><span class="mint">Понятный следующий шаг.</span></h2>
+        <figure class="real-shot">
+          <img src="previews/source-converter-desktop.png" alt="Экран МаркетологТЕХ: источники данных сходятся в едином рабочем окне">
+          <figcaption><span><strong>Карты, отзывы, YClients и Метрика</strong> собираются в одном месте.</span><span>Ева находит приоритет → команда подтверждает действие.</span></figcaption>
+        </figure>
       </div>
     </section>
 
