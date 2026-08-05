@@ -182,7 +182,7 @@
     (() => {
       const deck = document.querySelector('.deck');
       const nav = document.querySelector('.nav');
-      const presentationOrder = ['Маркетинг салона','Слишком много задач','Что внутри','YClients','Запись в диалоге','Контент','Геомаркетинг','Рабочее пространство','Уже работает','Уже завтра','Документы','Партнёрство','Следующий шаг'];
+      const presentationOrder = ['Маркетинг салона','Слишком много задач','Что внутри','YClients','Запись в диалоге','Контент','Геомаркетинг','Рабочее пространство','Уже работает','Документы','Уже завтра','Партнёрство','Следующий шаг'];
       presentationOrder.forEach(title => { const slide = deck.querySelector(`.slide[data-title="${title}"]`); if (slide) deck.insertBefore(slide, nav); });
       const slides = [...document.querySelectorAll('.slide')];
       const dots = document.getElementById('dots');
