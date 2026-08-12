@@ -83,11 +83,11 @@
   <script>
     const state={step:1,connected:{yclients:false,maps:false,metrika:false},connectedSocials:{},completed:{},skipped:{},sync:{},socials:[],values:{},mockOtp:''};
     const steps=[
-      {key:'yclients',progressLabel:'YClients',eyebrow:'Шаг 1 · Записи и клиенты',title:'Подключим YClients',lead:'Подключение только для чтения: данные о визитах и клиентах помогут собрать первые задачи для салона.',icon:'Y'},
-      {key:'maps',progressLabel:'Карты',eyebrow:'Шаг 2 · Видимость рядом',title:'Добавим карточки на картах',lead:'Добавьте одну или обе карточки, чтобы отслеживать локальную видимость салона.',icon:'Я'},
-      {key:'metrika',progressLabel:'Сайт и Метрика',eyebrow:'Шаг 3 · Сайт и интерес',title:'Поймём путь клиента',lead:'Сайт покажет путь клиента, а Метрика — интерес и заявки.',icon:'М'},
-      {key:'socials',progressLabel:'Соцсети',eyebrow:'Шаг 4 · Присутствие',title:'Какие соцсети ведёт салон?',lead:'Отметьте площадки, где салон публикуется или общается с клиентами.',icon:'S'},
-      {key:'access',progressLabel:'Доступы',eyebrow:'Шаг 5 · Доступы',title:'Подключим выбранные каналы',lead:'Подключите только отмеченные каналы — каждый доступ можно добавить отдельно.',icon:'→'}
+      {key:'yclients',progressLabel:'YClients',eyebrow:'Шаг 1 · Записи и клиенты',title:'Подключим YClients',lead:'Подключение в режиме чтения.',icon:'Y'},
+      {key:'maps',progressLabel:'Карты',eyebrow:'Шаг 2 · Видимость рядом',title:'Добавим карточки на картах',lead:'Добавьте ссылку на одну или обе карточки салона.',icon:'Я'},
+      {key:'metrika',progressLabel:'Сайт и Метрика',eyebrow:'Шаг 3 · Сайт и интерес',title:'Поймём путь клиента',lead:'Добавьте сайт и подключите Метрику, если она есть.',icon:'М'},
+      {key:'socials',progressLabel:'Соцсети',eyebrow:'Шаг 4 · Присутствие',title:'Какие соцсети ведёт салон?',lead:'Отметьте площадки, где салон работает.',icon:'S'},
+      {key:'access',progressLabel:'Доступы',eyebrow:'Шаг 5 · Доступы',title:'Подключим выбранные каналы',lead:'Подключите отмеченные каналы.',icon:'→'}
     ];
     const stepContent=document.getElementById('stepContent');
     const progress=document.getElementById('progress');
