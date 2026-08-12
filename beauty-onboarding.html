@@ -93,16 +93,16 @@
     @keyframes statusB{0%,32%{opacity:0;transform:translateY(5px)}38%,56%{opacity:1;transform:translateY(0)}62%,100%{opacity:0;transform:translateY(-5px)}}
     @keyframes statusC{0%,64%{opacity:0;transform:translateY(5px)}70%,88%{opacity:1;transform:translateY(0)}94%,100%{opacity:0;transform:translateY(-5px)}}
     /* Keep the four source tiles visibly separate from the central product mark. */
-    .loading-screen__grid{width:180px;height:180px}
+    .loading-screen__grid{width:224px;height:208px}
     .loading-screen__grid:before{inset:12px;border-radius:26px}
-    .loading-screen__piece{width:42px;height:42px;border-radius:12px}
-    .loading-screen__piece--red{--to-x:-69px;--to-y:-69px}
-    .loading-screen__piece--blue{--to-x:27px;--to-y:-69px}
-    .loading-screen__piece--yellow{--to-x:-69px;--to-y:27px}
-    .loading-screen__piece--coral{--to-x:27px;--to-y:27px}
-    .loading-screen__brand{width:48px;height:48px;border-radius:14px}
-    .loading-screen__brand strong{font-size:12px}
-    .loading-screen__brand small{margin-top:2px;font-size:5px}
+    .loading-screen__piece{width:46px;height:46px;border-radius:13px}
+    .loading-screen__piece--red{--to-x:-96px;--to-y:-88px}
+    .loading-screen__piece--blue{--to-x:50px;--to-y:-88px}
+    .loading-screen__piece--yellow{--to-x:-96px;--to-y:42px}
+    .loading-screen__piece--coral{--to-x:50px;--to-y:42px}
+    .loading-screen__brand{width:94px;height:64px;border-radius:16px}
+    .loading-screen__brand strong{font-size:14px}
+    .loading-screen__brand small{margin-top:3px;font-size:8px;letter-spacing:.025em}
     @keyframes flow{0%,10%{transform:translateX(0);opacity:0}20%{opacity:1}78%{transform:translateX(195px);opacity:1}90%,100%{transform:translateX(220px);opacity:0}}
     .animate-flow{animation:flow 3.2s ease-in-out infinite}.animate-assemble{animation:assemble 3.8s cubic-bezier(.22,1,.36,1) var(--delay) infinite}
   </style>
@@ -130,7 +130,7 @@
       <div id="otpView" hidden="">
         <div class="auth-layout otp-layout">
           <div class="auth-context"><p class="eyebrow">Следующий шаг</p><h1>Проверим, что<br><em>email ваш.</em></h1><p>Это займёт несколько секунд. После подтверждения сразу откроется настройка рабочего пространства.</p><ol><li><i>01</i><span>Код действует только для этого макета</span></li><li><i>02</i><span>Пароли источников появятся позже, по шагам</span></li><li><i>03</i><span>Каждый шаг можно пропустить</span></li></ol></div>
-          <form class="auth-card" id="otpForm"><button class="back-link back-button" id="otpBack" type="button">← Вернуться к регистрации</button><p class="card-kicker">Подтверждение email</p><h2>Введите код из письма</h2><p class="card-lead">Мы отправили шестизначный код на <strong id="otpEmail">demo@salon.ru</strong>.</p><div class="mock-otp">Код для макета: <b id="mockOtp">683 016</b></div><div class="field otp-field"><label for="otpCode">Код подтверждения</label><input id="otpCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" required=""></div><p class="form-message" id="otpMessage" role="alert"></p><button class="submit-button" id="otpSubmit" type="submit">Подтвердить email <span>→</span></button><button class="secondary-button" id="otpResend" type="button">Сгенерировать новый код</button><p class="auth-note">В реальном продукте код придёт на почту. Здесь он показан прямо на экране для кликабельного макета.</p></form>
+          <form class="auth-card" id="otpForm"><button class="back-link back-button" id="otpBack" type="button">← Вернуться к регистрации</button><p class="card-kicker">Подтверждение email</p><h2>Введите код из письма</h2><p class="card-lead">Мы отправили шестизначный код на <strong id="otpEmail">demo@salon.ru</strong>.</p><div class="mock-otp">Код для макета: <b id="mockOtp">381 372</b></div><div class="field otp-field"><label for="otpCode">Код подтверждения</label><input id="otpCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" required=""></div><p class="form-message" id="otpMessage" role="alert"></p><button class="submit-button" id="otpSubmit" type="submit">Подтвердить email <span>→</span></button><button class="secondary-button" id="otpResend" type="button">Сгенерировать новый код</button><p class="auth-note">В реальном продукте код придёт на почту. Здесь он показан прямо на экране для кликабельного макета.</p></form>
         </div>
       </div>
 
