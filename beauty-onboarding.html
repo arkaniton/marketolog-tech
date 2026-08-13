@@ -131,6 +131,26 @@
     @media (max-width:850px){.complete__animation{max-width:430px;justify-self:stretch;margin-inline:auto}}
     @keyframes flow{0%,10%{transform:translateX(0);opacity:0}20%{opacity:1}78%{transform:translateX(195px);opacity:1}90%,100%{transform:translateX(220px);opacity:0}}
     .animate-flow{animation:flow 3.2s ease-in-out infinite}.animate-assemble{animation:assemble 3.8s cubic-bezier(.22,1,.36,1) var(--delay) infinite}
+    /* Final loading motion: fixed geometry, staggered emphasis, no drifting tiles. */
+    .loading-screen__grid{width:210px;height:166px;transform:none}
+    .loading-screen__grid:before{inset:0;border-radius:24px}
+    .loading-screen__piece{width:46px;height:46px;animation:workspaceTilePulse 2.8s ease-in-out var(--delay) infinite}
+    .loading-screen__piece--red{--tile-x:-98px;--tile-y:-48px}
+    .loading-screen__piece--blue{--tile-x:52px;--tile-y:-48px}
+    .loading-screen__piece--yellow{--tile-x:-98px;--tile-y:36px}
+    .loading-screen__piece--coral{--tile-x:52px;--tile-y:36px}
+    .loading-screen__brand{width:92px;height:64px;border-radius:18px}
+    .loading-screen__brand strong{font-size:16px}
+    .loading-screen__brand small{font-size:7px;letter-spacing:.035em}
+    @keyframes workspaceTilePulse{0%,100%{opacity:.62;transform:translate(var(--tile-x),var(--tile-y)) scale(.94)}45%,65%{opacity:1;transform:translate(var(--tile-x),var(--tile-y)) scale(1.04)}}
+    .workspace-loader{position:fixed;inset:0;z-index:4;display:flex;align-items:center;justify-content:center;padding:28px;background:rgba(245,241,232,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+    .workspace-loader__card{width:min(100%,980px);overflow:hidden;border:1px solid rgba(23,24,22,.13);border-radius:28px;background:rgba(255,253,248,.98);box-shadow:0 28px 90px rgba(33,28,21,.2)}
+    .workspace-loader__head{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:20px 25px 17px;border-bottom:1px solid var(--line);color:#8c857a;font-size:10px;font-weight:850;letter-spacing:.1em;text-transform:uppercase}
+    .workspace-loader__dots{display:flex;gap:5px}.workspace-loader__dots i{width:7px;height:7px;border-radius:50%;background:#d5ccc0}.workspace-loader__dots i:nth-child(2){background:#e5a899}.workspace-loader__dots i:nth-child(3){background:#d0c7ba}
+    .workspace-loader__body{display:grid;grid-template-columns:minmax(0,.86fr) minmax(390px,1.14fr);gap:34px;align-items:center;padding:34px 38px 32px}
+    .workspace-loader__eyebrow{color:var(--coral-dark);font-size:10px;font-weight:850;letter-spacing:.13em;text-transform:uppercase}.workspace-loader__copy h1{max-width:420px;margin-top:14px;font:700 clamp(31px,4vw,51px)/.96 Golos,Onest,sans-serif;letter-spacing:-.07em}.workspace-loader__copy>p{max-width:370px;margin-top:15px;color:var(--muted);font-size:13px;line-height:1.65}.workspace-loader__message{display:flex;align-items:flex-start;gap:9px;margin-top:24px;color:var(--ink);font-size:12px;font-weight:800}.workspace-loader__message i{width:8px;height:8px;flex:0 0 8px;margin-top:4px;border:1.5px solid #b4ab9d;border-top-color:#5a8660;border-radius:50%;animation:spin .8s linear infinite}.workspace-loader__estimate{display:flex;align-items:center;gap:10px;margin-top:17px;color:var(--faint);font-size:10px}.workspace-loader__estimate strong,.workspace-loader__estimate small{display:block}.workspace-loader__estimate strong{color:var(--muted);font-size:11px}.workspace-loader__estimate small{margin-top:3px;font-size:9px}.workspace-loader__estimate>i{display:grid;width:25px;height:25px;place-items:center;border-radius:8px;background:var(--sage-soft);color:var(--sage-dark);font-style:normal;font-weight:900}
+    .workspace-loader__screen{padding:16px 17px 15px;border:1px solid #dcd4c8;border-radius:21px;background:#f4f0e8;box-shadow:0 18px 34px rgba(23,24,22,.08)}.workspace-loader__screen-head{display:flex;align-items:center;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid #ded6ca;color:#8c857a;font-size:8px;font-weight:800;letter-spacing:.09em;text-transform:uppercase}.workspace-loader__screen-grid{position:relative;display:grid;height:205px;place-items:center}.workspace-loader__screen-grid:before{position:absolute;inset:26px 35px;border:1px dashed #d7cdc0;border-radius:24px;content:""}.workspace-loader__tiles{position:relative;width:246px;height:160px}.workspace-loader__tile{position:absolute;width:49px;height:49px;border:1px solid rgba(255,255,255,.72);border-radius:14px;box-shadow:0 10px 20px rgba(23,24,22,.12);animation:workspaceTilePulse 2.8s ease-in-out var(--delay) infinite}.workspace-loader__tile:after{position:absolute;inset:0;width:9px;height:9px;margin:auto;border-radius:50%;background:#fff;content:""}.workspace-loader__tile--red{top:4px;left:20px;background:#fc3f1d;--tile-x:0;--tile-y:0}.workspace-loader__tile--blue{top:4px;right:20px;background:#0077ff;--tile-x:0;--tile-y:0}.workspace-loader__tile--yellow{bottom:4px;left:20px;background:#fed84c;--tile-x:0;--tile-y:0}.workspace-loader__tile--coral{right:20px;bottom:4px;background:#ff5a35;--tile-x:0;--tile-y:0}.workspace-loader__brand{position:absolute;top:50%;left:50%;display:grid;width:100px;height:70px;place-items:center;transform:translate(-50%,-50%);border-radius:20px;background:#171816;color:#fff;box-shadow:0 14px 28px rgba(23,24,22,.16)}.workspace-loader__brand div{text-align:center}.workspace-loader__brand strong{display:block;font-size:17px;letter-spacing:-.08em}.workspace-loader__brand small{display:block;margin-top:4px;color:rgba(255,255,255,.55);font-size:7px;font-weight:700;letter-spacing:.035em}.workspace-loader__footer{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-top:11px;border-top:1px solid #ded6ca;color:#6f6a61;font-size:10px}.workspace-loader__footer span{color:#9a9388;font-size:9px}.workspace-loader__continue{display:none;margin-top:22px}.workspace-loader.is-ready .workspace-loader__message i{border-color:var(--sage-dark);animation:none}.workspace-loader.is-ready .workspace-loader__continue{display:inline-flex}.workspace-loader.is-ready .workspace-loader__estimate>i{background:var(--sage-soft);color:var(--sage-dark)}
+    @media (max-width:720px){.workspace-loader{padding:14px}.workspace-loader__body{grid-template-columns:1fr;gap:22px;padding:24px 20px 23px}.workspace-loader__copy h1{font-size:36px}.workspace-loader__screen{max-width:470px;margin-inline:auto}.workspace-loader__continue{width:100%}}
   </style>
 </head>
 <body>
@@ -141,6 +161,26 @@
     </div>
   </div>
   <div class="veil" aria-hidden="true"></div>
+  <div class="workspace-loader" id="workspaceLoadingView" hidden role="dialog" aria-modal="true" aria-labelledby="workspaceLoadingTitle">
+    <section class="workspace-loader__card">
+      <header class="workspace-loader__head"><span>МаркетологТЕХ · рабочее пространство</span><span class="workspace-loader__dots" aria-hidden="true"><i></i><i></i><i></i></span></header>
+      <div class="workspace-loader__body">
+        <div class="workspace-loader__copy">
+          <p class="workspace-loader__eyebrow">Первичная загрузка</p>
+          <h1 id="workspaceLoadingTitle">Подтягиваем данные для рабочего пространства</h1>
+          <p>Собираем подтверждённые данные из подключённых источников. Это происходит один раз при первом входе.</p>
+          <div class="workspace-loader__message" aria-live="polite"><i aria-hidden="true"></i><span id="workspaceLoadingMessage">Сверяем записи на сегодня</span></div>
+          <div class="workspace-loader__estimate"><i aria-hidden="true">✓</i><span><strong id="workspaceLoadingEstimate">Осталось около 2 мин</strong><small>Оценка уточняется по мере загрузки разделов</small></span></div>
+          <button class="button button--dark workspace-loader__continue" id="workspaceLoadingContinue" type="button">Открыть рабочее пространство <span>→</span></button>
+        </div>
+        <div class="workspace-loader__screen" aria-label="Состояние загрузки рабочего пространства">
+          <div class="workspace-loader__screen-head"><span>Данные салона</span><span>обновляем</span></div>
+          <div class="workspace-loader__screen-grid"><div class="workspace-loader__tiles"><span class="workspace-loader__tile workspace-loader__tile--red" style="--delay:0s"></span><span class="workspace-loader__tile workspace-loader__tile--blue" style="--delay:.35s"></span><span class="workspace-loader__tile workspace-loader__tile--yellow" style="--delay:.7s"></span><span class="workspace-loader__tile workspace-loader__tile--coral" style="--delay:1.05s"></span><div class="workspace-loader__brand"><div><strong>МТ</strong><small>МаркетологТЕХ</small></div></div></div></div>
+          <div class="workspace-loader__footer"><strong id="workspaceLoadingSection">Сегодня</strong><span id="workspaceLoadingState">Загрузка раздела</span></div>
+        </div>
+      </div>
+    </section>
+  </div>
 
   <main class="shell">
     <section class="panel" aria-live="polite">
@@ -225,7 +265,18 @@
     document.getElementById('otpResend').addEventListener('click',()=>{makeMockOtp();showToast('Новый случайный код сгенерирован для макета.')});
     document.getElementById('otpBack').addEventListener('click',()=>{document.getElementById('otpView').hidden=true;document.getElementById('authView').hidden=false});
     document.querySelector('[data-toggle="authPassword"]').addEventListener('click',()=>{const input=document.getElementById('authPassword');input.type=input.type==='password'?'text':'password'});
-    document.getElementById('openWorkspace').addEventListener('click',()=>{document.querySelector('.veil').style.display='none';document.querySelector('.workflow').style.filter='none';document.querySelector('.workflow').style.transform='none';document.querySelector('.workflow').style.opacity='1';document.querySelector('.shell').style.display='none';showToast('Добро пожаловать в рабочее пространство салона.')});
+    const workspaceLoadingView=document.getElementById('workspaceLoadingView');
+    const workspaceLoadingMessage=document.getElementById('workspaceLoadingMessage');
+    const workspaceLoadingSection=document.getElementById('workspaceLoadingSection');
+    const workspaceLoadingState=document.getElementById('workspaceLoadingState');
+    const workspaceLoadingEstimate=document.getElementById('workspaceLoadingEstimate');
+    const workspaceLoadingContinue=document.getElementById('workspaceLoadingContinue');
+    const workspaceLoadingStages=[['Сегодня','Сверяем записи на сегодня'],['Клиенты','Собираем сегменты клиентов'],['Карты','Ищем салон на карте'],['Контент','Формируем задачи для команды']];
+    let workspaceLoadingTimer=null;
+    function startWorkspaceLoading(){document.querySelector('.veil').style.display='none';document.querySelector('.workflow').style.filter='none';document.querySelector('.workflow').style.transform='none';document.querySelector('.workflow').style.opacity='1';document.querySelector('.shell').style.display='none';workspaceLoadingView.hidden=false;workspaceLoadingView.classList.remove('is-ready');workspaceLoadingContinue.style.display='none';let index=0;workspaceLoadingMessage.textContent=workspaceLoadingStages[0][1];workspaceLoadingSection.textContent=workspaceLoadingStages[0][0];workspaceLoadingState.textContent='Загрузка раздела';workspaceLoadingEstimate.textContent='Осталось около 2 мин';clearInterval(workspaceLoadingTimer);workspaceLoadingTimer=setInterval(()=>{index+=1;if(index<workspaceLoadingStages.length){workspaceLoadingSection.textContent=workspaceLoadingStages[index][0];workspaceLoadingMessage.textContent=workspaceLoadingStages[index][1];workspaceLoadingEstimate.textContent=index===1?'Осталось около 1 мин 20 сек.':index===2?'Осталось около 45 сек.':'Осталось около 20 сек.'}else{clearInterval(workspaceLoadingTimer);workspaceLoadingView.classList.add('is-ready');workspaceLoadingMessage.textContent='Рабочие разделы готовы';workspaceLoadingSection.textContent='Сегодня';workspaceLoadingState.textContent='Готово';workspaceLoadingEstimate.textContent='Данные загружены';workspaceLoadingContinue.style.display='inline-flex'}},1800)}
+    function openLoadedWorkspace(){workspaceLoadingView.hidden=true;showToast('Рабочее пространство готово к работе.')}
+    document.getElementById('openWorkspace').addEventListener('click',startWorkspaceLoading);
+    workspaceLoadingContinue.addEventListener('click',openLoadedWorkspace);
   </script>
 </body>
 </html>
