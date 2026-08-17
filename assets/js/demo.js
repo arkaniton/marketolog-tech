@@ -99,9 +99,10 @@
   document.querySelectorAll('[data-salon-address]').forEach(function (node) { node.textContent = salonAddress; });
 
   var titles = {
-    home: 'Главная', calendar: 'Календарь', tasks: 'Задачи', clients: 'Клиенты',
-    finance: 'Финансы', geo: 'Геомаркетинг', growth: 'Рост и бренд',
-    reports: 'Отчёты', integrations: 'Интеграции'
+    home: 'Сегодня', calendar: 'План', tasks: 'Задачи', clients: 'Клиенты',
+    finance: 'Финансы', geo: 'Карты и отзывы', site: 'Сайт и конверсия', signals: 'Рынок',
+    strategy: 'Стратегия', content: 'Контент-фабрика', growth: 'Аналитика',
+    reports: 'Отчёт владельцу', integrations: 'Источники'
   };
   var notificationButton = document.querySelector('[data-notifications]');
   var notificationPopover = document.querySelector('[data-notification-popover]');
@@ -131,8 +132,8 @@
   }
 
   function showScreen(name) {
-    if (guestMode && ['clients', 'finance', 'growth', 'reports'].indexOf(name) > -1) {
-      openModal('connect', name === 'growth' ? 'metrica' : 'yclients');
+    if (guestMode && ['clients', 'finance', 'site', 'strategy', 'content', 'growth', 'reports'].indexOf(name) > -1) {
+      openModal('connect', (name === 'site' || name === 'growth') ? 'metrica' : 'yclients');
       return;
     }
     document.querySelectorAll('[data-screen-panel]').forEach(function (panel) {
@@ -492,14 +493,11 @@
     }
     if (homeTitle) {
       if (remaining === 0) homeTitle.textContent = 'План на сегодня выполнен';
-      else if (remaining === 1) homeTitle.textContent = 'Один приоритет остался';
-      else if (remaining === 2) homeTitle.textContent = 'Осталось два приоритета';
-      else if (remaining === 3) homeTitle.textContent = 'Три приоритета на сегодня';
-      else homeTitle.textContent = remaining + ' ' + taskWord(remaining) + ' в текущем плане';
+      else homeTitle.textContent = 'Состояние салона';
     }
     if (homeCopy) {
       if (!completedExtra && !demoState.manualTasks.length) {
-        homeCopy.textContent = 'Ева уже собрала сигналы, объяснила причины и подготовила следующие шаги.';
+        homeCopy.textContent = 'YClients показывает результат, карты — видимость, Метрика — интерес к сайту. Ева связывает их в понятный план действий.';
       } else {
         homeCopy.textContent = remaining
           ? 'Изменения синхронизированы: прогресс виден в задачах, календаре и отчёте.'
@@ -811,12 +809,311 @@
     closeNotifications();
   });
 
+  /*
+   * Live dashboard bridge.
+   *
+   * The host application injects this object only after the user signs in:
+   * window.MARKETOLOG_TECH_DASHBOARD_CONFIG = {
+   *   apiBaseUrl: 'https://api.example.com',
+   *   projectId: 123,
+   *   getAccessToken: function () { return 'user-jwt'; }
+   * };
+   *
+   * No token, API URL or project identifier is stored in this repository.
+   */
+  var dashboardRange = 'today';
+  var dashboardRequestId = 0;
+
+  var demoSummaries = {
+    today: {
+      salon: { id: 'demo-salon', name: salonName, address: salonAddress, timezone: 'Europe/Moscow' },
+      period: { range: 'today', from: '2026-07-23', to: '2026-07-23' },
+      updated_at: '2026-07-23T07:25:00+03:00',
+      signal: {
+        severity: 'attention',
+        title: 'Вернуть 24 клиента',
+        body: 'Срок их следующего визита уже наступил. Начните с подготовленного сегмента и проверьте результат после контакта.',
+        primary_metric: { key: 'return_due', label: 'готовы к контакту', value: 24, unit: 'count', source: 'yclients', kind: 'fact', updated_at: '2026-07-23T07:19:00+03:00' },
+        potential_revenue_rub: 84000,
+        potential_revenue_formula: '24 клиента × средний чек 3 500 ₽',
+        action: { label: 'Открыть сегмент', deep_link: '/salon/clients?segment=return_due' }
+      },
+      kpis: [
+        { key: 'booked', label: 'Записи', value: 8, unit: 'count', source: 'yclients', kind: 'fact', updated_at: '2026-07-23T07:19:00+03:00' },
+        { key: 'visits', label: 'Визиты', value: 18, unit: 'count', source: 'yclients', kind: 'fact', updated_at: '2026-07-23T07:19:00+03:00' },
+        { key: 'free_slots', label: 'Свободные окна', value: 3, unit: 'count', source: 'yclients', kind: 'fact', updated_at: '2026-07-23T07:19:00+03:00' }
+      ],
+      today_actions: [
+        { id: 'demo-return', title: 'Связаться с 24 клиентами', description: 'Срок следующего визита уже наступил.', priority: 'high', due: '2026-07-23', source: 'yclients', deep_link: '/salon/clients?segment=return_due', impact: { value: 84000, unit: 'rub' } },
+        { id: 'demo-reviews', title: 'Проверить 2 ответа клиентам', description: 'Первый отзыв ждёт ответа 19 часов.', priority: 'high', due: '2026-07-23', source: 'geo', deep_link: '/salon/geo?focus=review' },
+        { id: 'demo-slots', title: 'Согласовать «Тихий четверг»', description: 'Сценарий и расчёт готовы.', priority: 'normal', due: '2026-07-23', source: 'yclients', deep_link: '/salon/clients?focus=thursday' }
+      ],
+      sources: [
+        { key: 'yclients', label: 'YClients', status: 'connected', updated_at: '2026-07-23T07:19:00+03:00', message: null },
+        { key: 'geo', label: 'Карты', status: 'connected', updated_at: '2026-07-23T07:25:00+03:00', message: null },
+        { key: 'metrica', label: 'Метрика', status: 'stale', updated_at: '2026-07-22T18:00:00+03:00', message: 'Обновление ожидается' }
+      ]
+    },
+    '30d': {
+      salon: { id: 'demo-salon', name: salonName, address: salonAddress, timezone: 'Europe/Moscow' },
+      period: { range: '30d', from: '2026-06-24', to: '2026-07-23' },
+      updated_at: '2026-07-23T07:25:00+03:00',
+      signal: {
+        severity: 'attention',
+        title: 'Повторная запись ниже цели',
+        body: 'За последние 30 дней вернулись 27 клиентов. До цели месяца не хватает четырёх процентных пунктов.',
+        primary_metric: { key: 'rebooking_rate', label: 'повторная запись', value: 38, unit: 'percent', delta_percent: 5.4, source: 'yclients', kind: 'fact', updated_at: '2026-07-23T07:19:00+03:00' },
+        potential_revenue_rub: 84000,
+        potential_revenue_formula: 'оценка по клиентам с наступившим сроком визита',
+        action: { label: 'Открыть клиентов', deep_link: '/salon/clients?segment=return_due' }
+      },
+      kpis: [
+        { key: 'revenue', label: 'Выручка', value: 428600, unit: 'rub', delta_percent: 12.4, direction: 'up', source: 'yclients', kind: 'fact', updated_at: '2026-07-23T07:19:00+03:00' },
+        { key: 'rebooking_rate', label: 'Повторная запись', value: 38, unit: 'percent', delta_percent: 5.4, direction: 'up', source: 'yclients', kind: 'fact', updated_at: '2026-07-23T07:19:00+03:00' },
+        { key: 'unanswered_reviews', label: 'Отзывы без ответа', value: 6, unit: 'count', source: 'geo', kind: 'fact', updated_at: '2026-07-23T07:25:00+03:00' }
+      ],
+      today_actions: [],
+      sources: [
+        { key: 'yclients', label: 'YClients', status: 'connected', updated_at: '2026-07-23T07:19:00+03:00', message: null },
+        { key: 'geo', label: 'Карты', status: 'connected', updated_at: '2026-07-23T07:25:00+03:00', message: null },
+        { key: 'metrica', label: 'Метрика', status: 'stale', updated_at: '2026-07-22T18:00:00+03:00', message: 'Обновление ожидается' }
+      ]
+    }
+  };
+
+  function dashboardConfig() {
+    if (guestMode) return null;
+    var config = window.MARKETOLOG_TECH_DASHBOARD_CONFIG;
+    if (!config || typeof config !== 'object') return null;
+    var token = typeof config.getAccessToken === 'function' ? config.getAccessToken() : config.accessToken;
+    var projectId = config.projectId || params.get('project_id');
+    if (!config.apiBaseUrl || !projectId || !token) return null;
+    return { apiBaseUrl: String(config.apiBaseUrl).replace(/\/$/, '').replace(/\/api\/v1$/, ''), projectId: projectId, token: token };
+  }
+
+  function formatDashboardNumber(value, unit) {
+    if (value === null || typeof value === 'undefined') return '—';
+    var number = Number(value);
+    if (!Number.isFinite(number)) return String(value);
+    if (unit === 'rub') return new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 }).format(number) + ' ₽';
+    if (unit === 'percent') return new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 1 }).format(number) + '%';
+    return new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 1 }).format(number);
+  }
+
+  function sourceLabel(key) {
+    var labels = { yclients: 'YClients', geo: 'Карты', metrica: 'Метрика', eva: 'Ева' };
+    return labels[key] || key || 'Источник не указан';
+  }
+
+  function formatDashboardTime(value) {
+    if (!value) return 'нет даты';
+    var date = new Date(value);
+    if (Number.isNaN(date.getTime())) return String(value);
+    return new Intl.DateTimeFormat('ru-RU', { hour: '2-digit', minute: '2-digit' }).format(date);
+  }
+
+  function dashboardPeriodLabel(period, range) {
+    if (range === 'today' || period && period.range === 'today') return 'Сегодня';
+    if (range === '30d' || period && period.range === '30d') return 'Последние 30 дней';
+    if (period && period.from && period.to) return 'с ' + period.from + ' по ' + period.to;
+    return 'Выбранный период';
+  }
+
+  function routeFromDeepLink(deepLink) {
+    var link = String(deepLink || '').toLowerCase();
+    if (link.indexOf('finance') > -1) return 'finance';
+    if (link.indexOf('review') > -1 || link.indexOf('geo') > -1 || link.indexOf('map') > -1) return 'geo';
+    if (link.indexOf('site') > -1 || link.indexOf('metrica') > -1) return 'site';
+    if (link.indexOf('task') > -1) return 'tasks';
+    return 'clients';
+  }
+
+  function setDashboardText(selector, value) {
+    var node = document.querySelector(selector);
+    if (node) node.textContent = value;
+  }
+
+  function setDashboardState(text, variant, loading) {
+    var control = document.querySelector('.dashboard-range-control');
+    var node = document.querySelector('[data-dashboard-state]');
+    if (control) control.classList.toggle('is-loading', Boolean(loading));
+    if (!node) return;
+    node.textContent = text;
+    node.classList.toggle('is-live', variant === 'live');
+    node.classList.toggle('is-error', variant === 'error');
+  }
+
+  function setDashboardRange(range, loading) {
+    dashboardRange = range;
+    document.querySelectorAll('[data-dashboard-range]').forEach(function (button) {
+      var active = button.getAttribute('data-dashboard-range') === range;
+      button.classList.toggle('is-active', active);
+      button.setAttribute('aria-pressed', String(active));
+      button.disabled = Boolean(loading);
+    });
+  }
+
+  function renderDashboardKpis(summary, range) {
+    var kpis = Array.isArray(summary.kpis) ? summary.kpis.slice(0, 3) : [];
+    var cards = document.querySelectorAll('[data-summary-kpi-card]');
+    setDashboardText('[data-summary-kpis-title]', range === 'today' ? 'Главные факты на сегодня' : 'Главные факты за 30 дней');
+    setDashboardText('[data-summary-kpis-period]', 'Факты · ' + dashboardPeriodLabel(summary.period, range).toLowerCase());
+    cards.forEach(function (card, index) {
+      var metric = kpis[index];
+      card.classList.toggle('is-empty', !metric);
+      setTextIn(card, '[data-summary-kpi-label]', metric ? metric.label : 'Нет данных');
+      setTextIn(card, '[data-summary-kpi-source]', metric ? sourceLabel(metric.source) : 'Источник');
+      setTextIn(card, '[data-summary-kpi-value]', metric ? formatDashboardNumber(metric.value, metric.unit) : '—');
+      setTextIn(card, '[data-summary-kpi-period-label]', metric ? ((metric.kind === 'estimate' ? 'оценка' : 'факт') + ' · ' + dashboardPeriodLabel(metric.period || summary.period, range).toLowerCase()) : 'подключите источник');
+      setTextIn(card, '[data-summary-kpi-delta]', metric && metric.delta_percent !== null && typeof metric.delta_percent !== 'undefined' ? ((metric.delta_percent > 0 ? '+' : '') + new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 1 }).format(metric.delta_percent) + '% к предыдущему периоду') : '');
+    });
+  }
+
+  function setTextIn(parent, selector, value) {
+    var node = parent.querySelector(selector);
+    if (node) node.textContent = value;
+  }
+
+  function renderDashboardSources(sources) {
+    var foot = document.querySelector('[data-summary-sources]');
+    if (!foot || !Array.isArray(sources)) return;
+    foot.innerHTML = '';
+    sources.slice(0, 3).forEach(function (source) {
+      var row = document.createElement('span');
+      var dot = document.createElement('i');
+      dot.className = 'source-dot' + (source.status === 'connected' ? ' is-live' : '');
+      row.appendChild(dot);
+      row.appendChild(document.createTextNode(' ' + source.label + ' · ' + (source.status === 'connected' ? 'обновлён ' + formatDashboardTime(source.updated_at) : (source.message || source.status))));
+      foot.appendChild(row);
+    });
+    if (sourceCount) sourceCount.textContent = sources.filter(function (source) { return source.status === 'connected'; }).length + ' источника подключено';
+  }
+
+  function renderDashboardActions(actions, period) {
+    var list = document.querySelector('[data-summary-actions]');
+    var dateNode = document.querySelector('[data-agenda-date]');
+    var countNode = document.querySelector('[data-agenda-count]');
+    if (!list || !Array.isArray(actions)) return;
+    list.innerHTML = '';
+    if (dateNode) dateNode.textContent = 'Сегодня';
+    if (countNode) countNode.textContent = actions.length ? actions.length + ' ' + taskWord(actions.length) + ' в работе' : 'Задач на сегодня нет';
+    if (!actions.length) {
+      var empty = document.createElement('div');
+      empty.className = 'agenda-empty';
+      empty.textContent = 'На сегодня новых действий нет.';
+      list.appendChild(empty);
+      return;
+    }
+    actions.slice(0, 3).forEach(function (action) {
+      var button = document.createElement('button');
+      var meta = document.createElement('i');
+      var content = document.createElement('span');
+      var title = document.createElement('strong');
+      var description = document.createElement('small');
+      var time = document.createElement('time');
+      var open = document.createElement('b');
+      button.type = 'button';
+      button.className = 'agenda-task' + (action.priority === 'high' || action.priority === 'critical' ? ' is-urgent' : '');
+      button.setAttribute('data-task-route', routeFromDeepLink(action.deep_link));
+      time.textContent = period && action.due === period.to ? 'Сегодня' : (action.due || 'План');
+      meta.textContent = sourceLabel(action.source) + ' · ' + (action.priority === 'high' ? 'высокий приоритет' : 'действие');
+      title.textContent = action.title || 'Открыть задачу';
+      description.textContent = action.description || (action.impact ? 'Эффект: ' + formatDashboardNumber(action.impact.value, action.impact.unit) : 'Подробности доступны в задаче');
+      open.textContent = 'Открыть →';
+      content.appendChild(meta);
+      content.appendChild(title);
+      content.appendChild(description);
+      button.appendChild(time);
+      button.appendChild(content);
+      button.appendChild(open);
+      list.appendChild(button);
+    });
+  }
+
+  function renderDashboardSummary(summary, range, isLive) {
+    if (!summary || typeof summary !== 'object') return;
+    var signal = summary.signal || {};
+    var primary = signal.primary_metric || {};
+    var updatedAt = summary.updated_at || primary.updated_at;
+    var potential = signal.potential_revenue_rub;
+    var action = signal.action || {};
+    if (summary.salon) {
+      document.querySelectorAll('[data-salon-name], [data-topbar-salon]').forEach(function (node) { node.textContent = summary.salon.name || salonName; });
+      if (summary.salon.address) document.querySelectorAll('[data-salon-address]').forEach(function (node) { node.textContent = summary.salon.address; });
+    }
+    if (isLive) {
+      if (status) status.textContent = 'Данные салона';
+      if (demoCopy) demoCopy.textContent = '· подключённый кабинет';
+    }
+    setDashboardText('[data-summary-updated]', dashboardPeriodLabel(summary.period, range) + ' · обновлено в ' + formatDashboardTime(updatedAt));
+    setDashboardText('[data-summary-signal-kicker]', dashboardPeriodLabel(summary.period, range) + ' · главный сигнал');
+    setDashboardText('[data-summary-signal-title]', signal.title || 'Главный сигнал пока не сформирован');
+    setDashboardText('[data-summary-signal-body]', signal.body || 'Подключите источник, чтобы увидеть приоритет на этот период.');
+    setDashboardText('[data-summary-primary-value]', formatDashboardNumber(primary.value, primary.unit));
+    setDashboardText('[data-summary-primary-label]', primary.label || 'ключевой показатель');
+    setDashboardText('[data-summary-potential-value]', potential === null || typeof potential === 'undefined' ? '—' : 'до ' + formatDashboardNumber(potential, 'rub'));
+    setDashboardText('[data-summary-potential-formula]', signal.potential_revenue_formula || (potential ? 'оценка по данным салона' : 'оценка появится при наличии данных'));
+    setDashboardText('[data-summary-source-time]', formatDashboardTime(primary.updated_at || updatedAt));
+    setDashboardText('[data-summary-source-label]', sourceLabel(primary.source) + ' · ' + (primary.kind === 'estimate' ? 'оценка' : 'факт'));
+    var actionButton = document.querySelector('[data-summary-signal-action]');
+    if (actionButton) {
+      actionButton.textContent = (action.label || 'Открыть подробности') + ' →';
+      actionButton.setAttribute('data-go', routeFromDeepLink(action.deep_link));
+    }
+    renderDashboardKpis(summary, range);
+    renderDashboardSources(summary.sources || []);
+    if (range === 'today' || Array.isArray(summary.today_actions) && summary.today_actions.length) renderDashboardActions(summary.today_actions || [], summary.period);
+    var hasStaleSource = Array.isArray(summary.sources) && summary.sources.some(function (source) { return source.status === 'stale'; });
+    setDashboardState(isLive ? (hasStaleSource ? 'Есть устаревшие данные' : 'Живые данные') : 'Демо-данные', hasStaleSource ? 'error' : (isLive ? 'live' : 'demo'), false);
+  }
+
+  function loadDashboardSummary(range, refresh) {
+    var config = dashboardConfig();
+    var requestId = ++dashboardRequestId;
+    setDashboardRange(range, true);
+    setDashboardState(config ? 'Обновляем данные…' : 'Демо-данные', 'demo', true);
+    if (!config) {
+      window.setTimeout(function () {
+        if (requestId !== dashboardRequestId) return;
+        renderDashboardSummary(demoSummaries[range], range, false);
+        setDashboardRange(range, false);
+      }, 120);
+      return;
+    }
+    var requestUrl = config.apiBaseUrl + '/api/v1/dashboard/summary?project_id=' + encodeURIComponent(config.projectId) + '&range=' + encodeURIComponent(range) + (refresh ? '&refresh=true' : '');
+    fetch(requestUrl, {
+      headers: {
+        Authorization: 'Bearer ' + config.token,
+        'X-Client-Timezone': Intl.DateTimeFormat().resolvedOptions().timeZone || 'Europe/Moscow'
+      }
+    }).then(function (response) {
+      if (!response.ok) throw new Error('API returned ' + response.status);
+      return response.json();
+    }).then(function (summary) {
+      if (requestId !== dashboardRequestId) return;
+      renderDashboardSummary(summary, range, true);
+      setDashboardRange(range, false);
+    }).catch(function () {
+      if (requestId !== dashboardRequestId) return;
+      setDashboardRange(range, false);
+      setDashboardState('Не удалось обновить', 'error', false);
+      showToast('Данные не обновлены', 'Проверьте подключение источников и попробуйте ещё раз');
+    });
+  }
+
+  document.querySelectorAll('[data-dashboard-range]').forEach(function (button) {
+    button.addEventListener('click', function () { loadDashboardSummary(button.getAttribute('data-dashboard-range'), false); });
+  });
+  var dashboardRefresh = document.querySelector('[data-dashboard-refresh]');
+  if (dashboardRefresh) dashboardRefresh.addEventListener('click', function () { loadDashboardSummary(dashboardRange, true); });
+
   demoState.manualTasks.forEach(function (task) { renderManualTask(task, false); });
   demoState.completedTasks.slice().forEach(function (taskName) {
     if (taskData[taskName]) markTaskComplete(taskName, false);
   });
   applyNotificationState();
   updateTaskCounts();
+  loadDashboardSummary('today', false);
   var initialScreen = params.get('screen');
   if (initialScreen && Object.prototype.hasOwnProperty.call(titles, initialScreen)) showScreen(initialScreen);
   var initialTask = params.get('task');

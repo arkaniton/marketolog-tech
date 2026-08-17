@@ -5,6 +5,7 @@
   var flow = document.getElementById('audit-flow');
   var selectedSalon = 'Салон «Ирис»';
   var selectedAddress = 'Москва, ул. Остоженка, 25';
+  var selectedMapsUrl = '';
   var scanTimers = [];
 
   function updateHeader() {
@@ -34,6 +35,17 @@
     input.setAttribute('aria-invalid', message ? 'true' : 'false');
   }
 
+  function isMapsUrl(value) {
+    try {
+      var url = new URL(value);
+      var host = url.hostname.toLowerCase().replace(/^www\./, '');
+      return (host === 'yandex.ru' || host === 'yandex.com') && url.pathname.indexOf('/maps') === 0
+        || (host === '2gis.ru' || host === '2gis.com') && url.pathname.length > 1;
+    } catch (error) {
+      return false;
+    }
+  }
+
   function wireFinder(formId, inputId, suggestionId) {
     var form = document.getElementById(formId);
     var input = document.getElementById(inputId);
@@ -48,16 +60,24 @@
     input.addEventListener('input', showSuggestions);
     input.addEventListener('focus', showSuggestions);
 
-    form.addEventListener('submit', function (event) {
+    function runFinder(event) {
       event.preventDefault();
-      if (input.value.trim().length < 2) {
-        setError(input, 'Укажите город, улицу и номер дома');
+      var value = input.value.trim();
+      if (!isMapsUrl(value)) {
+        setError(input, 'Вставьте ссылку на карточку Яндекс Карт или 2ГИС');
         input.focus();
         return;
       }
-      suggestions.hidden = false;
-      suggestions.querySelector('button').focus();
-    });
+      selectedSalon = 'Салон по ссылке';
+      selectedMapsUrl = value;
+      selectedAddress = 'Ссылка получена · проверяем карточку';
+      suggestions.hidden = true;
+      openFlow();
+    }
+
+    form.addEventListener('submit', runFinder);
+    var submitButton = form.querySelector('button[type="submit"]');
+    if (submitButton) submitButton.addEventListener('click', runFinder);
 
     suggestions.querySelectorAll('[data-salon]').forEach(function (option) {
       option.addEventListener('click', function () {
@@ -66,6 +86,13 @@
         input.value = selectedAddress;
         suggestions.hidden = true;
         openFlow();
+      });
+    });
+
+    suggestions.querySelectorAll('[data-manual-salon]').forEach(function (option) {
+      option.addEventListener('click', function () {
+        suggestions.hidden = true;
+        openManualFlow('');
       });
     });
   }
@@ -123,6 +150,22 @@
     startScan();
   }
 
+  function openManualFlow(prefilledAddress) {
+    if (!flow) return;
+    var addressInput = document.getElementById('manual-salon-address');
+    var error = document.getElementById('manual-salon-error');
+    if (addressInput && prefilledAddress) addressInput.value = prefilledAddress;
+    if (error) error.textContent = '';
+    showFlowStage('manual');
+    flow.classList.add('is-open');
+    flow.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('flow-open');
+    window.setTimeout(function () {
+      var nameInput = document.getElementById('manual-salon-name');
+      if (nameInput) nameInput.focus();
+    }, 80);
+  }
+
   function closeFlow() {
     if (!flow) return;
     clearScanTimers();
@@ -149,6 +192,32 @@
   document.addEventListener('keydown', function (event) {
     if (event.key === 'Escape' && flow && flow.classList.contains('is-open')) closeFlow();
   });
+
+  var manualSalonForm = document.getElementById('manual-salon-form');
+  if (manualSalonForm) {
+    manualSalonForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      var nameInput = document.getElementById('manual-salon-name');
+      var cityInput = document.getElementById('manual-salon-city');
+      var addressInput = document.getElementById('manual-salon-address');
+      var error = document.getElementById('manual-salon-error');
+      if (error) error.textContent = '';
+      if (!nameInput || nameInput.value.trim().length < 2) {
+        if (error) error.textContent = 'Укажите название салона';
+        if (nameInput) nameInput.focus();
+        return;
+      }
+      if (!cityInput || cityInput.value.trim().length < 2) {
+        if (error) error.textContent = 'Укажите город — так мы не перепутаем карточку';
+        if (cityInput) cityInput.focus();
+        return;
+      }
+      selectedSalon = nameInput.value.trim();
+      selectedAddress = [cityInput.value.trim(), addressInput ? addressInput.value.trim() : ''].filter(Boolean).join(', ');
+      selectedMapsUrl = (document.getElementById('manual-yandex-url') || {}).value || (document.getElementById('manual-2gis-url') || {}).value || '';
+      openFlow();
+    });
+  }
 
   var channelInput = document.getElementById('flow-channel');
   var contactInput = document.getElementById('flow-contact');
@@ -226,7 +295,7 @@
 
       var dashboardLink = document.getElementById('open-dashboard');
       if (dashboardLink) {
-        dashboardLink.href = 'demo.html?guest=1&salon=' + encodeURIComponent(selectedSalon) + '&address=' + encodeURIComponent(selectedAddress);
+        dashboardLink.href = 'demo.html?guest=1&salon=' + encodeURIComponent(selectedSalon) + '&address=' + encodeURIComponent(selectedAddress) + (selectedMapsUrl ? '&maps_url=' + encodeURIComponent(selectedMapsUrl) : '');
       }
       showFlowStage('ready');
     });
@@ -253,42 +322,19 @@
     });
   });
 
-  var sourceConverter = document.querySelector('[data-source-converter]');
-  var converterBrand = document.querySelector('[data-converter-brand]');
-  var converterChips = Array.prototype.slice.call(document.querySelectorAll('[data-source-chip]'));
-  var converterFrame = null;
-
-  function updateSourceConverter() {
-    converterFrame = null;
-    if (!sourceConverter || !converterBrand || !converterChips.length) return;
-
-    var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var rect = sourceConverter.getBoundingClientRect();
-    var start = window.innerHeight * 0.42;
-    var end = window.innerHeight * 0.02;
-    var progress = reducedMotion ? 0 : Math.max(0, Math.min(1, (start - rect.top) / (start - end)));
-    var viewportScale = window.innerWidth < 760 ? 0.46 : window.innerWidth < 1050 ? 0.72 : 1;
-
-    converterChips.forEach(function (chip) {
-      var sourceX = Number(chip.getAttribute('data-x')) * viewportScale;
-      var sourceY = Number(chip.getAttribute('data-y')) * viewportScale;
-      var visiblePart = 1 - progress;
-      var x = sourceX * visiblePart;
-      var y = sourceY * visiblePart;
-      var scale = 1 - progress * 0.38;
-      chip.style.transform = 'translate(calc(-50% + ' + x + 'px), calc(-50% + ' + y + 'px)) scale(' + scale + ')';
-      chip.style.opacity = String(Math.max(0, 1 - progress * 1.18));
+  function makeExclusiveAccordion(selector) {
+    var items = Array.prototype.slice.call(document.querySelectorAll(selector));
+    items.forEach(function (item) {
+      item.addEventListener('toggle', function () {
+        if (!item.open) return;
+        items.forEach(function (other) {
+          if (other !== item) other.open = false;
+        });
+      });
     });
-
-    converterBrand.style.transform = 'translate(-50%, -50%) scale(' + (1 + progress * 0.08) + ')';
   }
 
-  function queueSourceConverter() {
-    if (converterFrame !== null) return;
-    converterFrame = window.requestAnimationFrame(updateSourceConverter);
-  }
+  makeExclusiveAccordion('.today-tasks details');
+  makeExclusiveAccordion('.capability-accordion details');
 
-  updateSourceConverter();
-  window.addEventListener('scroll', queueSourceConverter, { passive: true });
-  window.addEventListener('resize', queueSourceConverter);
 })();
