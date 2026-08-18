@@ -212,5 +212,658 @@
     state.editingReview=false;
     render();
   </script>
+  <script>
+    /* Administrator-first content flow: generated work first, weekly rhythm second,
+       manual creation last. Reviews keep their existing implementation. */
+    state.autoItems=state.autoItems.map(item=>item.id==='a1'
+      ?{...item,source:'YClients',reason:'В расписании найдено свободное окно у мастера Анны завтра после 16:00.'}
+      :{...item,source:'Медиатека салона',reason:'Появилась свежая работа, которую можно показать в карточке салона.'});
+
+    function reviewCountLabel(count){
+      if(count===1)return '1 материал ждёт проверки';
+      if(count>1&&count<5)return `${count} материала ждут проверки`;
+      return `${count} материалов ждут проверки`;
+    }
+
+    autoContent=function(){
+      const items=state.autoItems;
+      return `<section class="card overflow-hidden"><div class="flex flex-wrap items-start justify-between gap-3 border-b border-black/10 px-4 py-3"><div><p class="text-[9px] font-extrabold uppercase tracking-[.1em] text-beauty-accent-strong">Сделать сейчас</p><h2 class="mt-1 font-beauty-display text-[18px] font-bold tracking-[-.04em]">Проверьте готовые материалы</h2><p class="mt-1 max-w-[650px] text-[10px] leading-relaxed text-beauty-muted">Помощник подготовил историю и новость по данным салона. Проверьте их и сохраните для ручного размещения в Картах.</p></div><span class="rounded-full bg-beauty-sage-soft px-2.5 py-1 text-[9px] font-bold text-[#587147]">${reviewCountLabel(items.length)}</span></div><div class="grid gap-px bg-black/10 md:grid-cols-2">${items.length?items.map(item=>`<article class="bg-beauty-surface p-4"><div class="grid grid-cols-[58px_minmax(0,1fr)] gap-3"><div class="preview-image ${item.template==='result'?'is-work':''} h-[58px] rounded-xl"></div><div class="min-w-0"><div class="flex flex-wrap items-center gap-2"><span class="rounded-full bg-beauty-soft px-2 py-1 text-[8px] font-bold text-beauty-muted">${item.type}</span><span class="rounded-full bg-beauty-sage-soft px-2 py-1 text-[8px] font-bold text-[#587147]">Готово к проверке</span></div><b class="mt-2 block truncate text-[11px]">${item.title}</b><p class="mt-1 line-clamp-2 text-[9px] leading-relaxed text-beauty-muted">${item.reason}</p></div></div><div class="mt-3 flex items-center justify-between gap-3 border-t border-black/10 pt-3"><span class="text-[8px] text-beauty-muted">Источник: <b class="text-beauty-ink">${item.source}</b></span><button class="text-[10px] font-bold text-beauty-accent-strong" data-open-auto="${item.id}" type="button">Проверить →</button></div></article>`).join(''):`<div class="bg-beauty-surface px-4 py-5 md:col-span-2"><b class="text-[11px]">На проверке ничего не осталось</b><p class="mt-1 text-[9px] text-beauty-muted">Следующие материалы появятся по плану недели или после создания вручную.</p></div>`}</div></section>`;
+    };
+
+    function weeklyContentPlan(){
+      const rows=[
+        {day:'Сегодня',type:'История',title:'Свободные окна на окрашивание',source:'YClients',status:state.autoItems.some(item=>item.id==='a1')?'Готово к проверке':'Сохранено',ready:state.autoItems.some(item=>item.id==='a1')},
+        {day:'Сегодня',type:'Новость',title:'Свежая работа · мягкий блонд',source:'Медиатека',status:state.autoItems.some(item=>item.id==='a2')?'Готово к проверке':'Сохранено',ready:state.autoItems.some(item=>item.id==='a2')},
+        {day:'Среда',type:'Новость',title:'Как сохранить цвет после окрашивания',source:'Сайт и Карты',status:'Запланировано'},
+        {day:'Пятница',type:'История',title:'Работа мастера за неделю',source:'Медиатека',status:'Запланировано'}
+      ];
+      return `<section class="card overflow-hidden"><div class="flex flex-wrap items-start justify-between gap-3 px-4 py-3"><div><p class="text-[9px] font-extrabold uppercase tracking-[.1em] text-beauty-accent-strong">Ритм недели</p><h2 class="mt-1 font-beauty-display text-[17px] font-bold tracking-[-.04em]">План публикаций на 7 дней</h2><p class="mt-1 text-[10px] text-beauty-muted">План обновляется по расписанию, материалам салона и данным Карт.</p></div><span class="rounded-full bg-beauty-soft px-2.5 py-1 text-[9px] font-bold text-beauty-muted">4 материала</span></div><div class="divide-y divide-black/10 border-t border-black/10">${rows.map(row=>`<article class="grid grid-cols-[58px_minmax(0,1fr)_auto] items-center gap-3 px-4 py-3"><span class="text-[9px] font-bold text-beauty-muted">${row.day}</span><div class="min-w-0"><div class="flex flex-wrap items-center gap-2"><b class="truncate text-[10px]">${row.title}</b><span class="rounded-full bg-beauty-soft px-2 py-0.5 text-[8px] font-bold text-beauty-muted">${row.type}</span></div><span class="mt-1 block text-[8px] text-beauty-faint">Основа: ${row.source}</span></div><span class="rounded-full ${row.ready?'bg-beauty-sage-soft text-[#587147]':'bg-beauty-soft text-beauty-muted'} px-2 py-1 text-[8px] font-bold">${row.status}</span></article>`).join('')}</div></section>`;
+    }
+
+    overview=function(){
+      const choices=state.showCreateOptions?`<div class="mt-4 grid gap-3 sm:grid-cols-2">${['slots','service','work','promo','news'].map(id=>`<button class="group rounded-[14px] border border-black/10 bg-beauty-surface p-4 text-left transition-colors hover:border-beauty-accent hover:bg-[#fffaf6]" data-goal="${id}" type="button"><b class="block text-[11px]">${goals[id].title}</b><span class="mt-1.5 block text-[9px] leading-relaxed text-beauty-muted">${goals[id].note}</span></button>`).join('')}</div><button class="mt-3 text-[9px] font-bold text-beauty-muted hover:text-beauty-ink" data-close-create-menu type="button">Скрыть варианты</button>`:'';
+      return `<section class="mx-auto grid w-full max-w-[1180px] gap-4 px-3 pb-6 pt-5 sm:px-5"><div><h1 class="font-beauty-display text-[clamp(1.35rem,2.2vw,1.85rem)] font-bold tracking-[-.05em]">Контент для Карт</h1><p class="mt-1.5 text-[12px] text-beauty-muted">Готовые истории и новости, план публикаций и ручное создание.</p></div>${autoContent()}${weeklyContentPlan()}<section class="card p-4"><div class="flex flex-wrap items-center justify-between gap-3"><div><h2 class="text-[12px] font-bold">Нужно рассказать о чём-то ещё?</h2><p class="mt-1 text-[10px] text-beauty-muted">Выберите повод, добавьте факты — помощник соберёт материал.</p></div><button class="${secondary}" data-open-create-menu type="button">${icon('plus','h-3.5 w-3.5')} Создать материал</button></div>${choices}</section></section>`;
+    };
+
+    resultView=function(){
+      if(!state.hasGenerated)return resultViewBeforeGenerationGuard();
+      const pending=ensurePending(),changed=pendingChanged();
+      const active=state.autoItems.find(item=>item.id===state.activeAuto);
+      const kindAccusative=state.preview==='story'?'историю':'новость';
+      const reason=active?.reason||'Материал создан по фактам, которые вы указали на предыдущем шаге.';
+      const source=active?.source||'Данные салона';
+      return `<section class="mx-auto grid w-full max-w-[1180px] gap-4 px-3 pb-6 pt-5 sm:px-5"><div><button class="text-[10px] font-bold text-beauty-muted hover:text-beauty-ink" data-back type="button">← К контенту</button><h1 class="mt-2 font-beauty-display text-[clamp(1.35rem,2.2vw,1.85rem)] font-bold tracking-[-.05em]">Проверьте ${kindAccusative}</h1><p class="mt-1.5 text-[11px] text-beauty-muted">Исправьте только то, что действительно нужно. Без вашего действия материал никуда не отправится.</p></div><section class="card overflow-hidden">${progress()}</section><div class="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_330px]"><section class="card p-4"><div class="rounded-xl bg-beauty-soft p-3"><div class="flex flex-wrap items-center justify-between gap-2"><b class="text-[10px]">Почему материал появился</b><span class="rounded-full bg-beauty-surface px-2 py-1 text-[8px] font-bold text-beauty-muted">Источник: ${source}</span></div><p class="mt-1.5 text-[9px] leading-relaxed text-beauty-muted">${reason}</p></div><form class="mt-4 grid gap-4" id="manualEditForm"><label class="text-[10px] font-bold">Заголовок<input class="field mt-1.5" name="title" value="${esc(pending.title)}"></label><label class="text-[10px] font-bold">Текст публикации<textarea class="field mt-1.5 min-h-[145px] resize-y" name="text">${esc(pending.text)}</textarea></label><div><p class="text-[9px] font-bold text-beauty-muted">Быстрая правка</p><div class="mt-2 flex flex-wrap gap-2">${['Сделать короче','Более живо','Другой заголовок'].map(action=>`<button class="chip" data-quick="${action}" type="button">${action}</button>`).join('')}</div></div><button class="${secondary} justify-self-start" data-apply-preview type="button">${changed?'Применить изменения':'Обновить предпросмотр'}</button></form><details class="mt-4 rounded-xl border border-black/10 p-3"><summary class="cursor-pointer text-[10px] font-bold">Дополнительные настройки</summary><p class="mt-2 text-[9px] text-beauty-muted">Изображение, призыв к действию и тональность уже подобраны. Откройте настройки, только если хотите их изменить.</p><div class="mt-3 grid gap-2 sm:grid-cols-2"><label class="text-[9px] font-bold">Призыв к действию<select class="field mt-1"><option>Рекомендован помощником</option><option>Записаться</option><option>Узнать подробнее</option></select></label><label class="text-[9px] font-bold">Тональность<select class="field mt-1"><option>Тёплая и дружелюбная</option><option>Деловая</option><option>Лёгкая</option></select></label></div></details><div class="mt-4 flex flex-wrap justify-between gap-2 border-t border-black/10 pt-4"><button class="${secondary}" data-save-draft type="button">В черновики</button><button class="${primary}" data-next-publish type="button">Перейти к сохранению ${icon('arrow','h-3.5 w-3.5')}</button></div></section>${preview()}</div></section>`;
+    };
+
+    const publishViewBeforeAdministratorPlan=publishView;
+    publishView=function(){return publishViewBeforeAdministratorPlan()
+      .replace('Проверьте перед отправкой','Проверьте перед сохранением')
+      .replace('Сохранить и открыть Карты','Сохранить и перейти к размещению')};
+
+    render();
+  </script>
+  <script>
+    /* Complete content lifecycle: choose a topic, generate, fix, save and place. */
+    state.generationPhase=0;
+    state.generationToken=0;
+    state.textIssue='';
+    state.textFixStatus='';
+    state.imageIssue='';
+    state.imageFixStatus='';
+
+    progress=function(){
+      const steps=[{number:1,label:'Данные'},{number:2,label:'Генерация'},{number:3,label:'Сохранение'}];
+      return `<div class="flex items-center gap-3 overflow-x-auto border-b border-black/10 px-4 py-3">${steps.map((item,index)=>`${index?'<span class="h-px w-6 bg-black/10"></span>':''}<span class="progress-step ${state.step===item.number?'is-active':state.step>item.number?'is-done':''}"><b>${state.step>item.number?'✓':item.number}</b>${item.label}</span>`).join('')}</div>`;
+    };
+
+    function generationTopics(){
+      const topicIds=['slots','service','work','promo','news'];
+      return `<section><div class="flex flex-wrap items-end justify-between gap-3"><div><p class="text-[9px] font-extrabold uppercase tracking-[.1em] text-beauty-accent-strong">Новый материал</p><h2 class="mt-1 font-beauty-display text-[18px] font-bold tracking-[-.04em]">Выберите тему для генерации</h2><p class="mt-1 text-[10px] text-beauty-muted">Добавьте несколько фактов — текст и изображение подготовит помощник.</p></div></div><div class="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">${topicIds.map((id,index)=>`<button class="group card min-h-[138px] p-4 text-left transition-colors hover:border-beauty-accent hover:bg-[#fffaf6]" data-goal="${id}" type="button"><span class="grid h-8 w-8 place-items-center rounded-[10px] bg-beauty-accent-soft text-[11px] font-extrabold text-beauty-accent-strong">0${index+1}</span><b class="mt-4 block text-[11px] leading-tight">${goals[id].title}</b><span class="mt-1.5 block text-[9px] leading-relaxed text-beauty-muted">${goals[id].note}</span><span class="mt-3 block text-[9px] font-bold text-beauty-accent-strong">Начать →</span></button>`).join('')}</div></section>`;
+    }
+
+    overview=function(){return `<section class="mx-auto grid w-full max-w-[1180px] gap-5 px-3 pb-6 pt-5 sm:px-5"><div><h1 class="font-beauty-display text-[clamp(1.35rem,2.2vw,1.85rem)] font-bold tracking-[-.05em]">Контент для Карт</h1><p class="mt-1.5 text-[12px] text-beauty-muted">Проверяйте готовые материалы или создавайте новые по событиям салона.</p></div>${autoContent()}<p class="-mt-2 text-[9px] text-beauty-muted">Готовые материалы также остаются задачами на главной, пока администратор их не разместит.</p>${generationTopics()}</section>`};
+
+    function generationView(){
+      const stages=[
+        {title:'Проверяем факты',note:'Данные услуги, расписания и салона'},
+        {title:'Готовим текст',note:'Заголовок, описание и призыв к действию'},
+        {title:'Подбираем изображение',note:'Кадр, композиция и читаемость'},
+        {title:'Собираем материал',note:'Финальная история или новость'}
+      ];
+      return `<section class="mx-auto grid w-full max-w-[1180px] gap-4 px-3 pb-6 pt-5 sm:px-5"><div><button class="text-[10px] font-bold text-beauty-muted hover:text-beauty-ink" data-cancel-generation type="button">← Вернуться к данным</button><h1 class="mt-2 font-beauty-display text-[clamp(1.35rem,2.2vw,1.85rem)] font-bold tracking-[-.05em]">Готовим материал</h1><p class="mt-1.5 text-[11px] text-beauty-muted">Обычно это занимает меньше минуты. Можно сразу увидеть, из каких частей собирается результат.</p></div><section class="card overflow-hidden">${progress()}<div class="grid min-h-[440px] lg:grid-cols-[.9fr_1.1fr]"><div class="border-b border-black/10 p-5 lg:border-b-0 lg:border-r"><p class="text-[9px] font-extrabold uppercase tracking-[.1em] text-beauty-accent-strong">Процесс генерации</p><div class="mt-4 grid gap-3">${stages.map((stage,index)=>{const done=index<state.generationPhase,active=index===state.generationPhase;return `<div class="flex items-start gap-3 rounded-xl ${active?'bg-beauty-soft':'bg-transparent'} p-3"><span class="grid h-7 w-7 shrink-0 place-items-center rounded-full ${done?'bg-beauty-sage text-white':active?'bg-beauty-accent-soft text-beauty-accent-strong':'border border-black/10 bg-beauty-surface text-beauty-faint'} text-[10px] font-bold">${done?'✓':active?'<i class="h-3 w-3 animate-spin rounded-full border-2 border-beauty-accent-strong border-t-transparent"></i>':index+1}</span><span><b class="block text-[10px]">${stage.title}</b><small class="mt-1 block text-[8px] leading-relaxed text-beauty-muted">${stage.note}</small></span></div>`}).join('')}</div></div><div class="grid place-items-center bg-beauty-soft/50 p-5"><div class="w-full max-w-[430px] rounded-[16px] border border-black/10 bg-beauty-surface p-4 shadow-beauty"><div class="flex items-center justify-between"><span class="h-2 w-24 animate-pulse rounded-full bg-beauty-accent-soft"></span><span class="h-5 w-16 animate-pulse rounded-full bg-beauty-soft"></span></div><div class="mt-4 aspect-[16/9] animate-pulse rounded-xl bg-beauty-soft"></div><div class="mt-4 h-3 w-3/4 animate-pulse rounded-full bg-beauty-soft"></div><div class="mt-2 h-2 w-full animate-pulse rounded-full bg-beauty-soft"></div><div class="mt-2 h-2 w-5/6 animate-pulse rounded-full bg-beauty-soft"></div><p class="mt-5 text-center text-[9px] text-beauty-muted">Предпросмотр появится после завершения всех этапов</p></div></div></div></section></section>`;
+    }
+
+    const renderBeforeCompleteContentFlow=render;
+    render=function(){
+      if(state.view==='generating'){
+        document.body.dataset.template=state.template||'editorial';
+        app.innerHTML=header()+generationView();
+        document.title='Генерация контента · Карты · МаркетологТЕХ';
+        return;
+      }
+      renderBeforeCompleteContentFlow();
+    };
+
+    const creationBeforeCompleteContentFlow=creation;
+    creation=function(){return creationBeforeCompleteContentFlow().replace('✨ Создать публикацию','Создать материал')};
+
+    function reviewPreviewWithoutLegacyControls(){
+      return preview().replace(/<section class="mt-3 rounded-xl[\s\S]*?<\/section><\/div>$/,'</div>');
+    }
+
+    function imageCorrectionPanel(){
+      return `<section class="card p-3"><div class="flex items-center justify-between gap-2"><div><b class="block text-[10px]">Исправить изображение</b><p class="mt-1 text-[8px] leading-relaxed text-beauty-muted">Отметьте проблему — текст публикации не изменится.</p></div>${state.imageFixStatus?'<span class="rounded-full bg-beauty-sage-soft px-2 py-1 text-[8px] font-bold text-[#587147]">Исправлено</span>':''}</div><div class="mt-3 grid grid-cols-2 gap-2"><button class="chip" data-image-problem="Кадр не подходит" type="button">Кадр не подходит</button><button class="chip" data-image-problem="Слишком тёмное" type="button">Слишком тёмное</button><button class="chip" data-image-problem="Текст не читается" type="button">Текст не читается</button><button class="chip" data-image-problem="Другой вариант" type="button">Другой вариант</button></div>${state.imageFixStatus?`<p class="mt-3 rounded-lg bg-beauty-sage-soft p-2 text-[8px] leading-relaxed text-[#587147]">${state.imageFixStatus}</p>`:''}</section>`;
+    }
+
+    resultView=function(){
+      if(!state.hasGenerated)return resultViewBeforeGenerationGuard();
+      const pending=ensurePending(),changed=pendingChanged();
+      const active=state.autoItems.find(item=>item.id===state.activeAuto);
+      const kindAccusative=state.preview==='story'?'историю':'новость';
+      const reason=active?.reason||'Материал создан по фактам, которые вы указали на предыдущем шаге.';
+      const source=active?.source||'Данные салона';
+      return `<section class="mx-auto grid w-full max-w-[1180px] gap-4 px-3 pb-6 pt-5 sm:px-5"><div><button class="text-[10px] font-bold text-beauty-muted hover:text-beauty-ink" data-back type="button">← К данным</button><h1 class="mt-2 font-beauty-display text-[clamp(1.35rem,2.2vw,1.85rem)] font-bold tracking-[-.05em]">Проверьте ${kindAccusative}</h1><p class="mt-1.5 text-[11px] text-beauty-muted">Текст и изображение исправляются отдельно — изменение одного не сбросит другое.</p></div><section class="card overflow-hidden">${progress()}</section><div class="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_350px]"><section class="card p-4"><div class="rounded-xl bg-beauty-soft p-3"><div class="flex flex-wrap items-center justify-between gap-2"><b class="text-[10px]">Почему материал появился</b><span class="rounded-full bg-beauty-surface px-2 py-1 text-[8px] font-bold text-beauty-muted">Источник: ${source}</span></div><p class="mt-1.5 text-[9px] leading-relaxed text-beauty-muted">${reason}</p></div><div class="mt-4 flex items-center justify-between"><div><h2 class="text-[13px] font-bold">Текст</h2><p class="mt-1 text-[9px] text-beauty-muted">Проверьте факты и формулировки.</p></div>${state.textFixStatus?'<span class="rounded-full bg-beauty-sage-soft px-2 py-1 text-[8px] font-bold text-[#587147]">Исправлено</span>':''}</div><form class="mt-3 grid gap-4" id="manualEditForm"><label class="text-[10px] font-bold">Заголовок<input class="field mt-1.5" name="title" value="${esc(pending.title)}"></label><label class="text-[10px] font-bold">Текст публикации<textarea class="field mt-1.5 min-h-[138px] resize-y" name="text">${esc(pending.text)}</textarea></label><div><p class="text-[9px] font-bold text-beauty-muted">Что нужно исправить?</p><div class="mt-2 flex flex-wrap gap-2">${['Неверный факт','Слишком рекламно','Сделать короче','Другой заголовок'].map(action=>`<button class="chip ${state.textIssue===action?'is-active':''}" data-text-problem="${action}" type="button">${action}</button>`).join('')}</div></div><label class="text-[9px] font-bold">Своя правка<input class="field mt-1.5" name="correction" placeholder="Например: свободные окна после 17:00, а не после 16:00"></label><button class="${secondary} justify-self-start" data-apply-text-fix type="button">Исправить текст</button><button class="${secondary} justify-self-start" data-apply-preview type="button">${changed?'Применить к предпросмотру':'Обновить предпросмотр'}</button></form>${state.textFixStatus?`<p class="mt-3 rounded-lg bg-beauty-sage-soft p-2 text-[8px] leading-relaxed text-[#587147]">${state.textFixStatus}</p>`:''}<details class="mt-4 rounded-xl border border-black/10 p-3"><summary class="cursor-pointer text-[10px] font-bold">Дополнительные настройки текста</summary><div class="mt-3 grid gap-2 sm:grid-cols-2"><label class="text-[9px] font-bold">Призыв к действию<select class="field mt-1"><option>Рекомендован помощником</option><option>Записаться</option><option>Узнать подробнее</option></select></label><label class="text-[9px] font-bold">Тональность<select class="field mt-1"><option>Тёплая и дружелюбная</option><option>Деловая</option><option>Лёгкая</option></select></label></div></details><div class="mt-4 flex flex-wrap justify-between gap-2 border-t border-black/10 pt-4"><button class="${secondary}" data-save-draft type="button">В черновики</button><button class="${primary}" data-next-publish type="button">К сохранению ${icon('arrow','h-3.5 w-3.5')}</button></div></section><div class="grid content-start gap-3">${reviewPreviewWithoutLegacyControls()}${imageCorrectionPanel()}</div></div></section>`;
+    };
+
+    publishView=function(){
+      const kind=state.preview==='story'?'История':'Новость';
+      const media=state.preview==='story'?'3 слайда и изображения':'текст и изображения';
+      return `<section class="mx-auto grid w-full max-w-[1180px] gap-4 px-3 pb-6 pt-5 sm:px-5"><div><button class="text-[10px] font-bold text-beauty-muted hover:text-beauty-ink" data-back type="button">← Вернуться к проверке</button><h1 class="mt-2 font-beauty-display text-[clamp(1.35rem,2.2vw,1.85rem)] font-bold tracking-[-.05em]">Сохранение материала</h1><p class="mt-1.5 text-[11px] text-beauty-muted">Финальная проверка: что сохранится, куда попадёт материал и что делать дальше.</p></div><section class="card overflow-hidden">${progress()}</section><div class="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_350px]"><section class="card p-4"><div class="rounded-xl bg-beauty-sage-soft p-4"><p class="text-[9px] font-extrabold uppercase tracking-[.1em] text-[#587147]">Готово к сохранению</p><h2 class="mt-1 font-beauty-display text-[19px] font-bold tracking-[-.04em]">${esc(state.result.title)}</h2><p class="mt-2 text-[10px] leading-relaxed text-beauty-muted">${kind} прошла проверку текста и изображения.</p></div><div class="mt-4 grid gap-2"><div class="flex items-center gap-3 rounded-xl bg-beauty-soft p-3"><span class="grid h-6 w-6 place-items-center rounded-full bg-beauty-sage text-[10px] font-bold text-white">✓</span><span><b class="block text-[10px]">Текст сохранён</b><small class="mt-0.5 block text-[8px] text-beauty-muted">Заголовок, описание и призыв к действию</small></span></div><div class="flex items-center gap-3 rounded-xl bg-beauty-soft p-3"><span class="grid h-6 w-6 place-items-center rounded-full bg-beauty-sage text-[10px] font-bold text-white">✓</span><span><b class="block text-[10px]">Изображения сохранены</b><small class="mt-0.5 block text-[8px] text-beauty-muted">${media}</small></span></div></div><div class="mt-4 rounded-xl border border-black/10 p-4"><b class="text-[11px]">Куда попадёт материал</b><p class="mt-2 text-[9px] leading-relaxed text-beauty-muted">Он сохранится в разделе «Контент» и останется задачей на главной до размещения. В Карты ничего не отправится автоматически.</p></div><div class="mt-4 flex flex-wrap justify-between gap-2 border-t border-black/10 pt-4"><button class="${secondary}" data-save-draft type="button">Сохранить как черновик</button><button class="${primary}" data-save-open-maps type="button">Сохранить и перейти к размещению ${icon('arrow','h-3.5 w-3.5')}</button></div></section>${preview()}</div></section>`;
+    };
+
+    savedView=function(){
+      const format=state.preview==='story'?'историю':'новость';
+      return `<section class="mx-auto grid min-h-[72dvh] w-full max-w-[820px] place-items-center px-3 py-8"><article class="card w-full overflow-hidden"><div class="grid md:grid-cols-[.9fr_1.1fr]"><div class="bg-beauty-sage-soft p-6"><span class="grid h-12 w-12 place-items-center rounded-full bg-beauty-sage text-white">${icon('check','h-6 w-6')}</span><p class="mt-5 text-[9px] font-extrabold uppercase tracking-[.1em] text-[#587147]">Материал сохранён</p><h1 class="mt-1 font-beauty-display text-[24px] font-bold tracking-[-.05em]">Можно размещать</h1><p class="mt-3 text-[10px] leading-relaxed text-beauty-muted">Текст и изображения сохранены вместе. Задача останется на главной, пока публикация не будет размещена.</p></div><div class="p-6"><h2 class="font-beauty-display text-[17px] font-bold tracking-[-.04em]">Что делать дальше</h2><ol class="mt-4 grid gap-3"><li class="flex gap-3"><span class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-beauty-soft text-[9px] font-bold">1</span><span class="text-[10px] leading-relaxed">Откройте нужный сервис Карт и создайте ${format} в карточке салона.</span></li><li class="flex gap-3"><span class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-beauty-soft text-[9px] font-bold">2</span><span class="text-[10px] leading-relaxed">Перенесите готовый текст и изображения из сохранённого материала.</span></li><li class="flex gap-3"><span class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-beauty-soft text-[9px] font-bold">3</span><span class="text-[10px] leading-relaxed">После размещения отметьте задачу выполненной на главной.</span></li></ol><div class="mt-6 flex flex-wrap gap-2"><a class="${primary}" href="https://yandex.ru/maps/" target="_blank" rel="noopener">Открыть Яндекс Карты ${icon('arrow','h-3.5 w-3.5')}</a><a class="${secondary}" href="https://2gis.ru/" target="_blank" rel="noopener">Открыть 2ГИС</a><button class="${secondary}" data-return-content type="button">Вернуться к контенту</button></div></div></div></article></section>`;
+    };
+
+    window.addEventListener('click',event=>{
+      const target=event.target.closest('button');
+      if(!target)return;
+      if(target.dataset.goal!==undefined||target.dataset.openAuto!==undefined){state.textIssue='';state.textFixStatus='';state.imageIssue='';state.imageFixStatus=''}
+      if(target.dataset.generate!==undefined){
+        event.preventDefault();event.stopImmediatePropagation();
+        state.step=2;state.view='generating';state.generationPhase=0;
+        const token=Date.now();state.generationToken=token;render();
+        [1,2,3].forEach((phase,index)=>window.setTimeout(()=>{if(state.generationToken!==token)return;state.generationPhase=phase;render()},520*(index+1)));
+        window.setTimeout(()=>{if(state.generationToken!==token)return;const selectedPeriod=state.period;if(state.period==='На этой неделе')state.period='этой неделе';createResult();state.period=selectedPeriod},2200);
+      }
+    },true);
+
+    document.addEventListener('click',event=>{
+      const target=event.target.closest('button');if(!target)return;
+      if(target.dataset.cancelGeneration!==undefined){state.generationToken=Date.now();state.step=1;state.view='create';render();return}
+      if(target.dataset.textProblem){state.textIssue=target.dataset.textProblem;state.textFixStatus='';render();return}
+      if(target.dataset.applyTextFix!==undefined){
+        const form=document.getElementById('manualEditForm'),pending=ensurePending();
+        const correction=String(form?.elements?.correction?.value||'').trim();
+        pending.title=String(form?.elements?.title?.value||pending.title).trim()||pending.title;
+        pending.text=String(form?.elements?.text?.value||pending.text).trim()||pending.text;
+        if(state.textIssue==='Слишком рекламно')pending.text=pending.text.replace(/!+/g,'.').replace('Будем рады видеть вас в салоне!','');
+        if(state.textIssue==='Сделать короче')pending.text=pending.text.split('. ').slice(0,2).join('. ')+(pending.text.endsWith('.')?'':'.');
+        if(state.textIssue==='Другой заголовок')pending.title='Время для красивого обновления';
+        if(correction)pending.text=correction;
+        state.result={...state.result,title:pending.title,text:pending.text};
+        state.appliedBase=`${state.result.title}|${state.result.text}|${state.template}|${state.imageVariant}`;
+        state.pendingBase=state.appliedBase;
+        state.textFixStatus=state.textIssue==='Неверный факт'&&!correction?'Укажите правильный факт в поле «Своя правка» — система не будет придумывать замену.':'Исправление применено только к тексту. Изображение осталось без изменений.';
+        render();return;
+      }
+      if(target.dataset.imageProblem){
+        state.imageIssue=target.dataset.imageProblem;
+        if(state.imageIssue==='Слишком тёмное')state.imageVariant=1;
+        else if(state.imageIssue==='Текст не читается')state.template='helpful';
+        else state.imageVariant=(state.imageVariant+1)%3;
+        state.imageFixStatus='Подготовлен новый вариант изображения. Текст публикации не изменился.';
+        render();return;
+      }
+    });
+
+    render();
+  </script>
+  <script>
+    /* Keep automatic tasks and administrator-created drafts as separate flows. */
+    state.contentOrigin='auto';
+
+    autoContent=function(){
+      const items=state.autoItems;
+      return `<section class="card overflow-hidden"><div class="flex flex-wrap items-center justify-between gap-3 border-b border-black/10 px-4 py-3"><div><p class="text-[9px] font-extrabold uppercase tracking-[.1em] text-beauty-accent-strong">Сделать сейчас</p><h2 class="mt-1 font-beauty-display text-[18px] font-bold tracking-[-.04em]">Проверьте готовые материалы</h2></div><span class="rounded-full bg-beauty-sage-soft px-2.5 py-1 text-[9px] font-bold text-[#587147]">${reviewCountLabel(items.length)}</span></div><div class="grid gap-px bg-black/10 md:grid-cols-2">${items.length?items.map(item=>`<button class="group bg-beauty-surface p-4 text-left transition-colors hover:bg-[#fffaf6]" data-open-auto="${item.id}" type="button"><div class="grid grid-cols-[58px_minmax(0,1fr)] gap-3"><div class="preview-image ${item.template==='result'?'is-work':''} h-[58px] rounded-xl"></div><div class="min-w-0"><div class="flex flex-wrap items-center gap-2"><span class="rounded-full bg-beauty-soft px-2 py-1 text-[8px] font-bold text-beauty-muted">${item.type}</span><span class="rounded-full bg-beauty-sage-soft px-2 py-1 text-[8px] font-bold text-[#587147]">Готово к проверке</span></div><b class="mt-2 block truncate text-[11px]">${item.title}</b><p class="mt-1 line-clamp-2 text-[9px] leading-relaxed text-beauty-muted">${item.reason}</p></div></div><span class="mt-3 flex justify-end border-t border-black/10 pt-3 text-[10px] font-bold text-beauty-accent-strong">Открыть материал →</span></button>`).join(''):`<div class="bg-beauty-surface px-4 py-5 md:col-span-2"><b class="text-[11px]">Все готовые материалы проверены</b></div>`}</div></section>`;
+    };
+
+    function topicIconSvg(id){
+      const paths={
+        slots:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4M17 3v4M3 10h18"/><circle cx="12" cy="15" r="3"/><path d="M12 13.5V15l1 1"/>',
+        service:'<path d="M5 18h14M7 15l2-7 3 4 3-7 2 10"/><path d="M6 18v2h12v-2"/>',
+        work:'<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="9" r="2"/><path d="m4 17 5-5 3.5 3.5 2-2L20 18"/>',
+        promo:'<path d="M4 12.5 12.5 4H19a1 1 0 0 1 1 1v6.5L11.5 20 4 12.5Z"/><circle cx="16" cy="8" r="1.5"/><path d="m9 10 6 6M14.5 10.5l-5 5"/>',
+        news:'<rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 8h8M8 12h8M8 16h5"/>'
+      };
+      return `<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[id]}</svg>`;
+    }
+
+    generationTopics=function(){
+      const topicIds=['slots','service','work','promo','news'];
+      return `<section><div><p class="text-[9px] font-extrabold uppercase tracking-[.1em] text-beauty-accent-strong">Новый материал</p><h2 class="mt-1 font-beauty-display text-[18px] font-bold tracking-[-.04em]">Выберите тему для генерации</h2></div><div class="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">${topicIds.map(id=>`<button class="group card min-h-[142px] p-4 text-left transition-colors hover:border-beauty-accent hover:bg-[#fffaf6]" data-goal="${id}" type="button"><span class="grid h-9 w-9 place-items-center rounded-[10px] bg-beauty-accent-soft text-beauty-accent-strong transition-colors group-hover:bg-beauty-surface">${topicIconSvg(id)}</span><b class="mt-4 block text-[11px] leading-tight">${goals[id].title}</b><span class="mt-2 block text-[9px] leading-relaxed text-beauty-muted">${goals[id].note}</span><span class="mt-4 block text-[9px] font-bold text-beauty-accent-strong">Начать →</span></button>`).join('')}</div></section>`;
+    };
+
+    overview=function(){return `<section class="mx-auto grid w-full max-w-[1180px] gap-5 px-3 pb-6 pt-5 sm:px-5"><h1 class="font-beauty-display text-[clamp(1.35rem,2.2vw,1.85rem)] font-bold tracking-[-.05em]">Контент для Карт</h1>${autoContent()}${generationTopics()}</section>`};
+
+    const resultViewBeforeQuietOverview=resultView;
+    resultView=function(){return resultViewBeforeQuietOverview().replace(/<span class="rounded-full bg-beauty-surface[^>]*>Источник:[\s\S]*?<\/span>/,'')};
+
+    const publishViewBeforeSeparateDestinations=publishView;
+    publishView=function(){
+      const html=publishViewBeforeSeparateDestinations();
+      if(state.contentOrigin==='auto')return html;
+      return html
+        .replace('Он сохранится в разделе «Контент» и останется задачей на главной до размещения. В Карты ничего не отправится автоматически.','Материал сохранится в «Черновиках». Новая задача на главной не появится. В Карты ничего не отправится автоматически.')
+        .replace('Сохранить и перейти к размещению','Сохранить в черновики и перейти к размещению');
+    };
+
+    const savedViewBeforeSeparateDestinations=savedView;
+    savedView=function(){
+      const html=savedViewBeforeSeparateDestinations();
+      if(state.contentOrigin==='auto')return html;
+      return html
+        .replace('Текст и изображения сохранены вместе. Задача останется на главной, пока публикация не будет размещена.','Текст и изображения сохранены вместе в «Черновиках». Новая задача на главной не создавалась.')
+        .replace('После размещения отметьте задачу выполненной на главной.','После размещения материал останется в «Черновиках» — его можно открыть и использовать повторно.');
+    };
+
+    window.addEventListener('click',event=>{
+      const target=event.target.closest('button');if(!target)return;
+      if(target.dataset.openAuto!==undefined)state.contentOrigin='auto';
+      if(target.dataset.goal!==undefined){state.contentOrigin='manual';state.activeAuto=''}
+    },true);
+
+    document.querySelector('.sidebar-copy.mt-auto')?.remove();
+    render();
+  </script>
+  <script>
+    /* Automatic content stays actionable until the administrator confirms placement. */
+    state.publishedItems=[];
+
+    header=function(){
+      const content=state.mapsTab==='content';
+      const draftCount=state.drafts.filter(item=>item.status==='Черновик'||item.status==='Готово к публикации').length;
+      return `<div class="mx-auto w-full max-w-[1180px] px-3 pt-4 sm:px-5"><section class="card overflow-hidden"><div class="flex items-center justify-between gap-3 px-4 py-3"><div class="flex items-center gap-3"><span class="grid h-10 w-10 place-items-center rounded-xl bg-beauty-soft text-beauty-accent-strong">${icon('map','h-5 w-5')}</span><div><p class="font-beauty-display text-[17px] font-bold tracking-[-.045em]">Карты</p><p class="mt-0.5 text-[10px] text-beauty-muted">Салон «Ирис» · Яндекс Карты и 2ГИС</p></div></div>${content?`<button class="${primary}" data-start-create type="button">${icon('plus','h-3.5 w-3.5')} Создать</button>`:''}</div><nav class="flex border-t border-black/10 px-2" aria-label="Разделы Карт"><button class="tab ${!content?'is-active':''}" data-maps="reviews" type="button">Отзывы <span class="ml-1 rounded-full bg-beauty-warning-soft px-1.5 py-0.5 text-[8px] text-beauty-warning">2</span></button><button class="tab ${content?'is-active':''}" data-maps="content" type="button">Контент</button></nav>${content?`<nav class="flex overflow-x-auto border-t border-black/10 px-2" aria-label="Разделы контента"><button class="tab ${state.tab==='overview'?'is-active':''}" data-tab="overview" type="button">Обзор</button><button class="tab ${state.tab==='drafts'?'is-active':''}" data-tab="drafts" type="button">Черновики${draftCount?` <span class="ml-1 rounded-full bg-beauty-warning-soft px-1.5 py-0.5 text-[8px] text-beauty-warning">${draftCount}</span>`:''}</button><button class="tab ${state.tab==='published'?'is-active':''}" data-tab="published" type="button">Опубликовано${state.publishedItems.length?` <span class="ml-1 rounded-full bg-beauty-sage-soft px-1.5 py-0.5 text-[8px] text-[#587147]">${state.publishedItems.length}</span>`:''}</button></nav>`:''}</section></div>`;
+    };
+
+    autoContent=function(){
+      const items=state.autoItems;
+      return `<section class="card overflow-hidden"><div class="flex flex-wrap items-center justify-between gap-3 border-b border-black/10 px-4 py-3"><div><p class="text-[9px] font-extrabold uppercase tracking-[.1em] text-beauty-accent-strong">Сделать сейчас</p><h2 class="mt-1 font-beauty-display text-[18px] font-bold tracking-[-.04em]">${items.some(item=>item.stage==='placement')?'Завершите размещение':'Проверьте готовые материалы'}</h2></div><span class="rounded-full bg-beauty-sage-soft px-2.5 py-1 text-[9px] font-bold text-[#587147]">${items.length} ${items.length===1?'материал':'материала'}</span></div><div class="grid gap-px bg-black/10 md:grid-cols-2">${items.length?items.map(item=>{const placement=item.stage==='placement';return `<button class="group bg-beauty-surface p-4 text-left transition-colors hover:bg-[#fffaf6]" ${placement?`data-open-placement="${item.id}"`:`data-open-auto="${item.id}"`} type="button"><div class="grid grid-cols-[58px_minmax(0,1fr)] gap-3"><div class="preview-image ${item.template==='result'?'is-work':''} h-[58px] rounded-xl"></div><div class="min-w-0"><div class="flex flex-wrap items-center gap-2"><span class="rounded-full bg-beauty-soft px-2 py-1 text-[8px] font-bold text-beauty-muted">${item.type}</span><span class="rounded-full ${placement?'bg-beauty-warning-soft text-beauty-warning':'bg-beauty-sage-soft text-[#587147]'} px-2 py-1 text-[8px] font-bold">${placement?'Готово к размещению':'Готово к проверке'}</span></div><b class="mt-2 block truncate text-[11px]">${item.title}</b><p class="mt-1 line-clamp-2 text-[9px] leading-relaxed text-beauty-muted">${placement?'Материал сохранён. Разместите его в Картах и подтвердите выполнение.':item.reason}</p></div></div><span class="mt-3 flex justify-end border-t border-black/10 pt-3 text-[10px] font-bold text-beauty-accent-strong">${placement?'Продолжить размещение →':'Открыть материал →'}</span></button>`}).join(''):`<div class="bg-beauty-surface px-4 py-5 md:col-span-2"><b class="text-[11px]">Очередь пуста</b><p class="mt-1 text-[9px] text-beauty-muted">Размещённые материалы находятся во вкладке «Опубликовано».</p></div>`}</div></section>`;
+    };
+
+    function topicsPage(){return `<section class="mx-auto grid w-full max-w-[1180px] gap-5 px-3 pb-6 pt-5 sm:px-5"><div><button class="text-[10px] font-bold text-beauty-muted hover:text-beauty-ink" data-back-to-overview type="button">← К обзору</button><h1 class="mt-2 font-beauty-display text-[clamp(1.35rem,2.2vw,1.85rem)] font-bold tracking-[-.05em]">Создать материал</h1></div>${generationTopics()}</section>`}
+
+    const listingBeforePublished=listing;
+    listing=function(type){
+      if(type!=='published')return listingBeforePublished(type).replace(/<button class="[^"]*" data-self-create type="button">[\s\S]*?Создать<\/button>/,'');
+      return `<section class="mx-auto grid w-full max-w-[1180px] gap-4 px-3 pb-6 pt-5 sm:px-5"><div><h1 class="font-beauty-display text-[clamp(1.35rem,2.2vw,1.85rem)] font-bold tracking-[-.05em]">Опубликовано</h1></div><section class="card overflow-hidden">${state.publishedItems.length?state.publishedItems.map(item=>`<article class="grid grid-cols-[48px_minmax(0,1fr)_auto] items-center gap-3 border-t border-black/10 px-3 py-3 first:border-t-0"><div class="preview-image ${item.type==='История'?'is-work':''} h-12 rounded-[10px]"></div><div class="min-w-0"><b class="block truncate text-[11px]">${item.title}</b><small class="mt-1 block text-[8px] text-beauty-muted">${item.type} · ${item.date}</small></div><span class="rounded-full bg-beauty-sage-soft px-2 py-1 text-[8px] font-bold text-[#587147]">Опубликовано</span></article>`).join(''):'<div class="p-5"><b class="text-[11px]">Пока нет опубликованных материалов</b><p class="mt-1 text-[9px] text-beauty-muted">После подтверждения размещения материалы появятся здесь.</p></div>'}</section></section>`;
+    };
+
+    savedView=function(){
+      const automatic=state.contentOrigin==='auto';
+      const format=state.preview==='story'?'историю':'новость';
+      return `<section class="mx-auto grid min-h-[72dvh] w-full max-w-[820px] place-items-center px-3 py-8"><article class="card w-full overflow-hidden"><div class="grid md:grid-cols-[.9fr_1.1fr]"><div class="${automatic?'bg-beauty-warning-soft':'bg-beauty-sage-soft'} p-6"><span class="grid h-12 w-12 place-items-center rounded-full ${automatic?'bg-beauty-warning':'bg-beauty-sage'} text-white">${automatic?icon('arrow','h-6 w-6'):icon('check','h-6 w-6')}</span><p class="mt-5 text-[9px] font-extrabold uppercase tracking-[.1em] ${automatic?'text-beauty-warning':'text-[#587147]'}">${automatic?'Последний шаг':'Сохранено'}</p><h1 class="mt-1 font-beauty-display text-[24px] font-bold tracking-[-.05em]">${automatic?'Разместите материал':'Материал в черновиках'}</h1><p class="mt-3 text-[10px] leading-relaxed text-beauty-muted">${automatic?'Карточка и задача останутся активными до подтверждения размещения.':'Текст и изображения сохранены. Новая задача на главной не создавалась.'}</p></div><div class="p-6"><h2 class="font-beauty-display text-[17px] font-bold tracking-[-.04em]">${automatic?'Завершите задачу':'Что делать дальше'}</h2><ol class="mt-4 grid gap-3"><li class="flex gap-3"><span class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-beauty-soft text-[9px] font-bold">1</span><span class="text-[10px] leading-relaxed">Откройте нужный сервис Карт и создайте ${format} в карточке салона.</span></li><li class="flex gap-3"><span class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-beauty-soft text-[9px] font-bold">2</span><span class="text-[10px] leading-relaxed">Перенесите готовый текст и изображения.</span></li>${automatic?'<li class="flex gap-3"><span class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-beauty-soft text-[9px] font-bold">3</span><span class="text-[10px] leading-relaxed">Вернитесь сюда и подтвердите размещение.</span></li>':''}</ol><div class="mt-6 flex flex-wrap gap-2"><a class="${secondary}" href="https://yandex.ru/maps/" target="_blank" rel="noopener">Яндекс Карты</a><a class="${secondary}" href="https://2gis.ru/" target="_blank" rel="noopener">2ГИС</a>${automatic?`<button class="${primary}" data-confirm-placement type="button">Я разместил материал ${icon('check','h-3.5 w-3.5')}</button><button class="${secondary}" data-return-content type="button">Вернуться позже</button>`:`<button class="${primary}" data-return-drafts type="button">Перейти в черновики ${icon('arrow','h-3.5 w-3.5')}</button>`}</div></div></div></article></section>`;
+    };
+
+    const renderBeforePlacementLifecycle=render;
+    render=function(){
+      if(state.view==='topics'){
+        app.innerHTML=header()+topicsPage();
+        document.title='Создать материал · Карты · МаркетологТЕХ';
+        return;
+      }
+      renderBeforePlacementLifecycle();
+    };
+
+    window.addEventListener('click',event=>{
+      const target=event.target.closest('button');if(!target)return;
+      if(target.dataset.saveOpenMaps!==undefined){
+        event.preventDefault();event.stopImmediatePropagation();
+        if(state.contentOrigin==='auto'){
+          const item=state.autoItems.find(entry=>entry.id===state.activeAuto);
+          if(item){item.stage='placement';item.savedResult={...state.result};item.template=state.template;item.imageVariant=state.imageVariant}
+        }else{
+          state.drafts.unshift({id:`m${Date.now()}`,goal:state.goal,title:state.result.title,type:state.preview==='story'?'История':'Новость',date:'Только что',status:'Черновик'});
+        }
+        state.view='saved';state.mapsTab='content';render();
+      }
+    },true);
+
+    document.addEventListener('click',event=>{
+      const target=event.target.closest('button');if(!target)return;
+      if(target.dataset.startCreate!==undefined){state.contentOrigin='manual';state.activeAuto='';state.tab='overview';state.view='topics';render();return}
+      if(target.dataset.backToOverview!==undefined){state.tab='overview';state.view='overview';render();return}
+      if(target.dataset.openPlacement){
+        const item=state.autoItems.find(entry=>entry.id===target.dataset.openPlacement);if(!item)return;
+        state.contentOrigin='auto';state.activeAuto=item.id;state.goal=item.goal;state.preview=item.type==='История'?'story':'news';state.result={...(item.savedResult||{title:item.title,text:item.text,cta:item.cta})};state.template=item.template;state.imageVariant=item.imageVariant||0;state.view='saved';render();return;
+      }
+      if(target.dataset.confirmPlacement!==undefined){
+        const item=state.autoItems.find(entry=>entry.id===state.activeAuto);if(!item)return;
+        state.publishedItems.unshift({id:item.id,title:item.title,type:item.type,date:'Сегодня'});
+        state.autoItems=state.autoItems.filter(entry=>entry.id!==item.id);state.activeAuto='';state.tab='published';state.view='listing';render();notify('Материал опубликован. Задача на главной закрыта.');return;
+      }
+      if(target.dataset.returnDrafts!==undefined){state.tab='drafts';state.view='listing';render();return}
+    });
+
+    render();
+  </script>
+  <script>
+    /* Final UX pass after comparing the prototype with the working Maps content studio. */
+    state.reviewTemplateStatus='';
+
+    progress=function(){
+      const steps=[
+        {number:1,label:'Основа'},
+        {number:2,label:'Проверка'},
+        {number:3,label:'Сохранение'}
+      ];
+      const available=state.hasGenerated?3:1;
+      return `<nav class="flex items-center gap-3 overflow-x-auto border-b border-black/10 px-4 py-3" aria-label="Этапы создания материала">${steps.map((item,index)=>{
+        const disabled=item.number>available;
+        return `${index?'<span class="h-px w-6 shrink-0 bg-black/10" aria-hidden="true"></span>':''}<button class="progress-step shrink-0 ${state.step===item.number?'is-active':state.step>item.number?'is-done':''} ${disabled?'cursor-not-allowed opacity-45':''}" data-content-step="${item.number}" type="button" ${disabled?'disabled':''} aria-current="${state.step===item.number?'step':'false'}"><b>${state.step>item.number?'✓':item.number}</b>${item.label}</button>`;
+      }).join('')}</nav>`;
+    };
+
+    function reviewTemplatePicker(){
+      const pending=ensurePending();
+      const templates=[
+        {id:'editorial',title:'Текст на фото',note:'Заголовок поверх кадра',visual:'bg-gradient-to-t from-black/70 to-beauty-soft'},
+        {id:'helpful',title:'Фото в фокусе',note:'Крупный кадр, меньше текста',visual:'bg-beauty-sage-soft'},
+        {id:'result',title:'Акцентная плашка',note:'Выделенный оффер или результат',visual:'bg-beauty-accent-soft'}
+      ];
+      return `<section class="rounded-xl border border-black/10 p-3"><div class="flex flex-wrap items-start justify-between gap-2"><div><b class="block text-[10px]">Шаблон</b><p class="mt-1 text-[8px] text-beauty-muted">Можно сменить на этапе проверки — текст и изображение сохранятся.</p></div>${state.reviewTemplateStatus?'<span class="rounded-full bg-beauty-sage-soft px-2 py-1 text-[8px] font-bold text-[#587147]">Применён</span>':''}</div><div class="mt-3 grid gap-2 sm:grid-cols-3">${templates.map(item=>`<button class="rounded-[10px] border p-2 text-left transition-colors ${pending.template===item.id?'border-beauty-accent bg-[#fff8f3] ring-1 ring-beauty-accent-soft':'border-black/10 bg-beauty-surface hover:border-beauty-accent-soft'}" data-template="${item.id}" type="button" aria-pressed="${pending.template===item.id}"><i class="mb-2 block h-7 rounded ${item.visual}"></i><b class="block text-[9px] leading-tight">${item.title}</b><span class="mt-1 block text-[7px] leading-tight text-beauty-muted">${item.note}</span></button>`).join('')}</div></section>`;
+    }
+
+    const resultViewBeforeLiveParity=resultView;
+    resultView=function(){
+      let html=resultViewBeforeLiveParity();
+      if(!state.hasGenerated)return html;
+      html=html.replace('<div class="mt-4 flex items-center justify-between">',`${reviewTemplatePicker()}<div class="mt-4 flex items-center justify-between">`);
+      html=html.replace(/<button class="[^"]*" data-apply-text-fix type="button">Исправить текст<\/button><button class="[^"]*" data-apply-preview type="button">[\s\S]*?<\/button>/,`<button class="${primary} justify-self-start" data-apply-review type="button">Применить изменения</button>`);
+      return html;
+    };
+
+    function automaticSourceView(){
+      const item=state.autoItems.find(entry=>entry.id===state.activeAuto);
+      const sourceText=item?.reason||'Материал собран по актуальным данным салона.';
+      return `<section class="mx-auto grid w-full max-w-[1180px] gap-4 px-3 pb-6 pt-5 sm:px-5"><div><button class="text-[10px] font-bold text-beauty-muted hover:text-beauty-ink" data-back-to-overview type="button">← К контенту</button><h1 class="mt-2 font-beauty-display text-[clamp(1.35rem,2.2vw,1.85rem)] font-bold tracking-[-.05em]">Основа материала</h1><p class="mt-1.5 text-[11px] text-beauty-muted">Перед проверкой можно увидеть, почему помощник подготовил этот материал.</p></div><section class="card overflow-hidden">${progress()}<div class="grid gap-4 p-4 lg:grid-cols-[minmax(0,1fr)_330px]"><div><div class="rounded-xl bg-beauty-soft p-4"><p class="text-[9px] font-extrabold uppercase tracking-[.1em] text-beauty-accent-strong">Автоматическая генерация</p><h2 class="mt-1 font-beauty-display text-[19px] font-bold tracking-[-.04em]">${esc(item?.title||state.result.title)}</h2><p class="mt-3 text-[10px] leading-relaxed text-beauty-muted">${esc(sourceText)}</p></div><div class="mt-4 rounded-xl border border-black/10 p-4"><b class="text-[10px]">Что использовано</b><ul class="mt-3 grid gap-2 text-[9px] text-beauty-muted"><li>• актуальные данные салона и карточки;</li><li>• выбранный формат: ${state.preview==='story'?'история':'новость'};</li><li>• визуальный шаблон, подобранный помощником.</li></ul></div><button class="${primary} mt-4" data-content-step="2" type="button">Вернуться к проверке ${icon('arrow','h-3.5 w-3.5')}</button></div><aside class="card bg-beauty-soft p-4"><b class="text-[10px]">Данные не изменяются автоматически</b><p class="mt-2 text-[9px] leading-relaxed text-beauty-muted">На следующем этапе вы проверяете факты, текст, изображение и шаблон. Без сохранения материал никуда не отправится.</p></aside></div></section></section>`;
+    }
+
+    const renderBeforeLiveParity=render;
+    render=function(){
+      if(state.view==='auto-source'){
+        document.body.dataset.template=state.template||'editorial';
+        document.body.dataset.imageVariant=String(state.imageVariant||0);
+        app.innerHTML=header()+automaticSourceView();
+        document.title='Основа материала · Карты · МаркетологТЕХ';
+        return;
+      }
+      renderBeforeLiveParity();
+    };
+
+    window.addEventListener('click',event=>{
+      const target=event.target.closest('button');if(!target)return;
+      if(target.dataset.goal!==undefined||target.dataset.openAuto!==undefined){
+        state.pending=null;
+        state.appliedBase='';
+        state.pendingBase='__reset__';
+        state.reviewTemplateStatus='';
+      }
+      if(target.dataset.imageProblem!==undefined&&state.view==='result'){
+        event.preventDefault();event.stopImmediatePropagation();
+        const pending=ensurePending();
+        state.imageIssue=target.dataset.imageProblem;
+        if(state.imageIssue==='Слишком тёмное')pending.imageVariant=1;
+        else if(state.imageIssue==='Текст не читается')pending.template='helpful';
+        else pending.imageVariant=(pending.imageVariant+1)%3;
+        state.template=pending.template;
+        state.imageVariant=pending.imageVariant;
+        state.imageFixStatus='Изображение обновлено. Текст публикации не изменился.';
+        render();return;
+      }
+      if(target.dataset.contentStep!==undefined){
+        event.preventDefault();event.stopImmediatePropagation();
+        const step=Number(target.dataset.contentStep);
+        if(step===1){
+          state.step=1;
+          state.view=state.contentOrigin==='auto'?'auto-source':'create';
+        }else if(step===2&&state.hasGenerated){
+          state.step=2;state.view='result';
+        }else if(step===3&&state.hasGenerated){
+          state.step=3;state.view='publish';
+        }
+        render();return;
+      }
+      if(state.view==='result'&&target.dataset.template!==undefined){state.reviewTemplateStatus=''}
+      if(target.dataset.applyReview!==undefined&&state.view==='result'){
+        event.preventDefault();event.stopImmediatePropagation();
+        const form=document.getElementById('manualEditForm'),pending=ensurePending();
+        const correction=String(form?.elements?.correction?.value||'').trim();
+        pending.title=String(form?.elements?.title?.value||pending.title).trim()||pending.title;
+        pending.text=String(form?.elements?.text?.value||pending.text).trim()||pending.text;
+        if(state.textIssue==='Слишком рекламно')pending.text=pending.text.replace(/!+/g,'.').replace('Будем рады видеть вас в салоне!','');
+        if(state.textIssue==='Сделать короче')pending.text=pending.text.split('. ').slice(0,2).join('. ')+(pending.text.endsWith('.')?'':'.');
+        if(state.textIssue==='Другой заголовок')pending.title='Время для красивого обновления';
+        if(state.textIssue==='Неверный факт'&&!correction){state.textFixStatus='Укажите правильный факт в поле «Своя правка».';render();return}
+        if(correction)pending.text=correction;
+        state.result={...state.result,title:pending.title,text:pending.text};
+        state.template=pending.template;
+        state.imageVariant=pending.imageVariant;
+        state.appliedBase=`${state.result.title}|${state.result.text}|${state.template}|${state.imageVariant}`;
+        state.pendingBase=state.appliedBase;
+        state.textFixStatus='Изменения применены к материалу и предпросмотру.';
+        state.reviewTemplateStatus='applied';
+        render();notify('Материал обновлён');return;
+      }
+    },true);
+
+    render();
+  </script>
+  <script>
+    /* Mirror the working product: Auto plus user-created styles, not fixed layout presets. */
+    state.imageStyle='auto';
+    state.textStyle='standard';
+    state.savedImageStyles=[];
+    state.savedTextStyles=[];
+    state.styleManagerOpen=false;
+    state.styleManagerTab='image';
+    state.styleEditorOpen=false;
+
+    function selectedStyleName(kind){
+      if(kind==='text'){
+        if(state.textStyle==='standard')return 'Стандартный';
+        return state.savedTextStyles.find(item=>item.id===state.textStyle)?.name||'Стандартный';
+      }
+      if(state.imageStyle==='auto')return 'Авто';
+      return state.savedImageStyles.find(item=>item.id===state.imageStyle)?.name||'Авто';
+    }
+
+    function styleSummary({review=false}={}){
+      const imageName=selectedStyleName('image');
+      const textName=selectedStyleName('text');
+      return `<section class="rounded-xl border border-black/10 ${review?'bg-beauty-surface':'bg-beauty-surface'} p-3"><div class="flex flex-wrap items-center justify-between gap-3"><div><b class="block text-[10px]">${state.preview==='news'&&review?'Стили материала':'Стиль изображения'}</b><p class="mt-1 text-[8px] text-beauty-muted">${imageName==='Авто'?'Помощник подберёт оформление под материал.':`Выбран сохранённый стиль «${esc(imageName)}».`}</p></div><button class="${secondary}" data-open-style-manager type="button">${review?'Изменить стиль':'Выбрать стиль'}</button></div><div class="mt-3 grid gap-2 ${state.preview==='news'&&review?'sm:grid-cols-2':''}"><div class="flex items-center gap-3 rounded-[10px] bg-beauty-soft p-3"><span class="grid h-8 w-8 shrink-0 place-items-center rounded-[9px] bg-beauty-surface text-[12px] font-bold text-beauty-accent-strong">${imageName==='Авто'?'A':'С'}</span><span><b class="block text-[9px]">Изображение · ${esc(imageName)}</b><small class="mt-0.5 block text-[7px] text-beauty-muted">${imageName==='Авто'?'На усмотрение системы':'Сохранённый стиль салона'}</small></span></div>${state.preview==='news'&&review?`<div class="flex items-center gap-3 rounded-[10px] bg-beauty-soft p-3"><span class="grid h-8 w-8 shrink-0 place-items-center rounded-[9px] bg-beauty-surface text-[12px] font-bold text-beauty-accent-strong">Т</span><span><b class="block text-[9px]">Текст · ${esc(textName)}</b><small class="mt-0.5 block text-[7px] text-beauty-muted">Стиль текста настраивается отдельно</small></span></div>`:''}</div></section>`;
+    }
+
+    const detailsBeforeRealStyles=details;
+    details=function(){
+      let html=detailsBeforeRealStyles();
+      html=html.replace(/<section class="rounded-xl border border-black\/10 bg-beauty-surface p-3"><div><b class="text-\[11px\]">Выберите внешний вид<\/b>[\s\S]*?<\/section><details class/,`${styleSummary()}<details class`);
+      html=html.replace(/<label class="text-\[10px\] font-bold">Шаблон<select class="field mt-1\.5">[\s\S]*?<\/select><\/label>/,'');
+      return html;
+    };
+
+    reviewTemplatePicker=function(){return styleSummary({review:true})};
+
+    function styleCard(kind,item,selected){
+      const automatic=item.id==='auto'||item.id==='standard';
+      return `<button class="rounded-xl border p-3 text-left transition-colors ${selected?'border-beauty-accent bg-[#fff8f3] ring-1 ring-beauty-accent-soft':'border-black/10 bg-beauty-surface hover:border-beauty-accent-soft'}" data-select-style="${item.id}" data-style-kind="${kind}" type="button" aria-pressed="${selected}"><span class="grid h-9 w-9 place-items-center rounded-[10px] ${automatic?'bg-beauty-soft':'bg-beauty-accent-soft'} text-[12px] font-bold text-beauty-accent-strong">${automatic?'A':'С'}</span><b class="mt-3 block text-[10px]">${esc(item.name)}</b><span class="mt-1 block text-[8px] leading-relaxed text-beauty-muted">${esc(item.description)}</span></button>`;
+    }
+
+    function styleManager(){
+      const kind=state.styleManagerTab;
+      const saved=kind==='image'?state.savedImageStyles:state.savedTextStyles;
+      const current=kind==='image'?state.imageStyle:state.textStyle;
+      const base=kind==='image'?{id:'auto',name:'Авто',description:'Оформление выбирает система под материал.'}:{id:'standard',name:'Стандартный',description:'Базовый стиль текста сервиса.'};
+      const editor=state.styleEditorOpen?`<form class="mt-4 grid gap-3 rounded-xl bg-beauty-soft p-4" id="newStyleForm"><div><b class="text-[11px]">Новый ${kind==='image'?'стиль изображения':'стиль текста'}</b><p class="mt-1 text-[8px] text-beauty-muted">Стиль сохранится и станет доступен для следующих материалов.</p></div><label class="text-[9px] font-bold">Название<input class="field mt-1.5" name="name" placeholder="Например: Стиль салона" required></label><label class="text-[9px] font-bold">Описание<textarea class="field mt-1.5 min-h-[80px]" name="description" placeholder="Цвета, настроение, композиция и ограничения"></textarea></label>${kind==='image'?`<label class="text-[9px] font-bold">Ссылка на референс<input class="field mt-1.5" name="reference" placeholder="https://yandex.ru/maps/org/…"></label><label class="upload-zone flex min-h-[72px] cursor-pointer items-center justify-center p-3 text-[9px] font-bold text-beauty-muted">Добавить изображения-референсы<input class="sr-only" type="file" accept="image/*" multiple></label>`:''}<div class="flex justify-end gap-2"><button class="${secondary}" data-cancel-style-editor type="button">Отмена</button><button class="${primary}" type="submit">Сохранить стиль</button></div></form>`:'';
+      return `<div class="fixed inset-0 z-[80] grid place-items-center bg-black/35 p-3"><button class="absolute inset-0" data-close-style-manager type="button" aria-label="Закрыть настройки стилей"></button><section class="card relative z-10 max-h-[90dvh] w-full max-w-[720px] overflow-y-auto p-5" role="dialog" aria-modal="true" aria-labelledby="styleManagerTitle"><div class="flex items-start justify-between gap-3"><div><h2 class="font-beauty-display text-[20px] font-bold tracking-[-.04em]" id="styleManagerTitle">Настройки стилей</h2><p class="mt-1 text-[9px] text-beauty-muted">Текст и изображения для генерации настраиваются отдельно.</p></div><button class="${secondary}" data-close-style-manager type="button">Закрыть</button></div><div class="mt-4 flex border-b border-black/10"><button class="tab ${kind==='image'?'is-active':''}" data-style-tab="image" type="button">Картинки</button><button class="tab ${kind==='text'?'is-active':''}" data-style-tab="text" type="button">Текст</button></div><div class="mt-4 flex items-center justify-between gap-3"><div><b class="text-[11px]">${kind==='image'?'Стили изображений':'Стили текста'}</b><p class="mt-1 text-[8px] text-beauty-muted">Выберите существующий стиль или создайте собственный.</p></div><button class="${secondary}" data-new-style type="button">${icon('plus','h-3.5 w-3.5')} Новый стиль</button></div><div class="mt-4 grid gap-3 sm:grid-cols-3">${styleCard(kind,base,current===base.id)}${saved.map(item=>styleCard(kind,item,current===item.id)).join('')}</div>${!saved.length&&!state.styleEditorOpen?'<p class="mt-4 rounded-xl bg-beauty-soft p-4 text-[9px] leading-relaxed text-beauty-muted">Сохранённых стилей пока нет. Можно оставить «Авто» или создать стиль по референсам салона.</p>':''}${editor}</section></div>`;
+    }
+
+    const renderBeforeRealStyleManager=render;
+    render=function(){
+      renderBeforeRealStyleManager();
+      if(state.styleManagerOpen)app.insertAdjacentHTML('beforeend',styleManager());
+    };
+
+    window.addEventListener('click',event=>{
+      const target=event.target.closest('button');if(!target)return;
+      if(target.dataset.openStyleManager!==undefined){event.preventDefault();event.stopImmediatePropagation();state.styleManagerOpen=true;state.styleEditorOpen=false;state.styleManagerTab=state.preview==='news'?'text':'image';render();return}
+      if(target.dataset.closeStyleManager!==undefined){event.preventDefault();event.stopImmediatePropagation();state.styleManagerOpen=false;state.styleEditorOpen=false;render();return}
+      if(target.dataset.styleTab){event.preventDefault();event.stopImmediatePropagation();state.styleManagerTab=target.dataset.styleTab;state.styleEditorOpen=false;render();return}
+      if(target.dataset.newStyle!==undefined){event.preventDefault();event.stopImmediatePropagation();state.styleEditorOpen=true;render();return}
+      if(target.dataset.cancelStyleEditor!==undefined){event.preventDefault();event.stopImmediatePropagation();state.styleEditorOpen=false;render();return}
+      if(target.dataset.selectStyle){
+        event.preventDefault();event.stopImmediatePropagation();
+        if(target.dataset.styleKind==='image'){
+          state.imageStyle=target.dataset.selectStyle;
+          if(state.imageStyle==='auto')state.template='editorial';
+          else state.template=state.savedImageStyles.findIndex(item=>item.id===state.imageStyle)%2?'result':'helpful';
+          const pending=ensurePending();pending.template=state.template;
+        }else state.textStyle=target.dataset.selectStyle;
+        state.styleManagerOpen=false;state.styleEditorOpen=false;render();notify('Стиль выбран');return;
+      }
+    },true);
+
+    document.addEventListener('submit',event=>{
+      if(event.target.id!=='newStyleForm')return;
+      event.preventDefault();event.stopImmediatePropagation();
+      const form=new FormData(event.target),kind=state.styleManagerTab;
+      const item={id:`${kind}-${Date.now()}`,name:String(form.get('name')||'Новый стиль').trim(),description:String(form.get('description')||'Пользовательский стиль салона.').trim()||'Пользовательский стиль салона.'};
+      if(kind==='image'){state.savedImageStyles.push(item);state.imageStyle=item.id;state.template=state.savedImageStyles.length%2?'helpful':'result';const pending=ensurePending();pending.template=state.template}
+      else{state.savedTextStyles.push(item);state.textStyle=item.id}
+      state.styleManagerOpen=false;state.styleEditorOpen=false;render();notify('Стиль сохранён и выбран');
+    },true);
+
+    render();
+  </script>
+  <script>
+    /* Manual Yandex Business handoff and a free-form creation entry point. */
+    goals.custom={title:'Создать с нуля',note:'Своя идея без готового сценария',icon:'+'};
+    state.customTitle='';
+
+    topicsPage=function(){
+      return `<section class="mx-auto grid w-full max-w-[1180px] gap-5 px-3 pb-6 pt-5 sm:px-5"><div><button class="text-[10px] font-bold text-beauty-muted hover:text-beauty-ink" data-back-to-overview type="button">← К обзору</button><h1 class="mt-2 font-beauty-display text-[clamp(1.35rem,2.2vw,1.85rem)] font-bold tracking-[-.05em]">Новый материал</h1><p class="mt-1.5 text-[11px] text-beauty-muted">Начните с чистого листа или используйте тему как подсказку.</p></div><button class="card group grid gap-4 p-5 text-left transition-colors hover:border-beauty-accent hover:bg-[#fffaf6] sm:grid-cols-[1fr_auto] sm:items-center" data-start-blank type="button"><div><span class="grid h-10 w-10 place-items-center rounded-xl bg-beauty-accent-soft text-beauty-accent-strong">${icon('plus','h-5 w-5')}</span><p class="mt-4 text-[9px] font-extrabold uppercase tracking-[.1em] text-beauty-accent-strong">Свободный редактор</p><h2 class="mt-1 font-beauty-display text-[20px] font-bold tracking-[-.04em]">Создать с нуля</h2><p class="mt-2 max-w-[620px] text-[10px] leading-relaxed text-beauty-muted">Вы сами задаёте идею, факты, формат и стиль. Готовую тему выбирать не нужно.</p></div><span class="${primary}">Открыть редактор ${icon('arrow','h-3.5 w-3.5')}</span></button><section><div><p class="text-[9px] font-extrabold uppercase tracking-[.1em] text-beauty-accent-strong">Быстрый старт</p><h2 class="mt-1 font-beauty-display text-[17px] font-bold tracking-[-.04em]">Или выберите тему</h2><p class="mt-1 text-[9px] text-beauty-muted">Форма подскажет, какие факты понадобятся.</p></div>${generationTopics().replace(/<section>[\s\S]*?<div class="mt-3 grid/,'<div class="mt-3 grid').replace(/<\/section>$/,'')}</section></section>`;
+    };
+
+    const detailsBeforeFreeEditor=details;
+    details=function(){
+      let html=detailsBeforeFreeEditor();
+      if(state.goal!=='custom')return html;
+      html=html
+        .replace('Расскажите, что произошло','Создайте материал с нуля')
+        .replace(/<label class="text-\[11px\] font-bold">Что произошло\?<textarea class="field mt-2 min-h-\[180px\] resize-y" data-bind="note"[\s\S]*?<\/textarea><\/label>/,`<label class="text-[11px] font-bold">Заголовок<input class="field mt-2" data-bind="customTitle" value="${esc(state.customTitle)}" placeholder="Например: Новая услуга в салоне"></label><label class="text-[11px] font-bold">Что хотите рассказать?<textarea class="field mt-2 min-h-[150px] resize-y" data-bind="note" placeholder="Опишите факты, которые обязательно должны попасть в материал">${esc(state.note)}</textarea></label>`)
+        .replaceAll('Изменить цель','Выбрать тему');
+      return html;
+    };
+
+    const creationBeforeFreeEditor=creation;
+    creation=function(){
+      const html=creationBeforeFreeEditor();
+      return state.goal==='custom'?html.replaceAll('Изменить цель','Выбрать тему'):html;
+    };
+
+    const createResultBeforeFreeEditor=createResult;
+    createResult=function(){
+      if(state.goal!=='custom'){createResultBeforeFreeEditor();return}
+      state.result={title:state.customTitle.trim()||'Новость салона «Ирис»',text:state.note.trim()||'Расскажите главное о событии, услуге или предложении салона.',cta:'Подробнее'};
+      state.step=2;state.view='result';state.hasGenerated=true;render();
+    };
+
+    publishView=function(){
+      const kind=state.preview==='story'?'история':'публикация';
+      const count=state.preview==='story'?'3 изображения':'3 фотографии';
+      return `<section class="mx-auto grid w-full max-w-[1180px] gap-4 px-3 pb-6 pt-5 sm:px-5"><div><button class="text-[10px] font-bold text-beauty-muted hover:text-beauty-ink" data-back type="button">← Вернуться к проверке</button><h1 class="mt-2 font-beauty-display text-[clamp(1.35rem,2.2vw,1.85rem)] font-bold tracking-[-.05em]">Подготовка к публикации</h1><p class="mt-1.5 text-[11px] text-beauty-muted">Сервис сохранит материал, но не отправит его в Яндекс автоматически.</p></div><section class="card overflow-hidden">${progress()}</section><div class="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_350px]"><section class="card p-4"><div class="rounded-xl bg-beauty-soft p-4"><p class="text-[9px] font-extrabold uppercase tracking-[.1em] text-beauty-accent-strong">Ручная публикация</p><h2 class="mt-1 font-beauty-display text-[19px] font-bold tracking-[-.04em]">${esc(state.result.title)}</h2><p class="mt-2 text-[10px] leading-relaxed text-beauty-muted">После сохранения вы скачаете изображения, скопируете текст и откроете Яндекс Бизнес.</p></div><div class="mt-4 grid gap-2"><div class="flex items-center gap-3 rounded-xl border border-black/10 p-3"><span class="grid h-7 w-7 place-items-center rounded-full bg-beauty-sage-soft text-[10px] font-bold text-[#587147]">✓</span><span><b class="block text-[10px]">Текст подготовлен</b><small class="mt-0.5 block text-[8px] text-beauty-muted">Заголовок, описание и призыв к действию</small></span></div><div class="flex items-center gap-3 rounded-xl border border-black/10 p-3"><span class="grid h-7 w-7 place-items-center rounded-full bg-beauty-sage-soft text-[10px] font-bold text-[#587147]">✓</span><span><b class="block text-[10px]">Изображения подготовлены</b><small class="mt-0.5 block text-[8px] text-beauty-muted">${count} для загрузки в Яндекс Бизнес</small></span></div></div><div class="mt-4 rounded-xl border border-beauty-accent-soft bg-[#fffaf6] p-4"><b class="text-[10px]">Куда перейти после сохранения</b><p class="mt-2 text-[9px] leading-relaxed text-beauty-muted">Яндекс Бизнес → Организации → выберите салон → О компании → <b class="text-beauty-ink">${state.preview==='story'?'Истории':'Публикации'}</b>.</p></div><div class="mt-4 flex flex-wrap justify-between gap-2 border-t border-black/10 pt-4"><button class="${secondary}" data-save-draft type="button">В черновики</button><button class="${primary}" data-save-open-maps type="button">Сохранить материал ${icon('arrow','h-3.5 w-3.5')}</button></div></section>${preview()}</div></section>`;
+    };
+
+    savedView=function(){
+      const automatic=state.contentOrigin==='auto';
+      const path=state.preview==='story'?'Истории':'Публикации';
+      const imageCount=state.preview==='story'?'3 изображения истории':'3 фотографии новости';
+      return `<section class="mx-auto grid min-h-[72dvh] w-full max-w-[920px] place-items-center px-3 py-8"><article class="card w-full overflow-hidden"><div class="grid md:grid-cols-[.78fr_1.22fr]"><div class="bg-beauty-soft p-6"><span class="grid h-12 w-12 place-items-center rounded-full bg-beauty-ink text-white">${icon('arrow','h-6 w-6')}</span><p class="mt-5 text-[9px] font-extrabold uppercase tracking-[.1em] text-beauty-accent-strong">Материал сохранён</p><h1 class="mt-1 font-beauty-display text-[23px] font-bold tracking-[-.05em]">Перенесите его в Яндекс Бизнес</h1><p class="mt-3 text-[10px] leading-relaxed text-beauty-muted">Прямого подключения к публикациям Яндекса нет — администратор размещает материал вручную.</p></div><div class="p-6"><h2 class="font-beauty-display text-[17px] font-bold tracking-[-.04em]">Всё готово для переноса</h2><div class="mt-4 grid gap-2 sm:grid-cols-2"><button class="${secondary}" data-download-media type="button">${icon('image','h-3.5 w-3.5')} Скачать изображения</button><button class="${secondary}" data-copy-content="all" type="button">Скопировать заголовок и текст</button></div><div class="mt-4 rounded-xl bg-beauty-soft p-4"><b class="text-[10px]">${imageCount}</b><p class="mt-1 text-[8px] leading-relaxed text-beauty-muted">Файлы подготовлены в формате PNG. Текст сохранён отдельно, как его принимает Яндекс.</p></div><ol class="mt-4 grid gap-3"><li class="flex gap-3"><span class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-beauty-accent-soft text-[9px] font-bold text-beauty-accent-strong">1</span><span class="text-[9px] leading-relaxed">Откройте Яндекс Бизнес и выберите карточку своего салона.</span></li><li class="flex gap-3"><span class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-beauty-accent-soft text-[9px] font-bold text-beauty-accent-strong">2</span><span class="text-[9px] leading-relaxed">Перейдите: О компании → ${path} → ${state.preview==='story'?'Новая история':'Новая публикация'}.</span></li><li class="flex gap-3"><span class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-beauty-accent-soft text-[9px] font-bold text-beauty-accent-strong">3</span><span class="text-[9px] leading-relaxed">Загрузите изображения, вставьте текст и отправьте материал на модерацию.</span></li></ol><div class="mt-6 flex flex-wrap gap-2"><a class="${primary}" href="https://business.yandex.ru/organizations" target="_blank" rel="noopener">Открыть Яндекс Бизнес ${icon('arrow','h-3.5 w-3.5')}</a>${automatic?`<button class="${secondary}" data-confirm-placement type="button">Я разместил материал ${icon('check','h-3.5 w-3.5')}</button><button class="${secondary}" data-return-content type="button">Вернуться позже</button>`:`<button class="${secondary}" data-return-drafts type="button">Вернуться в черновики</button>`}</div><p class="mt-4 text-[8px] leading-relaxed text-beauty-faint">После отправки Яндекс проверит материал. Статус модерации отслеживается в кабинете Яндекс Бизнеса.</p></div></div></article></section>`;
+    };
+
+    function wrapCanvasText(ctx,text,x,y,maxWidth,lineHeight,maxLines){
+      const words=String(text).split(/\s+/);let line='',lines=[];
+      words.forEach(word=>{const test=line?`${line} ${word}`:word;if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=word}else line=test});
+      if(line)lines.push(line);lines.slice(0,maxLines).forEach((value,index)=>ctx.fillText(value,x,y+index*lineHeight));
+    }
+
+    function downloadCanvas(canvas,name){canvas.toBlob(blob=>{if(!blob)return;const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=name;link.click();window.setTimeout(()=>URL.revokeObjectURL(url),1200)},'image/png')}
+
+    function downloadGeneratedMedia(){
+      const source=state.photoUrl||'assets/img/salon-audit-cover.jpg',image=new Image();
+      image.onload=()=>{
+        const story=state.preview==='story',items=story?[{title:state.result.title,text:'Главное о предложении салона'},{title:'Красота в деталях',text:state.result.text},{title:'Выберите удобное время',text:state.result.cta}]:[{title:'',text:''},{title:'',text:''},{title:'',text:''}];
+        items.forEach((item,index)=>{
+          const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d');canvas.width=story?1080:1200;canvas.height=story?1920:750;
+          const scale=Math.max(canvas.width/image.width,canvas.height/image.height),width=image.width*scale,height=image.height*scale;ctx.drawImage(image,(canvas.width-width)/2,(canvas.height-height)/2,width,height);
+          if(story){const gradient=ctx.createLinearGradient(0,canvas.height*.42,0,canvas.height);gradient.addColorStop(0,'rgba(0,0,0,0)');gradient.addColorStop(1,'rgba(0,0,0,.82)');ctx.fillStyle=gradient;ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#fff';ctx.font='700 76px Onest, sans-serif';wrapCanvasText(ctx,item.title,82,1450,900,88,3);ctx.font='500 40px Onest, sans-serif';wrapCanvasText(ctx,item.text,82,1720,900,52,2)}
+          window.setTimeout(()=>downloadCanvas(canvas,`${story?'yandex-story':'yandex-publication'}-${index+1}.png`),index*180);
+        });
+        notify('Изображения подготовлены к скачиванию');
+      };
+      image.src=source;
+    }
+
+    window.addEventListener('click',event=>{
+      const target=event.target.closest('button');if(!target)return;
+      if(target.dataset.startBlank!==undefined){
+        event.preventDefault();event.stopImmediatePropagation();
+        state.contentOrigin='manual';state.activeAuto='';state.goal='custom';state.customTitle='';state.note='';state.step=1;state.view='create';state.hasGenerated=false;state.pending=null;state.appliedBase='';state.pendingBase='__reset__';render();return;
+      }
+      if(target.dataset.copyContent){
+        event.preventDefault();event.stopImmediatePropagation();
+        const text=`${state.result.title}\n\n${state.result.text}${state.result.cta?`\n\n${state.result.cta}`:''}`;
+        navigator.clipboard?.writeText(text).then(()=>notify('Заголовок и текст скопированы')).catch(()=>notify('Не удалось скопировать — выделите текст вручную'));return;
+      }
+      if(target.dataset.downloadMedia!==undefined){event.preventDefault();event.stopImmediatePropagation();downloadGeneratedMedia();return}
+    },true);
+
+    render();
+  </script>
+  <script>
+    /* A placed automatic material keeps a visible, truthful lifecycle after manual handoff. */
+    state.activePublished='';
+
+    const headerBeforePlacedLifecycle=header;
+    header=function(){
+      return headerBeforePlacedLifecycle()
+        .replace('>Опубликовано','>Размещённые');
+    };
+
+    autoContent=function(){
+      const items=state.autoItems;
+      const oneItem=items.length===1;
+      const cards=items.map(item=>{
+        const placement=item.stage==='placement';
+        return `<button class="group grid bg-beauty-surface p-4 text-left transition-colors hover:bg-[#fffaf6] ${oneItem?'items-center gap-4 sm:grid-cols-[72px_minmax(0,1fr)_auto]':'gap-3'}" ${placement?`data-open-placement="${item.id}"`:`data-open-auto="${item.id}"`} type="button"><div class="preview-image ${item.template==='result'?'is-work':''} ${oneItem?'h-[72px]':'h-[58px]'} rounded-xl"></div><div class="min-w-0"><div class="flex flex-wrap items-center gap-2"><span class="rounded-full bg-beauty-soft px-2 py-1 text-[8px] font-bold text-beauty-muted">${item.type}</span><span class="rounded-full ${placement?'bg-beauty-warning-soft text-beauty-warning':'bg-beauty-sage-soft text-[#587147]'} px-2 py-1 text-[8px] font-bold">${placement?'Готово к размещению':'Готово к проверке'}</span></div><b class="mt-2 block truncate text-[11px]">${item.title}</b><p class="mt-1 line-clamp-2 text-[9px] leading-relaxed text-beauty-muted">${placement?'Материал сохранён. Разместите его в Яндекс Бизнесе и подтвердите здесь.':item.reason}</p></div><span class="${oneItem?'sm:border-l sm:border-t-0 sm:pl-4':'border-t pt-3'} flex justify-end border-black/10 text-[10px] font-bold text-beauty-accent-strong">${placement?'Продолжить размещение →':'Открыть материал →'}</span></button>`;
+      }).join('');
+      const countLabel=items.length===1?'материал':items.length>1&&items.length<5?'материала':'материалов';
+      return `<section class="card overflow-hidden"><div class="flex flex-wrap items-center justify-between gap-3 border-b border-black/10 px-4 py-3"><div><p class="text-[9px] font-extrabold uppercase tracking-[.1em] text-beauty-accent-strong">Сделать сейчас</p><h2 class="mt-1 font-beauty-display text-[18px] font-bold tracking-[-.04em]">${items.some(item=>item.stage==='placement')?'Завершите размещение':items.length?'Проверьте готовые материалы':'Готовые материалы размещены'}</h2></div><span class="rounded-full ${items.length?'bg-beauty-sage-soft text-[#587147]':'bg-beauty-soft text-beauty-muted'} px-2.5 py-1 text-[9px] font-bold">${items.length} ${countLabel}</span></div>${items.length?`<div class="grid gap-px bg-black/10 ${oneItem?'grid-cols-1':'md:grid-cols-2'}">${cards}</div>`:`<div class="grid items-center gap-4 bg-beauty-surface px-4 py-5 sm:grid-cols-[auto_minmax(0,1fr)_auto]"><span class="grid h-10 w-10 place-items-center rounded-full bg-beauty-sage-soft text-[#587147]">${icon('check','h-5 w-5')}</span><div><b class="text-[11px]">В очереди ничего не осталось</b><p class="mt-1 text-[9px] leading-relaxed text-beauty-muted">Подтверждённые материалы можно открыть во вкладке «Размещённые».</p></div><button class="${secondary}" data-go-placed type="button">Открыть размещённые ${icon('arrow','h-3.5 w-3.5')}</button></div>`}</section>`;
+    };
+
+    const listingBeforePlacedLifecycle=listing;
+    listing=function(type){
+      if(type!=='published')return listingBeforePlacedLifecycle(type);
+      return `<section class="mx-auto grid w-full max-w-[1180px] gap-4 px-3 pb-6 pt-5 sm:px-5"><div><h1 class="font-beauty-display text-[clamp(1.35rem,2.2vw,1.85rem)] font-bold tracking-[-.05em]">Размещённые</h1><p class="mt-1.5 text-[10px] text-beauty-muted">Материалы, которые администратор перенёс в сервис Карт вручную.</p></div><section class="card overflow-hidden">${state.publishedItems.length?state.publishedItems.map(item=>`<button class="grid w-full grid-cols-[48px_minmax(0,1fr)_auto] items-center gap-3 border-t border-black/10 px-3 py-3 text-left transition-colors first:border-t-0 hover:bg-[#fffaf6]" data-open-published="${item.id}" type="button"><div class="preview-image ${item.template==='result'||item.type==='История'?'is-work':''} h-12 rounded-[10px]"></div><div class="min-w-0"><b class="block truncate text-[11px]">${item.title}</b><small class="mt-1 block text-[8px] text-beauty-muted">${item.type} · ${item.date} · статус Яндекса проверяется отдельно</small></div><span class="rounded-full bg-beauty-sage-soft px-2 py-1 text-[8px] font-bold text-[#587147]">Размещено вручную</span></button>`).join(''):'<div class="p-5"><b class="text-[11px]">Здесь пока ничего нет</b><p class="mt-1 text-[9px] text-beauty-muted">После подтверждения ручного размещения материал появится в этом списке.</p></div>'}</section></section>`;
+    };
+
+    function placementSuccessView(){
+      const item=state.publishedItems.find(entry=>entry.id===state.activePublished);
+      if(!item)return listing('published');
+      return `<section class="mx-auto grid min-h-[72dvh] w-full max-w-[900px] place-items-center px-3 py-8"><article class="card w-full overflow-hidden"><div class="grid md:grid-cols-[.78fr_1.22fr]"><div class="bg-beauty-sage-soft p-6"><span class="grid h-12 w-12 place-items-center rounded-full bg-beauty-sage text-white">${icon('check','h-6 w-6')}</span><p class="mt-5 text-[9px] font-extrabold uppercase tracking-[.1em] text-[#587147]">Задача завершена</p><h1 class="mt-1 font-beauty-display text-[23px] font-bold tracking-[-.05em]">Материал отмечен как размещённый</h1><p class="mt-3 text-[10px] leading-relaxed text-beauty-muted">Он убран из очереди проверки и сохранён в истории материалов.</p></div><div class="p-6"><div class="flex items-start gap-3"><div class="preview-image ${item.template==='result'||item.type==='История'?'is-work':''} h-14 w-14 shrink-0 rounded-xl"></div><div class="min-w-0"><span class="rounded-full bg-beauty-soft px-2 py-1 text-[8px] font-bold text-beauty-muted">${item.type}</span><h2 class="mt-2 font-beauty-display text-[17px] font-bold tracking-[-.04em]">${item.title}</h2></div></div><div class="mt-5 rounded-xl border border-beauty-warning/25 bg-beauty-warning-soft p-4"><b class="text-[10px] text-beauty-warning">Проверьте модерацию в Яндекс Бизнесе</b><p class="mt-1 text-[9px] leading-relaxed text-beauty-muted">Сервис не получает статус публикации автоматически, поэтому здесь фиксируется только ваше подтверждение размещения.</p></div><div class="mt-5 flex flex-wrap gap-2"><button class="${primary}" data-open-published="${item.id}" type="button">Открыть материал ${icon('arrow','h-3.5 w-3.5')}</button><button class="${secondary}" data-go-overview type="button">Вернуться к обзору</button><a class="${secondary}" href="https://business.yandex.ru/organizations" target="_blank" rel="noopener">Яндекс Бизнес</a></div></div></div></article></section>`;
+    }
+
+    function publishedDetailView(){
+      const item=state.publishedItems.find(entry=>entry.id===state.activePublished);
+      if(!item)return listing('published');
+      return `<section class="mx-auto grid w-full max-w-[1180px] gap-4 px-3 pb-6 pt-5 sm:px-5"><div><button class="text-[10px] font-bold text-beauty-muted hover:text-beauty-ink" data-back-placed type="button">← К размещённым</button><div class="mt-3 flex flex-wrap items-start justify-between gap-3"><div><p class="text-[9px] font-extrabold uppercase tracking-[.1em] text-beauty-accent-strong">${item.type}</p><h1 class="mt-1 font-beauty-display text-[clamp(1.35rem,2.2vw,1.85rem)] font-bold tracking-[-.05em]">${item.title}</h1><p class="mt-1 text-[9px] text-beauty-muted">Размещено вручную · ${item.date}</p></div><span class="rounded-full bg-beauty-sage-soft px-2.5 py-1 text-[9px] font-bold text-[#587147]">Задача закрыта</span></div></div><div class="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_350px]"><section class="card p-4"><div class="rounded-xl bg-beauty-soft p-4"><b class="text-[10px]">Что произошло с материалом</b><div class="mt-3 grid gap-3 sm:grid-cols-3"><div><span class="grid h-7 w-7 place-items-center rounded-full bg-beauty-sage-soft text-[9px] font-bold text-[#587147]">✓</span><p class="mt-2 text-[9px] font-bold">Убран из очереди</p></div><div><span class="grid h-7 w-7 place-items-center rounded-full bg-beauty-sage-soft text-[9px] font-bold text-[#587147]">✓</span><p class="mt-2 text-[9px] font-bold">Задача закрыта</p></div><div><span class="grid h-7 w-7 place-items-center rounded-full bg-beauty-warning-soft text-[9px] font-bold text-beauty-warning">!</span><p class="mt-2 text-[9px] font-bold">Модерация в Яндексе</p></div></div></div><div class="mt-4"><h2 class="font-beauty-display text-[16px] font-bold tracking-[-.04em]">${esc(item.result?.title||item.title)}</h2><p class="mt-2 text-[10px] leading-relaxed text-beauty-muted">${esc(item.result?.text||'Готовый материал был перенесён администратором в Яндекс Бизнес.')}</p></div><div class="mt-5 flex flex-wrap gap-2 border-t border-black/10 pt-4"><a class="${primary}" href="https://business.yandex.ru/organizations" target="_blank" rel="noopener">Проверить в Яндекс Бизнесе ${icon('arrow','h-3.5 w-3.5')}</a><button class="${secondary}" data-go-overview type="button">К обзору</button></div></section>${preview()}</div></section>`;
+    }
+
+    const renderBeforePlacedLifecycle=render;
+    render=function(){
+      if(state.view==='placement-success'){
+        app.innerHTML=header()+placementSuccessView();
+        document.title='Материал размещён · Карты · МаркетологТЕХ';
+        return;
+      }
+      if(state.view==='published-detail'){
+        app.innerHTML=header()+publishedDetailView();
+        document.title='Размещённый материал · Карты · МаркетологТЕХ';
+        return;
+      }
+      renderBeforePlacedLifecycle();
+    };
+
+    window.addEventListener('click',event=>{
+      const target=event.target.closest('button');if(!target)return;
+      if(target.dataset.confirmPlacement!==undefined){
+        event.preventDefault();event.stopImmediatePropagation();
+        const item=state.autoItems.find(entry=>entry.id===state.activeAuto);if(!item)return;
+        const placed={id:item.id,title:item.title,type:item.type,date:'Сегодня',template:item.template,imageVariant:item.imageVariant||0,result:{...(item.savedResult||{title:item.title,text:item.text,cta:item.cta})}};
+        state.publishedItems.unshift(placed);state.autoItems=state.autoItems.filter(entry=>entry.id!==item.id);state.activePublished=item.id;state.activeAuto='';state.tab='published';state.view='placement-success';render();notify('Материал отмечен как размещённый. Задача закрыта.');return;
+      }
+      if(target.dataset.goPlaced!==undefined){event.preventDefault();event.stopImmediatePropagation();state.tab='published';state.view='listing';render();return}
+      if(target.dataset.goOverview!==undefined){event.preventDefault();event.stopImmediatePropagation();state.tab='overview';state.view='overview';render();return}
+      if(target.dataset.openPublished){
+        event.preventDefault();event.stopImmediatePropagation();
+        const item=state.publishedItems.find(entry=>entry.id===target.dataset.openPublished);if(!item)return;
+        state.activePublished=item.id;state.result={...(item.result||{title:item.title,text:'',cta:''})};state.preview=item.type==='История'?'story':'news';state.template=item.template||'editorial';state.imageVariant=item.imageVariant||0;state.view='published-detail';render();return;
+      }
+      if(target.dataset.backPlaced!==undefined){event.preventDefault();event.stopImmediatePropagation();state.tab='published';state.view='listing';render();return}
+    },true);
+
+    render();
+  </script>
 </body>
 </html>
